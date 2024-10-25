@@ -3,7 +3,11 @@
 #include <stdlib.h>
 #include <assert.h>
 
-void userInput() {
+void promptForInput() {
+    printf("¬ведите строку:\n");
+}
+
+char* userInput() {
     char *inputString = (char *)calloc(1, sizeof(char));
     assert(inputString != NULL);
     size_t bufferSize = 1;
@@ -27,4 +31,5 @@ void userInput() {
     }
 
     inputString[lineLength] = '\0';
+    return inputString;
 }

@@ -2,4 +2,8 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-void userInput();
+// Prompt for input.
+void promptForInput();
+
+// User input of a string. Returns a pointer to the entered string.
+char* userInput();
