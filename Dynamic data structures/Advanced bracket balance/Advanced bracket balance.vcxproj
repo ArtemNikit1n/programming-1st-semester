@@ -130,11 +130,13 @@
     <ClCompile Include="advancedBracketBalance.c" />
     <ClCompile Include="C:\Users\hjhjh\Downloads\Telegram Desktop\stack.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="testsForStack.c" />
     <ClCompile Include="userInput.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="advancedBracketBalance.h" />
     <ClInclude Include="stack.h" />
+    <ClInclude Include="testsForStack.h" />
     <ClInclude Include="userInput.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
