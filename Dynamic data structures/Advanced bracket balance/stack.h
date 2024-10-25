@@ -17,8 +17,9 @@ bool isEmpty(Stack* stack);
 // Adds an element to the end of the stack.
 void push(Stack* stack, int value);
 
-// Removes an element from the beginning of the stack.
-void pop(Stack* stack);
+// Removes an element from the beginning of the stack. 
+// Returns "true" if the item was successfully deleted, and "fasle" if the stack was empty.
+bool pop(Stack* stack);
 
 // Returns the number of stack elements.
 int stackSize(Stack* stack);

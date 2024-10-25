@@ -1,9 +1,9 @@
 ﻿#include <stdio.h>
-#include <stdlib.h>
 #include <locale.h>
 
 #include "stack.h"
 #include "advancedBracketBalance.h"
+#include "userInput.h"
 
 void runningTests(bool* errorCode) {
     if (!testCreateStack()) {
@@ -33,7 +33,9 @@ int main(void) {
 
     bool errorCode = false;
 
-    runningTests(&errorCode);
+    userInput();
+
+    //runningTests(&errorCode);
 
     Stack *stackOfParentheses = createStack();
     Stack *stackOfSquareBrackets = createStack();
