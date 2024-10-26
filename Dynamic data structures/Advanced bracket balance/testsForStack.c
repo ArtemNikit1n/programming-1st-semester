@@ -54,10 +54,9 @@ bool testPop() {
     push(testStack, 2);
     push(testStack, 3);
     pop(testStack);
-    pop(testStack);
-    pop(testStack);
-    if (pop(testStack) != false) {
+    if (pop(testStack) != 2) {
         return false;
     }
+    pop(testStack);
     return isEmpty(testStack);
 }

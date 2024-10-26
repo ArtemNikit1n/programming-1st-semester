@@ -33,13 +33,22 @@ int main(void) {
 
     bool errorCode = false;
 
-    userInput();
+    //userInput();
 
-    //runningTests(&errorCode);
+    runningTests(&errorCode);
 
     Stack *stackOfParentheses = createStack();
     Stack *stackOfSquareBrackets = createStack();
     Stack *stackOfCurlyBraces = createStack();
+
+    Stack* stack = createStack();
+    push(stack, 1);
+    push(stack, 1);
+    push(stack, 0);
+    push(stack, 0);
+
+    promptForInput();
+    createBinaryStack(userInput());
 
     return errorCode;
 }
