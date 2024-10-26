@@ -3,10 +3,6 @@
 #include <stdlib.h>
 #include <assert.h>
 
-void promptForInput() {
-    printf("¬ведите строку:\n");
-}
-
 char* userInput() {
     char *inputString = (char *)calloc(1, sizeof(char));
     assert(inputString != NULL);
@@ -16,7 +12,7 @@ char* userInput() {
     while (1) {
         char oneCharacter = getchar();
 
-        if (oneCharacter = '\n') {
+        if (oneCharacter == '\n') {
             break;
         }
 
@@ -26,8 +22,7 @@ char* userInput() {
             assert(tmp != NULL);
             inputString = tmp;
         }
-
-        inputString[++lineLength] = oneCharacter;
+        inputString[lineLength++] = oneCharacter;
     }
 
     inputString[lineLength] = '\0';

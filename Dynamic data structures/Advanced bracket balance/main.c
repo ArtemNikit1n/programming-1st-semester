@@ -1,11 +1,18 @@
 ﻿#include <stdio.h>
 #include <locale.h>
+#include <stdlib.h>
 
 #include "stack.h"
 #include "advancedBracketBalance.h"
 #include "userInput.h"
+#include "testsForAdvancedBracketBalance.h"
+#include "testsForStack.h"
 
 void runningTests(bool* errorCode) {
+    if (!testAdvancedBracketBalance()) {
+        printf("Тест testAdvancedBracketBalance не пройден\n");
+        *errorCode = true;
+    }
     if (!testCreateStack()) {
         printf("Тест testCreateStack не пройден\n");
         *errorCode = true;
@@ -33,22 +40,19 @@ int main(void) {
 
     bool errorCode = false;
 
-    //userInput();
-
     runningTests(&errorCode);
 
-    Stack *stackOfParentheses = createStack();
-    Stack *stackOfSquareBrackets = createStack();
-    Stack *stackOfCurlyBraces = createStack();
+    printf("Введите строку:\n");
+    char* inputString = userInput();
 
-    Stack* stack = createStack();
-    push(stack, 1);
-    push(stack, 1);
-    push(stack, 0);
-    push(stack, 0);
+    bool balance = advanceBracketBalance(inputString);
 
-    promptForInput();
-    createBinaryStack(userInput());
+    if (!balance) {
+        printf("Баланс скобок не соблюдён");
+    } else {
+        printf("Баланс скобок не нарушен");
+    }
+    free(inputString);
 
     return errorCode;
 }

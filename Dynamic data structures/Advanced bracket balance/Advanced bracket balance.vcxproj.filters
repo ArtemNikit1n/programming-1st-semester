@@ -30,18 +30,24 @@
     <ClCompile Include="userInput.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="testsForAdvancedBracketBalance.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\advancedBracketBalance.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\testsForStack.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\userInput.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="stack.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="advancedBracketBalance.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="testsForStack.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="userInput.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="testsForAdvancedBracketBalance.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
