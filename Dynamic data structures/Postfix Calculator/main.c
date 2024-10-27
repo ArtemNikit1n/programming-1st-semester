@@ -1,13 +1,18 @@
 ﻿#include <locale.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
-#include "stack.h"
 #include "userInput.h"
+#include "postfixCalculator.h"
+#include "testsForPostfixCalculator.h"
 #include "testsForUserInput.h"
 #include "testsForStack.h"
 
 void runningTests(bool* errorCode) {
+    if (!testCalculate()) {
+        printf("Тест testCalculate не пройден\n");
+        *errorCode = true;
+    }
     if (!testCheckingUserInput()) {
         printf("Тест testCheckingUserInput не пройден\n");
         *errorCode = true;
@@ -45,7 +50,7 @@ int main(void) {
         "Разрешённые символы: {0123456789+-*/ }\n");
 
     char* inputString = userInput();
-    printf("\n%s", inputString);
+    printf("%d", calculate(inputString));
 
     return errorCode;
 }

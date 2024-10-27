@@ -130,6 +130,7 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="postfixCalculator.c" />
     <ClCompile Include="stack.c" />
+    <ClCompile Include="testsForPostfixCalculator.c" />
     <ClCompile Include="testsForStack.c" />
     <ClCompile Include="testsForUserInput.c" />
     <ClCompile Include="userInput.c" />
@@ -137,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="postfixCalculator.h" />
     <ClInclude Include="stack.h" />
+    <ClInclude Include="testsForPostfixCalculator.h" />
     <ClInclude Include="testsForStack.h" />
     <ClInclude Include="testsForUserInput.h" />
     <ClInclude Include="userInput.h" />
