@@ -6,20 +6,17 @@
 typedef struct Stack Stack;
 
 // Allocating memory for a new stack.
-Stack* createStack();
+Stack* createStack(bool* errorCode);
 
 // Deletes the stack
-void deleteStack(Stack* stack);
+void deleteStack(Stack** stackDoublePointer);
 
 // Checking whether the stack contains at least one element.
 bool isEmpty(Stack* stack);
 
 // Adds an element to the end of the stack.
-void push(Stack* stack, int value);
+void push(Stack* stack, int value, bool* errorCode);
 
-// Removes an element from the beginning of the stack. 
+// Removes an element from the beginning of the stack.
 // Returns a deleted value.
-int pop(Stack* stack);
-
-// Returns the number of stack elements.
-int stackSize(Stack* stack);
+int pop(Stack* stack, bool* errorCode);
