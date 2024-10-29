@@ -128,17 +128,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
-    <ClCompile Include="queue.c" />
+    <ClCompile Include="marchallingYard.c" />
     <ClCompile Include="stack.c" />
-    <ClCompile Include="testForQueue.c" />
     <ClCompile Include="testsForStack.c" />
     <ClCompile Include="testsForUserInput.c" />
     <ClCompile Include="userInput.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="queue.h" />
+    <ClInclude Include="marchallingYard.h" />
     <ClInclude Include="stack.h" />
-    <ClInclude Include="testForQueue.h" />
     <ClInclude Include="testsForStack.h" />
     <ClInclude Include="testsForUserInput.h" />
     <ClInclude Include="userInput.h" />

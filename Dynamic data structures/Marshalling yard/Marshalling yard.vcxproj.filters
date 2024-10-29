@@ -30,10 +30,7 @@
     <ClCompile Include="testsForStack.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="queue.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="testForQueue.c">
+    <ClCompile Include="marchallingYard.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,10 +47,7 @@
     <ClInclude Include="testsForStack.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="queue.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="testForQueue.h">
+    <ClInclude Include="marchallingYard.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
