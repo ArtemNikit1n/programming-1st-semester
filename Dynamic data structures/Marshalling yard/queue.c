@@ -5,7 +5,7 @@
 #include "queue.h"
 
 typedef struct QueueElement {
-    int value;
+    char value;
     struct QueueElement* next;
 } QueueElement;
 
@@ -40,7 +40,7 @@ void deleteQueue(Queue** queueDoublePointer) {
     *queueDoublePointer = NULL;
 }
 
-void enqueue(Queue* queue, int value, bool *errorCode) {
+void enqueue(Queue* queue, char value, bool *errorCode) {
     QueueElement* element = (QueueElement*)calloc(1, sizeof(QueueElement));
     if (element == NULL) {
         errorCode = true;
@@ -57,12 +57,12 @@ void enqueue(Queue* queue, int value, bool *errorCode) {
     }
 }
 
-int dequeue(Queue* queue, bool* errorCode) {
+char dequeue(Queue* queue, bool* errorCode) {
     if (queue->front == NULL) {
         errorCode = true;
         return 0;
     }
-    int value = queue->front->value;
+    char value = queue->front->value;
     QueueElement* tmp = queue->front;
     queue->front = queue->front->next;
     if (queue->front == NULL) {

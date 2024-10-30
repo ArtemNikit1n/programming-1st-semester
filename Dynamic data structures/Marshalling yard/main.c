@@ -3,7 +3,6 @@
 #include <locale.h>
 
 #include "marchallingYard.h"
-#include "../stack/stack.h"
 #include "userInput.h"
 #include "testsForUserInput.h"
 #include "testsForQueue.h"
@@ -27,12 +26,6 @@ void runTests(bool* errorCode) {
     }
 }
 
-void bringOutTheStack(Stack* stack, bool *errorCode) {
-    while (!isEmpty(stack)) {
-        printf("%c", pop(stack, errorCode));
-    }
-}
-
 int main(void) {
     setlocale(LC_ALL, "Ru-ru");
 
@@ -43,9 +36,6 @@ int main(void) {
     if (errorCode) {
         return errorCode;
     }
-    Stack* stack = createStack(&errorCode);
-    push(stack, 154, &errorCode);
-    bringOutTheStack(stack, &errorCode);
 
     printf("Введите выражение в постфиксной форме:\n"
         "Разрешённые символы: {0123456789+-*/( )}\n");
@@ -54,8 +44,11 @@ int main(void) {
     if (errorCode) {
         return errorCode;
     }
-    Stack* postfixFormStack = infixToPostfix(infixForm, &errorCode);
-    
-
+    char* postfixForm = infixToPostfix(infixForm, &errorCode);
+    if (postfixForm == NULL) {
+        printf("Программа завершена с ошибкой\n");
+        return true;
+    }
+    printf("%s", postfixForm);
     return errorCode;
 }

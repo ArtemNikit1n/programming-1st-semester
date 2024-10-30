@@ -4,10 +4,10 @@
 typedef struct Queue Queue;
 
 // Adds a number to the top of the queue.
-void enqueue(Queue* queue, int value, bool* errorCode);
+void enqueue(Queue* queue, char value, bool* errorCode);
 
 // Removes a number from the end of the queue.
-int dequeue(Queue* queue, bool* errorCode);
+char dequeue(Queue* queue, bool* errorCode);
 
 // Creates a queue.
 Queue* createQueue(bool* errorCode);
