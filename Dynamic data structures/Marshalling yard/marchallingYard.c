@@ -6,7 +6,7 @@
 #include "../stack/stack.h"
 #include "queue.h"
 
-char* queueToString(Queue* queue, int inputStringLength, bool* errorCode) {
+char* queueToString(Queue* queue, const int inputStringLength, bool* errorCode) {
     if (queue == NULL || queueIsEmpty(queue)) {
         *errorCode = true;
         return NULL;
@@ -28,7 +28,7 @@ char* queueToString(Queue* queue, int inputStringLength, bool* errorCode) {
     return postfixForm;
 }
 
-char* infixToPostfix(char* inputString, bool *errorCode) {
+char* infixToPostfix(const char* inputString, bool *errorCode) {
     Stack* stack = createStack(errorCode);
     Queue* queue = createQueue(errorCode);
     if (*errorCode) {

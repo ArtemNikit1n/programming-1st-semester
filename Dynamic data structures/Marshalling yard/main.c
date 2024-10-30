@@ -4,11 +4,17 @@
 
 #include "marchallingYard.h"
 #include "userInput.h"
+#include "TestsForMarchallingYard.h"
 #include "testsForUserInput.h"
 #include "testsForQueue.h"
 #include "../stack/testsForStack.h"
 
 void runTests(bool* errorCode) {
+    if (!testTheMarshallingYard(errorCode)) {
+        printf("Тест testTheMarshallingYard() не пройден\n");
+        *errorCode = true;
+        return;
+    }
     if (!testForEnqueueAndDequeue(errorCode)) {
         printf("Тест testForEnqueueAndDequeue() не пройден\n");
         *errorCode = true;
@@ -51,4 +57,4 @@ int main(void) {
     }
     printf("%s", postfixForm);
     return errorCode;
-}
+ }

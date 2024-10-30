@@ -132,6 +132,7 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="marchallingYard.c" />
     <ClCompile Include="queue.c" />
+    <ClCompile Include="TestsForMarchallingYard.c" />
     <ClCompile Include="testsForQueue.c" />
     <ClCompile Include="testsForUserInput.c" />
     <ClCompile Include="userInput.c" />
@@ -141,6 +142,7 @@
     <ClInclude Include="..\Stack\testsForStack.h" />
     <ClInclude Include="marchallingYard.h" />
     <ClInclude Include="queue.h" />
+    <ClInclude Include="TestsForMarchallingYard.h" />
     <ClInclude Include="testsForQueue.h" />
     <ClInclude Include="testsForUserInput.h" />
     <ClInclude Include="userInput.h" />
