@@ -22,6 +22,7 @@ char* queueToString(Queue* queue, const int inputStringLength, bool* errorCode) 
     int i = 0;
     while (!queueIsEmpty(queue)) {
         postfixForm[i++] = dequeue(queue, errorCode);
+        postfixForm[i++] = ' ';
     }
     postfixForm[i] = '\0';
 
@@ -54,17 +55,14 @@ char* infixToPostfix(const char* inputString, bool *errorCode) {
     inputStringWithoutSpaces[j] = '\0';
 
     int i = 0;
-    bool previousTokenIsADigit = false;
     while (inputStringWithoutSpaces[i] != '\0') {
         if (strchr(numbers, inputStringWithoutSpaces[i]) != NULL) {
             enqueue(queue, inputStringWithoutSpaces[i], errorCode);
-            enqueue(queue, ' ', errorCode);
             if (*errorCode) {
                 deleteQueue(&queue);
                 deleteStack(&stack);
                 return NULL;
             }
-            previousTokenIsADigit = true;
             ++i;
             continue;
         }
@@ -74,13 +72,11 @@ char* infixToPostfix(const char* inputString, bool *errorCode) {
             if (*errorCode) {
                 *errorCode = false;
                 push(stack, inputStringWithoutSpaces[i], errorCode);
-                previousTokenIsADigit = false;
                 ++i;
                 continue;
             } else {
                 while (opreator == '*' || opreator == '/') {
                     enqueue(queue, opreator, errorCode);
-                    enqueue(queue, ' ', errorCode);
                     opreator = pop(stack, errorCode);
                     if (*errorCode) {
                         *errorCode = false;
@@ -89,7 +85,6 @@ char* infixToPostfix(const char* inputString, bool *errorCode) {
                 }
                 push(stack, opreator, errorCode);
                 push(stack, inputStringWithoutSpaces[i], errorCode);
-                previousTokenIsADigit = false;
                 ++i;
                 continue;
             }
@@ -102,7 +97,6 @@ char* infixToPostfix(const char* inputString, bool *errorCode) {
                 deleteStack(&stack);
                 return NULL;
             }
-            previousTokenIsADigit = false;
             ++i;
             continue;
         }
@@ -111,10 +105,8 @@ char* infixToPostfix(const char* inputString, bool *errorCode) {
             char stackHead = pop(stack, errorCode);
             while (stackHead != '(') {
                 enqueue(queue, stackHead, errorCode);
-                enqueue(queue, ' ', errorCode);
                 stackHead = pop(stack, errorCode);
             }
-            previousTokenIsADigit = false;
             ++i;
             continue;
         }
@@ -123,7 +115,6 @@ char* infixToPostfix(const char* inputString, bool *errorCode) {
     while (!isEmpty(stack)) {
         char stackHead = pop(stack, errorCode);
         enqueue(queue, stackHead, errorCode);
-        enqueue(queue, ' ', errorCode);
     }
     deleteStack(&stack);
     
