@@ -22,7 +22,7 @@ char* queueToString(Queue* queue, const int inputStringLength, bool* errorCode) 
     int i = 0;
     while (!queueIsEmpty(queue)) {
         postfixForm[i++] = dequeue(queue, errorCode);
-        postfixForm[i++] = ' ';
+        //postfixForm[i++] = ' ';
     }
     postfixForm[i] = '\0';
 
@@ -30,6 +30,7 @@ char* queueToString(Queue* queue, const int inputStringLength, bool* errorCode) 
 }
 
 char* infixToPostfix(const char* inputString, bool *errorCode) {
+    bool theNumbersArePresent = false;
     Stack* stack = createStack(errorCode);
     Queue* queue = createQueue(errorCode);
     if (*errorCode) {
@@ -57,6 +58,7 @@ char* infixToPostfix(const char* inputString, bool *errorCode) {
     int i = 0;
     while (inputStringWithoutSpaces[i] != '\0') {
         if (strchr(numbers, inputStringWithoutSpaces[i]) != NULL) {
+            theNumbersArePresent = true;
             enqueue(queue, inputStringWithoutSpaces[i], errorCode);
             if (*errorCode) {
                 deleteQueue(&queue);
@@ -71,11 +73,13 @@ char* infixToPostfix(const char* inputString, bool *errorCode) {
             char opreator = pop(stack, errorCode);
             if (*errorCode) {
                 *errorCode = false;
+                enqueue(queue, ' ', errorCode);
                 push(stack, inputStringWithoutSpaces[i], errorCode);
                 ++i;
                 continue;
             } else {
                 while (opreator == '*' || opreator == '/') {
+                    enqueue(queue, ' ', errorCode);
                     enqueue(queue, opreator, errorCode);
                     opreator = pop(stack, errorCode);
                     if (*errorCode) {
@@ -84,6 +88,7 @@ char* infixToPostfix(const char* inputString, bool *errorCode) {
                     }
                 }
                 push(stack, opreator, errorCode);
+                enqueue(queue, ' ', errorCode);
                 push(stack, inputStringWithoutSpaces[i], errorCode);
                 ++i;
                 continue;
@@ -104,6 +109,7 @@ char* infixToPostfix(const char* inputString, bool *errorCode) {
         if (inputStringWithoutSpaces[i] == ')') {
             char stackHead = pop(stack, errorCode);
             while (stackHead != '(') {
+                enqueue(queue, ' ', errorCode);
                 enqueue(queue, stackHead, errorCode);
                 stackHead = pop(stack, errorCode);
             }
@@ -114,9 +120,14 @@ char* infixToPostfix(const char* inputString, bool *errorCode) {
     }
     while (!isEmpty(stack)) {
         char stackHead = pop(stack, errorCode);
+        enqueue(queue, ' ', errorCode);
         enqueue(queue, stackHead, errorCode);
     }
     deleteStack(&stack);
+
+    if (!theNumbersArePresent) {
+        return NULL;
+    }
     
     char* postfixForm = queueToString(queue, strlen(inputString), errorCode);
     deleteQueue(&queue);

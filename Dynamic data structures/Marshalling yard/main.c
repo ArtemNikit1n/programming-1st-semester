@@ -51,9 +51,13 @@ int main(void) {
         return errorCode;
     }
     char* postfixForm = infixToPostfix(infixForm, &errorCode);
-    if (postfixForm == NULL) {
+    if (NULL == postfixForm) {
+        printf("Вы ввели пустую строку или выражение состоящее из скобок!\n");
+        return errorCode;
+    }
+    if (errorCode) {
         printf("Программа завершена с ошибкой\n");
-        return true;
+        return errorCode;
     }
     printf("%s", postfixForm);
     return errorCode;
