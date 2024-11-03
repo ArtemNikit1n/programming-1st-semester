@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "list.h"
+#include "../list/list.h"
 
 typedef struct ListElement* Position;
 
