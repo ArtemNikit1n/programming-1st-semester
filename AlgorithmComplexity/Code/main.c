@@ -3,17 +3,25 @@
 #include <string.h>
 #include "headerFile.h"
 
-void startingTask(char taskNumber) {
-    if (taskNumber == '1') {
+void printTheBackgroundInformation() {
+    printf(
+            "1 - Half qsort\n"
+            "2 - Bubble and counting\n"
+            "3 - Exponentiation\n"
+            "4 - Fibonacci Numbers\n");
+}
+
+void startingTask(int taskNumber) {
+    if (taskNumber == 1) {
         halfQsortTask();
     }
-    else if (taskNumber == '2') {
+    else if (taskNumber == 2) {
         bubbleAndCountingTask();
     }
-    else if (taskNumber == '3') {
+    else if (taskNumber == 3) {
         exponentiationTask();
     }
-    else if (taskNumber == '4') {
+    else if (taskNumber == 4) {
         fibonacciNumbersTask();
     } else {
         printf("Input error");
@@ -21,22 +29,27 @@ void startingTask(char taskNumber) {
     }
 }
 
-bool testInputCorrectnessForMain(const char *taskNumber) {
-    size_t lengthTaskNumber = strlen(taskNumber);
-    return (*taskNumber == '0') ? true : false;
-    return (strlen(taskNumber) > 1) ? true : false;
+void clearBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
+int getTheFunctionCodeFromTheUser(void) {
+    int functionCode = -1;
+    printTheBackgroundInformation();
+    int scanfReturns = scanf("%d", &functionCode);
+    printf("Enter the task number:\n");
+    while (functionCode > 4 || functionCode < 1 || scanfReturns != 1) {
+        printf("The task number is entered incorrectly, try again\n");
+        printTheBackgroundInformation();
+        clearBuffer();
+        scanfReturns = scanf("%d", &functionCode);
+    }
+    return functionCode;
 }
 
 int main() {
-    char taskNumber = '0';
-    printf("Enter the task number from 1 to 4:\n");
-    scanf("%[0123456789]", &taskNumber);
-
-    if (testInputCorrectnessForMain(&taskNumber)) {
-        printf("Input error");
-        return 1;
-    }
-
+    int taskNumber = getTheFunctionCodeFromTheUser();
     startingTask(taskNumber);
     return 0;
 }
