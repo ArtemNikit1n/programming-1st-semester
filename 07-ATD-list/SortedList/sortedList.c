@@ -26,6 +26,10 @@ void sortByInsertionSort(int* array, int start, int stop) {
 
 void sortTheList(List* list, int listLength, bool* errorCode) {
     int* arrayForSorting = calloc(listLength, sizeof(int));
+    if (NULL == arrayForSorting) {
+        *errorCode = true;
+        return;
+    }
     for (int i = 0; i < listLength; ++i) {
         int element = remove(list, 0, errorCode);
         arrayForSorting[i] = element;

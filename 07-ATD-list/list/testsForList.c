@@ -43,14 +43,13 @@ bool testAddAndRemove(bool* errorCode) {
     return test1 && test2 && test3 && test4;
 }
 
-bool runTheListTests(bool* errorCode) {
+void runTheListTests(bool* errorCode) {
     if (!testListIsEmptyAndCreateList(errorCode)) {
         printf("Тест testListIsEmptyAndCreateList не пройден\n");
         if (*errorCode) {
             printf("Ошибка в работе модуля\n");
         }
         *errorCode = true;
-        return false;
     }
     if (!testAddAndRemove(errorCode)) {
         printf("Тест testAddAndRemove не пройден\n");
@@ -58,6 +57,5 @@ bool runTheListTests(bool* errorCode) {
             printf("Ошибка в работе модуля\n");
         }
         *errorCode = true;
-        return false;
     }
 }
