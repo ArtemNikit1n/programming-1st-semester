@@ -115,3 +115,15 @@ bool add(List* list, int position, Value value, bool *errorCode) {
     new->next = temp;
     return false;
 }
+
+void printList(List* list) {
+    if (list == NULL) {
+        return;
+    }
+    ListElement* head = list->head;
+    while (list->head->next != NULL) {
+        printf("%d ", list->head->next->value);
+        list->head = list->head->next;
+    }
+    list->head = head;
+}

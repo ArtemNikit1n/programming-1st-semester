@@ -18,3 +18,6 @@ bool add(List* list, int position, Value value, bool* errorCode);
 
 // Deletes an element from the specified location.
 Value remove(List* list, int position, bool* errorCode);
+
+// Displays the list in the console.
+void printList(List* list);
