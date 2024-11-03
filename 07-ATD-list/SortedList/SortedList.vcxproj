@@ -130,10 +130,14 @@
     <ClCompile Include="..\list\list.c" />
     <ClCompile Include="..\list\testsForList.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="sortedList.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\list\list.h" />
     <ClInclude Include="..\list\testsForList.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="sortedList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

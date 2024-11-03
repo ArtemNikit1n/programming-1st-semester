@@ -24,6 +24,9 @@
     <ClCompile Include="..\list\testsForList.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="sortedList.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\list\list.h">
@@ -32,5 +35,10 @@
     <ClInclude Include="..\list\testsForList.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="sortedList.h">
+      <Filter>Файлы заголовков</Filter>
+    </None>
   </ItemGroup>
 </Project>
