@@ -27,12 +27,18 @@
     <ClCompile Include="sortedList.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="testsForSortedList.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\list\list.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="..\list\testsForList.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="testsForSortedList.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

@@ -131,10 +131,12 @@
     <ClCompile Include="..\list\testsForList.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="sortedList.c" />
+    <ClCompile Include="testsForSortedList.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\list\list.h" />
     <ClInclude Include="..\list\testsForList.h" />
+    <ClInclude Include="testsForSortedList.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="sortedList.h" />
