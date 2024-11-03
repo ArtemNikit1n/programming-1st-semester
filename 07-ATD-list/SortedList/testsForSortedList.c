@@ -20,7 +20,7 @@ bool testSortTheList(bool *errorCode) {
         deleteList(&list);
         return false;
     }
-    bool test1 = remove(list, 2, errorCode) == 456 && remove(list, 1, errorCode) == 321 && remove(list, 0, errorCode) == 123;
+    bool test1 = removeListElement(list, 2, errorCode) == 456 && removeListElement(list, 1, errorCode) == 321 && removeListElement(list, 0, errorCode) == 123;
     sortTheList(list, 0, errorCode);
     deleteList(&list);
     return test1;

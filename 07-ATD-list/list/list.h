@@ -17,4 +17,4 @@ List* createList(bool* errorCode);
 bool add(List* list, int position, Value value, bool* errorCode);
 
 // Deletes an element from the specified location.
-Value remove(List* list, int position, bool* errorCode);
+Value removeListElement(List* list, int position, bool* errorCode);

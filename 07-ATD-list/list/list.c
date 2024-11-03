@@ -71,7 +71,7 @@ Position calculateThePosition(List* list, int position, bool *errorCode) {
     return theSelectedElement;
 }
 
-Value remove(List* list, int position, bool* errorCode) {
+Value removeListElement(List* list, int position, bool* errorCode) {
     if (list == NULL) {
         *errorCode = true;
         return true;
