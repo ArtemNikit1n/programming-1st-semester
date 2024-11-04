@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "../list/list.h"
+#include "../TheCyclicList/theCyclicList.h"
 
 typedef struct ListElement* Position;
 
@@ -21,21 +21,15 @@ bool listIsEmpty(List* list, bool* errorCode) {
         *errorCode = true;
         return true;
     }
-    return list->head->next == NULL;
+    return list->head == NULL;
 }
 
 List* createList(bool* errorCode) {
-    ListElement* guardian = calloc(1, sizeof(ListElement));
-    if (guardian == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
     List* list = calloc(1, sizeof(List));
     if (list == NULL) {
         *errorCode = true;
         return NULL;
     }
-    list->head = guardian;
     return list;
 }
 
@@ -45,6 +39,10 @@ void deleteList(List** listDoublePointer) {
         return;
     }
     while (list->head != NULL) {
+        if (list->head->next = list->head) {
+            free(list->head);
+            break;
+        }
         ListElement* next = list->head->next;
         free(list->head);
         list->head = next;
@@ -60,7 +58,7 @@ Position calculateThePosition(List* list, int position, bool* errorCode) {
     }
     Position theSelectedElement = NULL;
     ListElement* head = list->head;
-    for (int i = 0; i < position; ++i) {
+    for (int i = 1; i < position; ++i) {
         if (list->head == NULL) {
             *errorCode = true;
             return NULL;
@@ -81,11 +79,17 @@ Value removeListElement(List* list, int position, bool* errorCode) {
     if (*errorCode || NULL == theSelectedElement) {
         return errorCode;
     }
+    if (theSelectedElement->next == theSelectedElement) {
+        Value value = theSelectedElement->value;
+        free(theSelectedElement);
+        list->head = NULL;
+        return value;
+    }
     ListElement* temp = theSelectedElement->next;
     if (temp == NULL) {
         *errorCode = true;
         return NULL;
-    }
+    } 
     Value value = temp->value;
     theSelectedElement->next = theSelectedElement->next->next;
     free(temp);
@@ -102,7 +106,7 @@ bool add(List* list, int position, Value value, bool* errorCode) {
         return true;
     }
     Position theSelectedElement = calculateThePosition(list, position, errorCode);
-    if (*errorCode || NULL == theSelectedElement) {
+    if (*errorCode) {
         return errorCode;
     }
     ListElement* new = calloc(1, sizeof(ListElement));
@@ -111,6 +115,11 @@ bool add(List* list, int position, Value value, bool* errorCode) {
         return errorCode;
     }
     new->value = value;
+    if (theSelectedElement == NULL) {
+        list->head = new;
+        new->next = new;
+        return false;
+    }
     ListElement* temp = theSelectedElement->next;
     theSelectedElement->next = new;
     new->next = temp;
