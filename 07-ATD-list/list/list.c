@@ -1,8 +1,9 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "list.h"
+#include "../list/list.h"
 
 typedef struct ListElement* Position;
 
@@ -15,7 +16,7 @@ struct List {
     ListElement* head;
 };
 
-bool listIsEmpty(List* list, bool *errorCode) {
+bool listIsEmpty(List* list, bool* errorCode) {
     if (list == NULL) {
         *errorCode = true;
         return true;
@@ -52,7 +53,7 @@ void deleteList(List** listDoublePointer) {
     *listDoublePointer = NULL;
 }
 
-Position calculateThePosition(List* list, int position, bool *errorCode) {
+Position calculateThePosition(List* list, int position, bool* errorCode) {
     if (position < 0) {
         *errorCode = true;
         return errorCode;
@@ -71,7 +72,7 @@ Position calculateThePosition(List* list, int position, bool *errorCode) {
     return theSelectedElement;
 }
 
-Value remove(List* list, int position, bool* errorCode) {
+Value removeListElement(List* list, int position, bool* errorCode) {
     if (list == NULL) {
         *errorCode = true;
         return true;
@@ -95,7 +96,7 @@ Value remove(List* list, int position, bool* errorCode) {
     return value;
 }
 
-bool add(List* list, int position, Value value, bool *errorCode) {
+bool add(List* list, int position, Value value, bool* errorCode) {
     if (list == NULL) {
         *errorCode = true;
         return true;

@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "list.h"
+#include "../list/list.h"
 
 bool testListIsEmptyAndCreateList(bool* errorCode) {
     List* list = createList(errorCode);
@@ -27,9 +27,9 @@ bool testAddAndRemove(bool* errorCode) {
         deleteList(&list);
         return false;
     }
-    bool test1 = remove(list, 2, errorCode) == 3;
-    bool test2 = remove(list, 1, errorCode) == 2;
-    bool test3 = remove(list, 0, errorCode) == 1;
+    bool test1 = removeListElement(list, 2, errorCode) == 3;
+    bool test2 = removeListElement(list, 1, errorCode) == 2;
+    bool test3 = removeListElement(list, 0, errorCode) == 1;
 
     if (*errorCode) {
         deleteList(&list);
