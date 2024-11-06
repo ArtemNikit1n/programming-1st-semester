@@ -83,32 +83,33 @@ Value removeListElement(List* list, Position position, bool* errorCode) {
     return value;
 }
 
-void add(List* list, Position position, Value value, bool* errorCode) {
+Position add(List* list, Position position, Value value, bool* errorCode) {
     if (list == NULL) {
         *errorCode = true;
-        return;
+        return NULL;
     }
     ListElement* new = calloc(1, sizeof(ListElement));
     if (new == NULL) {
         *errorCode = true;
-        return;
+        return NULL;
     }
     new->value = value;
     if (position == NULL) {
         list->first = new;
         list->last = new;
         new->next = new;
-        return;
+        return new;
     }
     if (list->last == position) {
         new->next = list->first;
         position->next = new;
         list->last = new;
-        return;
+        return new;
     }
     ListElement* temp = position->next;
     position->next = new;
     new->next = temp;
+    return new;
 }
 
 Position first(List* list, bool* errorCode) {

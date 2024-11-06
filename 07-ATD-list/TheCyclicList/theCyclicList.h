@@ -19,7 +19,7 @@ void deleteList(List** listDoublePointer);
 List* createList(bool* errorCode);
 
 // Adds a new element to the specified location.
-void add(List* list, Position position, Value value, bool* errorCode);
+Position add(List* list, Position position, Value value, bool* errorCode);
 
 // Deletes an element from the specified location.
 Value removeListElement(List* list, Position position, bool* errorCode);
