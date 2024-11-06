@@ -1,8 +1,13 @@
 #pragma once
 
+// This is necessary to quickly change the type of data stored in the list.
 typedef int Value;
 
+// This is a list type declaration.
 typedef struct List List;
+
+// Pointer to a list item.
+typedef struct ListElement* Position;
 
 // Returns true if the list is empty.
 bool listIsEmpty(List* list, bool* errorCode);
@@ -14,7 +19,19 @@ void deleteList(List** listDoublePointer);
 List* createList(bool* errorCode);
 
 // Adds a new element to the specified location.
-bool add(List* list, int position, Value value, bool* errorCode);
+void add(List* list, Position position, Value value, bool* errorCode);
 
 // Deletes an element from the specified location.
-Value removeListElement(List* list, int position, bool* errorCode);
+Value removeListElement(List* list, Position position, bool* errorCode);
+
+// Returns a pointer to the first added element.
+Position first(List* list, bool *errorCode);
+
+// Returns a pointer to the last added element.
+Position last(List* list, bool* errorCode);
+
+// Returns a pointer to the next element.
+Position next(Position position, bool* errorCode);
+
+// Returns the value at the passed position.
+Value getValue(Position position, bool* errorCode);
