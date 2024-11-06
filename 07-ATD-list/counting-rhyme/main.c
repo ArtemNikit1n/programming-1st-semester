@@ -49,10 +49,10 @@ int getANumberFromTheUser(void) {
 int main(void) {
     setlocale(LC_ALL, "Ru-ru");
     bool errorCode = false;
-    //runTheListTests(&errorCode);
-    //if (errorCode) {
-    //    return errorCode;
-    //}
+    runTheListTests(&errorCode);
+    if (errorCode) {
+        return errorCode;
+    }
     //printf("Введите n (количество войнов):\n");
     //int theNumberOfWars = 41;
     //printf("Каждые два война убивают каждого m-го. Введите m:\n");
@@ -71,8 +71,10 @@ int main(void) {
     add(list, next(first(list, &errorCode), &errorCode), 4, &errorCode);
     add(list, last(list, &errorCode), 5, &errorCode);
 
-    int value = getValue(first(list, &errorCode), &errorCode);
-    removeListElement(list, next(first(list, &errorCode), &errorCode), &errorCode);
-    deleteList(&list);
+    //int value = getValue(first(list, &errorCode), &errorCode);
+    removeListElement(list, last(list, &errorCode), &errorCode);
+
+    // 
+    //deleteList(&list);
     return errorCode;
 }

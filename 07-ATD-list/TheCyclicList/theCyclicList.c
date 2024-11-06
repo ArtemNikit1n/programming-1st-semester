@@ -62,19 +62,19 @@ Value removeListElement(List* list, Position position, bool* errorCode) {
         list->last = NULL;
         return value;
     }
-    ListElement* temp = position;
-    if (list->first == position && list->first->next != position) {
+    if (list->first == position->next) {
         list->first = list->first->next;
     }
-    //if (list->last == position && list->last->next != position) {
-    //    list->last = 
-    //}
+    if (list->last == position->next) {
+        list->last = position;
+    }
+    ListElement* temp = position->next;
     if (temp == NULL) {
         *errorCode = true;
         return NULL;
     } 
-    Value value = position->value;
-    position = position->next;
+    Value value = position->next->value;
+    position->next = position->next->next;
     free(temp);
     if (list->first == NULL) {
         *errorCode = true;
@@ -100,12 +100,6 @@ void add(List* list, Position position, Value value, bool* errorCode) {
         new->next = new;
         return;
     }
-    //if (list->first == position) {
-    //    new->next = position;
-    //    list->last->next = new;
-    //    list->first = new;
-    //    return;
-    //}
     if (list->last == position) {
         new->next = list->first;
         position->next = new;
