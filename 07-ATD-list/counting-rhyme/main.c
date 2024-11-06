@@ -53,9 +53,23 @@ int calculateTheLastRemainingPosition(const int theNumberOfWars, int theDeadOfWa
     return survivor;
 }
 
+bool testForCalculateTheLastRemainingPosition(bool *errorCode) {
+    bool test1 = 31 == calculateTheLastRemainingPosition(41, 3, errorCode);
+    bool test2 = 1 == calculateTheLastRemainingPosition(8, 2, errorCode);
+    bool test3 = 7 == calculateTheLastRemainingPosition(10, 11, errorCode);
+    return test1 && test2 && test3;
+}
+
 int main(void) {
     setlocale(LC_ALL, "Ru-ru");
     bool errorCode = false;
+    if (!testForCalculateTheLastRemainingPosition(&errorCode)) {
+        printf("Тест calculateTheLastRemainingPosition не пройден\n");
+        if (errorCode) {
+            printf("Произошла ошибка или нарушен инвариан\n");
+        }
+        return errorCode;
+    }
     runTheListTests(&errorCode);
     if (errorCode) {
         return errorCode;
@@ -64,7 +78,7 @@ int main(void) {
     int theNumberOfWars = getANumberFromTheUser();
     printf("Убивают каждого m-го. Введите m:\n");
     int theDeadOfWar = getANumberFromTheUser();
-    while (theDeadOfWar <= 0 || theNumberOfWars <= 0) {
+    while (theDeadOfWar < 0 || theNumberOfWars <= 0 ) {
         printf("Так не бывает, попробуйте ещё раз\n");
         printf("Введите n (количество войнов):\n");
         theNumberOfWars = getANumberFromTheUser();
