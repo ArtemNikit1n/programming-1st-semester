@@ -27,7 +27,7 @@ int getANumberFromTheUser(void) {
 int calculateTheLastRemainingPosition(const int theNumberOfWars, int theDeadOfWar, bool* errorCode) {
     List* list = createList(errorCode);
     int j = 1;
-    for (Position i = first(list, errorCode); j <= theNumberOfWars; i/* = next(i, errorCode)*/) {
+    for (Position i = first(list, errorCode); j <= theNumberOfWars; i) {
         i = add(list, i, j, errorCode);
         ++j;
         if (*errorCode) {
@@ -35,17 +35,22 @@ int calculateTheLastRemainingPosition(const int theNumberOfWars, int theDeadOfWa
             return -1;
         }
     }
-
-    int theLastWarriorKilled = -1;
+    int survivor = -1;
+    Position i = last(list, errorCode);
     while (!listIsEmpty(list, errorCode)) {
-        theLastWarriorKilled = removeListElement(list, theDeadOfWar - 1, errorCode);
+        int j = 1;
+        while (j < theDeadOfWar) {
+            i = next(i, errorCode);
+            ++j;
+        }
+        survivor = removeListElement(list, i, errorCode);
         if (*errorCode) {
             deleteList(&list);
             return -1;
         }
-        theDeadOfWar = (theDeadOfWar + 2) % 41;
     }
-    return theLastWarriorKilled;
+    deleteList(&list);
+    return survivor;
 }
 
 int main(void) {
@@ -56,9 +61,24 @@ int main(void) {
         return errorCode;
     }
     printf("Введите n (количество войнов):\n");
-    int theNumberOfWars = 41;
+    int theNumberOfWars = getANumberFromTheUser();
     printf("Убивают каждого m-го. Введите m:\n");
-    int theDeadOfWar = 3;
+    int theDeadOfWar = getANumberFromTheUser();
+    while (theDeadOfWar <= 0 || theNumberOfWars <= 0) {
+        printf("Так не бывает, попробуйте ещё раз\n");
+        printf("Введите n (количество войнов):\n");
+        theNumberOfWars = getANumberFromTheUser();
+        printf("Убивают каждого m-го. Введите m:\n");
+        theDeadOfWar = getANumberFromTheUser();
+    }
+    if (theDeadOfWar == 1) {
+        printf("Все умрут:(\n");
+        return errorCode;
+    }
+    if (theDeadOfWar == 0) {
+        printf("Никто не умрёт:)\n");
+        return errorCode;
+    }
     int theSurvivor = calculateTheLastRemainingPosition(theNumberOfWars, theDeadOfWar, &errorCode);
     if (errorCode) {
         printf("Произошла ошибка\n");
