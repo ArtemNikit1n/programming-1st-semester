@@ -8,6 +8,7 @@
 #include <locale.h>
 #include <stdlib.h>
 
+#include "mergeSort.h"
 #include "../list/list.h"
 #include "../list/testsForList.h"
 
@@ -26,7 +27,7 @@ void printTheBackgroundInformation() {
 }
 
 void printList(const List* list, bool* errorCode) {
-    for (Position i = first(list, errorCode); next(i, errorCode) != NULL; i = next(i, errorCode)) {
+    for (Position i = first(list, errorCode); i != last(list, errorCode); i = next(i, errorCode)) {
         printf("%s ", getValue(next(i, errorCode), errorCode));
         if (*errorCode) {
             printf("Модуль списка сработал некорректно\n");
@@ -96,10 +97,18 @@ void callTheFunction(int functionCode, bool* errorCode) {
     }
     while (functionCode != 0) {
         if (functionCode == 1) {
-            printf("Не готово\n");
+            sortByMerging(records->phones, first(records->phones, errorCode), last(records->phones, errorCode), errorCode);
+            if (*errorCode) {
+                printf("Произошла ошибка\n");
+            }
+            printf("Список был успешно отсортирован!\n");
         }
         if (functionCode == 2) {
-            printf("Не готово\n");
+            sortByMerging(records->names, first(records->names, errorCode), last(records->names, errorCode), errorCode);
+            if (*errorCode) {
+                printf("Произошла ошибка\n");
+            }
+            printf("Список был успешно отсортирован!\n");
         }
         if (functionCode == 3) {
             printf("Имена:\n");

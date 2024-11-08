@@ -121,3 +121,18 @@ void setValue(Position position, Value value, bool* errorCode) {
     }
     position->value = value;
 }
+
+Position last(List* list, bool* errorCode) {
+    if (list == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    Position i = first(list, errorCode);
+    while (next(i, errorCode) != NULL) {
+        i = next(i, errorCode);
+        if (*errorCode) {
+            return NULL;
+        }
+    }
+    return i;
+}
