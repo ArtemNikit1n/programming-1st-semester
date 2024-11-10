@@ -5,9 +5,13 @@
 #include "../list/list.h"
 #include "mergeSort.h"
 
-bool checkTheLexicographicOrder(List* list, bool errorCode) {
-    for (Position i = first(list, errorCode); i != last(list, errorCode); i = next(i, errorCode)) {
-        if (strcmp(i, next(i, errorCode)) > 0) {
+bool checkTheLexicographicOrder(List* list, bool* errorCode) {
+    for (Position i = next(first(list, errorCode), errorCode); i != last(list, errorCode); i = next(i, errorCode)) {
+        Position j = next(i, errorCode);
+        if (strcmp(getValue(i, errorCode), getValue(i, errorCode)) > 0) {
+            return false;
+        }
+        if (*errorCode) {
             return false;
         }
     }
@@ -21,8 +25,9 @@ bool testSortByMerging(bool* errorCode) {
     add(testList, first(testList, errorCode), "Sashka", errorCode);
     add(testList, first(testList, errorCode), "Pashka", errorCode);
 
-    sortByMerging(testList, first(testList, errorCode), last(testList, errorCode), errorCode);
+    sortByMerging(testList, first(testList, errorCode), NULL, errorCode);
     bool test1 = checkTheLexicographicOrder(testList, errorCode);
+    deleteList(&testList);
     return test1;
 }
 

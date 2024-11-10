@@ -14,7 +14,7 @@ void merge(List* list, Position left, Position middle, Position right, bool* err
     Position saveLeft = left;
     Position saveMiddle = middle;
 
-    while (left != middle && middle != right) {
+    while (left != saveMiddle && middle != right) {
         if (strcmp(getValue(left, errorCode), getValue(middle, errorCode)) < 0) {
             add(result, i, getValue(left, errorCode), errorCode);
             i = next(i, errorCode);
@@ -31,10 +31,8 @@ void merge(List* list, Position left, Position middle, Position right, bool* err
             }
         }
     }
-    Position MiddleWithAShift = middle;
-    middle = saveMiddle;
 
-    while (left != middle) {
+    while (left != saveMiddle) {
         add(result, i, getValue(left, errorCode), errorCode);
         i = next(i, errorCode);
         left = next(left, errorCode);
@@ -42,12 +40,11 @@ void merge(List* list, Position left, Position middle, Position right, bool* err
             return;
         }
     }
-    left = saveLeft;
 
-    while (MiddleWithAShift != right) {
-        add(result, i, getValue(MiddleWithAShift, errorCode), errorCode);
+    while (middle != right) {
+        add(result, i, getValue(middle, errorCode), errorCode);
         i = next(i, errorCode);
-        MiddleWithAShift = next(MiddleWithAShift, errorCode);
+        middle = next(middle, errorCode);
         if (*errorCode) {
             return;
         }
@@ -57,6 +54,7 @@ void merge(List* list, Position left, Position middle, Position right, bool* err
     if (*errorCode) {
         return;
     }
+    left = saveLeft;
     for (Position j = left; j != NULL && i != NULL; j = next(j, errorCode)) {
         if (*errorCode) {
             return;

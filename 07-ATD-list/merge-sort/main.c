@@ -103,7 +103,7 @@ void callTheFunction(int functionCode, bool* errorCode) {
     }
     while (functionCode != 0) {
         if (functionCode == 1) {
-            sortByMerging(records->phones, first(records->phones, errorCode), last(records->phones, errorCode), errorCode);
+            sortByMerging(records->phones, first(records->phones, errorCode), NULL, errorCode);
             if (*errorCode) {
                 deleteList(&records->phones);
                 deleteList(&records->names);
@@ -113,7 +113,7 @@ void callTheFunction(int functionCode, bool* errorCode) {
             printf("Список был успешно отсортирован!\n");
         }
         if (functionCode == 2) {
-            sortByMerging(records->names, first(records->names, errorCode), last(records->names, errorCode), errorCode);
+            sortByMerging(records->names, first(records->names, errorCode), NULL, errorCode);
             if (*errorCode) {
                 deleteList(&records->phones);
                 deleteList(&records->names);
@@ -160,11 +160,10 @@ int main(void) {
     if (errorCode) {
         return errorCode;
     }
-    //runMergeSortingTests(&errorCode);
+    runMergeSortingTests(&errorCode);
     if (errorCode) {
         return errorCode;
     }
-
     callTheFunction(getTheFunctionCodeFromTheUser(), &errorCode);
 
     return errorCode;
