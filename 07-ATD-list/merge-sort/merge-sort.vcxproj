@@ -131,6 +131,7 @@
     <ClCompile Include="..\list\testsForList.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mergeSort.c" />
+    <ClCompile Include="testForMergeSort.c" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="phoneDatabase.txt" />
@@ -139,6 +140,7 @@
     <ClInclude Include="..\list\list.h" />
     <ClInclude Include="..\list\testsForList.h" />
     <ClInclude Include="mergeSort.h" />
+    <ClInclude Include="testForMergeSort.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

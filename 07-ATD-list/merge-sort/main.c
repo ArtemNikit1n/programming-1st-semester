@@ -60,6 +60,10 @@ void readFromTheFile(NamesAndPhones* records, const char* filename, bool* errorC
         char* name = calloc(1, sizeof(char) * MAX_NAME_LENGTH);
         char* phone = calloc(1, sizeof(char) * MAX_PHONE_LENGTH);
         scanfResult = fscanf(file, "%s - %s\n", name, phone);
+        if (scanfResult != 2) {
+            break;
+        }
+
         add(names, i, name, errorCode);
         i = next(i, errorCode);
         if (*errorCode) {
@@ -91,6 +95,8 @@ void callTheFunction(int functionCode, bool* errorCode) {
     }
     readFromTheFile(records, "phoneDatabase.txt", errorCode);
     if (*errorCode) {
+        deleteList(&records->phones);
+        deleteList(&records->names);
         free(records);
         printf("Ошибка в чтении из файла памяти");
         return;
@@ -99,14 +105,20 @@ void callTheFunction(int functionCode, bool* errorCode) {
         if (functionCode == 1) {
             sortByMerging(records->phones, first(records->phones, errorCode), last(records->phones, errorCode), errorCode);
             if (*errorCode) {
+                deleteList(&records->phones);
+                deleteList(&records->names);
                 printf("Произошла ошибка\n");
+                return;
             }
             printf("Список был успешно отсортирован!\n");
         }
         if (functionCode == 2) {
             sortByMerging(records->names, first(records->names, errorCode), last(records->names, errorCode), errorCode);
             if (*errorCode) {
+                deleteList(&records->phones);
+                deleteList(&records->names);
                 printf("Произошла ошибка\n");
+                return;
             }
             printf("Список был успешно отсортирован!\n");
         }
@@ -118,6 +130,8 @@ void callTheFunction(int functionCode, bool* errorCode) {
         }
         functionCode = getTheFunctionCodeFromTheUser();
     }
+    deleteList(&records->phones);
+    deleteList(&records->names);
     free(records);
 }
 
@@ -142,10 +156,14 @@ int getTheFunctionCodeFromTheUser(void) {
 int main(void) {
     setlocale(LC_ALL, "Ru-ru");
     bool errorCode = false;
-    //runTheListTests(&errorCode);
-    //if (errorCode) {
-    //    return errorCode;
-    //}
+    runTheListTests(&errorCode);
+    if (errorCode) {
+        return errorCode;
+    }
+    //runMergeSortingTests(&errorCode);
+    if (errorCode) {
+        return errorCode;
+    }
 
     callTheFunction(getTheFunctionCodeFromTheUser(), &errorCode);
 
