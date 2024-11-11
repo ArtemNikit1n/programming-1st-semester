@@ -79,14 +79,14 @@ bool checkForSorting(const int array[], int arrayLength) {
 }
 
 bool testBubbleSort() {
-    int testArray[20] = {20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
+    int testArray[20] = {20, 19, 18, -17, 16, 15, 14, 13, -12, 11, 10, 9, 8, -7, 6, 5, 4, 3, -2, 1};
     bubbleSort(testArray, 20);
     bool test1 = checkForSorting(testArray, 20);
     return test1;
 }
 
 bool testCountingSort() {
-    int testArray[20] = {20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
+    int testArray[20] = {20, 19, 18, 17, 16, 15, 14, 13, 12, 11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1};
     countingSort(testArray, 20);
     bool test1 = checkForSorting(testArray, 20);
     return test1;
@@ -95,15 +95,15 @@ bool testCountingSort() {
 void bubbleAndCountingTask() {
     srand(time(NULL));
 
-//    if (!testBubbleSort()) {
-//        printf("Bubble sorting test failed");
-//        return;
-//    }
-//
-//    if (!testCountingSort()) {
-//        printf("Counting sorting test failed");
-//        return;
-//    }
+    if (!testBubbleSort()) {
+        printf("Bubble sorting test failed");
+        return;
+    }
+
+    if (!testCountingSort()) {
+        printf("Counting sorting test failed");
+        return;
+    }
 
     int arrayForBubble[ARRAY_LENGTH] = {0};
 
