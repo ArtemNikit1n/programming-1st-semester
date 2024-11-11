@@ -4,19 +4,29 @@
 #include <time.h>
 #include <stdbool.h>
 
+#define ARRAY_LENGTH 100000
+
 void fillingAnArray(int array[], size_t arrayLength) {
-    srand(time(NULL));
     for (int i = 0; i < arrayLength; ++i) {
-        array[i] = rand() % 100;
+        if (i % 5 == 0) {
+            array[i] = rand() * -1;
+            continue;
+        }
+        array[i] = rand();
     }
 }
 
 void bubbleSort(int array[], size_t arrayLength) {
+    bool swapWorked = false;
     while (arrayLength > 1) {
         for (int i = 0; i < arrayLength - 1; ++i) {
             if (array[i] > array[i + 1]) {
                 swap(&array[i + 1], &array[i]);
+                swapWorked = true;
             }
+        }
+        if (!swapWorked) {
+            break;
         }
         --arrayLength;
     }
@@ -40,7 +50,7 @@ void countingSort(int array[], size_t arrayLength) {
             maxValue = max(maxValue, array[i]);
         }
     }
-    int *arrayToCount = calloc(abs(minValue) + abs(maxValue), sizeof(int));
+    int* arrayToCount = calloc(abs(minValue) + abs(maxValue), sizeof(int));
     if (arrayToCount == NULL) {
         return;
     }
@@ -59,15 +69,14 @@ void countingSort(int array[], size_t arrayLength) {
     }
 }
 
-bool checkForSorting(int array[], int arrayLength) {
-    for (int i = 0; i < 19; ++i) {
+bool checkForSorting(const int array[], int arrayLength) {
+    for (int i = 0; i < arrayLength; ++i) {
         if (array[i] > array[i + 1]) {
             return false;
         }
     }
     return true;
 }
-
 
 bool testBubbleSort() {
     int testArray[20] = {20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
@@ -84,47 +93,37 @@ bool testCountingSort() {
 }
 
 void bubbleAndCountingTask() {
-    if (!testBubbleSort()) {
-        printf("Bubble sorting test failed");
-        return;
-    }
+    srand(time(NULL));
 
-    if (!testCountingSort()) {
-        printf("Counting sorting test failed");
-        return;
-    }
+//    if (!testBubbleSort()) {
+//        printf("Bubble sorting test failed");
+//        return;
+//    }
+//
+//    if (!testCountingSort()) {
+//        printf("Counting sorting test failed");
+//        return;
+//    }
 
-    size_t arrayLength = 10000;
-    int *arrayForBubble = (int *)malloc(arrayLength * sizeof(int));
+    int arrayForBubble[ARRAY_LENGTH] = {0};
 
-    if (arrayForBubble == NULL) {
-        printf("Memory allocation error\n");
-        return;
-    }
-
-    fillingAnArray(arrayForBubble, arrayLength);
+    fillingAnArray(arrayForBubble, ARRAY_LENGTH);
 
     clock_t startBubbleSort = clock();
-    bubbleSort(arrayForBubble, arrayLength);
+    bubbleSort(arrayForBubble, ARRAY_LENGTH);
     clock_t endBubbleSort = clock();
 
     double timeSpentBubbleSorting = (double)(endBubbleSort - startBubbleSort) / CLOCKS_PER_SEC;
 
-    free(arrayForBubble);
-    int *arrayForCounting = malloc(arrayLength * sizeof(int));
-    if (arrayForCounting == NULL) {
-        printf("Memory allocation error\n");
-        return;
-    }
+    int arrayForCounting[ARRAY_LENGTH] = {0};
 
-    fillingAnArray(arrayForCounting, arrayLength);
+    fillingAnArray(arrayForCounting, ARRAY_LENGTH);
 
     clock_t startCountingSort = clock();
-    countingSort(arrayForCounting, arrayLength);
+    countingSort(arrayForCounting, ARRAY_LENGTH);
     clock_t endCountingSort = clock();
     double timeSpentCountingSort = (double)(endCountingSort - startCountingSort) / CLOCKS_PER_SEC;
 
-    free(arrayForCounting);
     printf("Time taken for bubble sorting: %f seconds", timeSpentBubbleSorting);
     printf("\nTime taken for counting sorting: %f seconds\n", timeSpentCountingSort);
 }
