@@ -9,10 +9,10 @@
 void fillingAnArray(int array[], size_t arrayLength) {
     for (int i = 0; i < arrayLength; ++i) {
         if (i % 5 == 0) {
-            array[i] = rand() * -1;
+            array[i] = (rand() % 100) * -1;
             continue;
         }
-        array[i] = rand();
+        array[i] = rand() % 100;
     }
 }
 
@@ -50,18 +50,18 @@ void countingSort(int array[], size_t arrayLength) {
             maxValue = max(maxValue, array[i]);
         }
     }
-    int* arrayToCount = calloc(abs(minValue) + abs(maxValue), sizeof(int));
+    int* arrayToCount = calloc(abs(minValue) + abs(maxValue) + 1, sizeof(int));
     if (arrayToCount == NULL) {
         return;
     }
     for (int i = 0; i < arrayLength; ++i) {
-        ++arrayToCount[array[i] - 1];
+        ++arrayToCount[array[i] + abs(minValue)];
     }
-    for (int i = 0; i < abs(minValue) + abs(maxValue); ++i) {
+    int j = 0;
+    for (int i = 0; i < abs(minValue) + abs(maxValue) + 1; ++i) {
         if (arrayToCount[i] != 0) {
-            int j = 0;
             while (arrayToCount[i] != 0) {
-                array[j] = i;
+                array[j] = i - abs(minValue);
                 ++j;
                 --arrayToCount[i];
             }
@@ -69,8 +69,8 @@ void countingSort(int array[], size_t arrayLength) {
     }
 }
 
-bool checkForSorting(const int array[], int arrayLength) {
-    for (int i = 0; i < arrayLength; ++i) {
+bool checkTheSortingInAscendingOrder(const int array[], int arrayLength) {
+    for (int i = 0; i < arrayLength - 1; ++i) {
         if (array[i] > array[i + 1]) {
             return false;
         }
@@ -79,16 +79,16 @@ bool checkForSorting(const int array[], int arrayLength) {
 }
 
 bool testBubbleSort() {
-    int testArray[20] = {20, 19, 18, -17, 16, 15, 14, 13, -12, 11, 10, 9, 8, -7, 6, 5, 4, 3, -2, 1};
+    int testArray[20] = {20, 20, 18, -17, 16, 15, 14, 13, -12, 11, 10, 9, 8, -7, 6, 5, 4, 3, -2, 1};
     bubbleSort(testArray, 20);
-    bool test1 = checkForSorting(testArray, 20);
+    bool test1 = checkTheSortingInAscendingOrder(testArray, 20);
     return test1;
 }
 
 bool testCountingSort() {
-    int testArray[20] = {20, 19, 18, 17, 16, 15, 14, 13, 12, 11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1};
+    int testArray[20] = {20, 19, 18, 17, 16, 16, 14, 13, 12, 11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1};
     countingSort(testArray, 20);
-    bool test1 = checkForSorting(testArray, 20);
+    bool test1 = checkTheSortingInAscendingOrder(testArray, 20);
     return test1;
 }
 
@@ -114,6 +114,7 @@ void bubbleAndCountingTask() {
     clock_t endBubbleSort = clock();
 
     double timeSpentBubbleSorting = (double)(endBubbleSort - startBubbleSort) / CLOCKS_PER_SEC;
+    printf("Time taken for bubble sorting: %f seconds", timeSpentBubbleSorting);
 
     int arrayForCounting[ARRAY_LENGTH] = {0};
 
@@ -122,8 +123,7 @@ void bubbleAndCountingTask() {
     clock_t startCountingSort = clock();
     countingSort(arrayForCounting, ARRAY_LENGTH);
     clock_t endCountingSort = clock();
-    double timeSpentCountingSort = (double)(endCountingSort - startCountingSort) / CLOCKS_PER_SEC;
 
-    printf("Time taken for bubble sorting: %f seconds", timeSpentBubbleSorting);
+    double timeSpentCountingSort = (double)(endCountingSort - startCountingSort) / CLOCKS_PER_SEC;
     printf("\nTime taken for counting sorting: %f seconds\n", timeSpentCountingSort);
 }
