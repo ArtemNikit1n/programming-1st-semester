@@ -1,9 +1,6 @@
 #include "headerFile.h"
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
 
 long double exponentiationLineTime(long long baseOfDegree, long exponent) {
     long double result = 1;
@@ -43,63 +40,56 @@ long double exponentiationLogTime(long long baseOfDegree, long exponent) {
 
     return negativeDegree ? 1.0 / result : result;
 }
-
-bool testInputCorrectness(const char *endptrBaseOfDegree, const char *endptrExponent, const long long baseOfDegree) {
-    if (baseOfDegree < 0) {
-        printf("The base of a degree cannot be negative\n");
-        return false;
-    }
-    if (*endptrBaseOfDegree != '\0' || *endptrExponent != '\0') {
-        printf("Input error\n");
-        return false;
-    }
-    return true;
-}
-
+// 9.70590147927644445685e-010
 bool testForCorrectnessOfCalculation() {
     const double epsilon = 0.000001;
     bool test1LineTime = exponentiationLineTime(5, 2) == 25;
     bool test2LineTime = exponentiationLineTime(50, 10) == 97656250000000000;
     bool test3LineTime = 0.000010 - epsilon < exponentiationLineTime(10, -5);
     bool test4LineTime = 0.000010 + epsilon > exponentiationLineTime(10, -5);
+    bool test5LineTime = exponentiationLineTime(-3, 3) == -27;
+    bool test6LineTime = epsilon > exponentiationLineTime(1010, -3);
+    bool allTestLineTime = test1LineTime && test2LineTime && test3LineTime && test4LineTime && test5LineTime && test6LineTime;
 
     bool test1LogTime = exponentiationLogTime(5, 2) == 25;
     bool test2LogTime = exponentiationLogTime(50, 10) == 97656250000000000;
     bool test3LogTime = 0.000010 - epsilon < exponentiationLogTime(10, -5);
     bool test4LogTime = 0.000010 + epsilon > exponentiationLogTime(10, -5);
+    bool test5LogTime = exponentiationLineTime(-3, 3) == -27;
+    bool test6LogTime = epsilon > exponentiationLogTime(1010, -3);
+    bool allTestLogTime = test1LogTime && test2LogTime && test3LogTime && test4LogTime && test5LogTime && test6LogTime;
 
-    return (test1LineTime && test2LineTime && test3LineTime && test4LineTime && test1LogTime && test2LogTime && test3LogTime && test4LogTime);
+    return (allTestLineTime && allTestLogTime);
 }
 
 void exponentiationTask() {
-    char strBaseOfDegree[40];
-    char strExponent[40];
-    char *endptrBaseOfDegree;
-    char *endptrExponent;
-
     long exponent = -1;
     long long baseOfDegree = -1;
 
     if (!testForCorrectnessOfCalculation()) {
-        printf("Tests failed");
+        printf("Tests failed\n");
         return;
     }
 
-    printf("Enter the base of the degree: ");
-    scanf("%s", strBaseOfDegree);
-    baseOfDegree = strtol(strBaseOfDegree, &endptrBaseOfDegree, 10);
+    printf("Enter the base of the degree:\n");
+    if (scanf("%lld", &baseOfDegree) != 1) {
+        printf("The base of the degree is entered incorrectly\n");
+        return;
+    }
 
     printf("Enter the exponent: ");
-    scanf("%s", strExponent);
-    exponent = strtol(strExponent, &endptrExponent, 10);
-
-    if (!testInputCorrectness(endptrBaseOfDegree, endptrExponent, baseOfDegree)) {
+    if (scanf("%ld", &exponent) != 1) {
+        printf("The degree was entered incorrectly\n");
         return;
     }
 
     long double resultExponentiationLogTime = exponentiationLogTime(baseOfDegree, exponent);
     long double resultExponentiationLineTime = exponentiationLineTime(baseOfDegree, exponent);
-    assert(resultExponentiationLineTime > 0 && resultExponentiationLogTime > 0);
+
+    if (exponent == 0 && baseOfDegree == 0) {
+        printf("Zero to the power of zero is an uncertainty\n");
+        return;
+    }
 
     printf("Result for logarithm: %Lf\n", resultExponentiationLogTime);
     printf("Result for line: %Lf\n", resultExponentiationLineTime);
