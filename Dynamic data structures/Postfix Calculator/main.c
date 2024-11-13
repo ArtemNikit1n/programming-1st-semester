@@ -6,37 +6,23 @@
 #include "postfixCalculator.h"
 #include "testsForPostfixCalculator.h"
 #include "testsForUserInput.h"
-#include "testsForStack.h"
+#include "../Stack/testsForStack.h"
 
-void runningTests(bool* errorCode) {
-    if (!testCalculate()) {
+
+void runTests(bool* errorCode) {
+    if (!testCalculate(errorCode)) {
         printf("Тест testCalculate не пройден\n");
+        if (*errorCode) {
+            printf("Код ошибки: 1");
+        }
         *errorCode = true;
+        return;
     }
     if (!testCheckingUserInput()) {
         printf("Тест testCheckingUserInput не пройден\n");
         *errorCode = true;
     }
-    if (!testCreateStack()) {
-        printf("Тест testCreateStack не пройден\n");
-        *errorCode = true;
-    }
-    if (!testDeleteStack()) {
-        printf("Тест testDeleteStack не пройден\n");
-        *errorCode = true;
-    }
-    if (!testIsEmpty()) {
-        printf("Тест testIsEmpty не пройден\n");
-        *errorCode = true;
-    }
-    if (!testPushAndStackSize()) {
-        printf("Тест testPushAndStackSize не пройден\n");
-        *errorCode = true;
-    }
-    if (!testPop()) {
-        printf("Тест testPop не пройден\n");
-        *errorCode = true;
-    }
+    runStackTest(errorCode);
 }
 
 int main(void) {
@@ -44,13 +30,24 @@ int main(void) {
 
     bool errorCode = false;
 
-    runningTests(&errorCode);
+    runTests(&errorCode);
+    if (errorCode) {
+        return errorCode;
+    }
 
     printf("Введите выражение в постфиксной форме:\n"
         "Разрешённые символы: {0123456789+-*/ }\n");
 
-    char* inputString = userInput();
-    printf("%d", calculate(inputString));
+    char* inputString = userInput(&errorCode);
+    if (errorCode) {
+        return errorCode;
+    }
+    int calculatesResult = calculate(inputString, &errorCode);
+    if (errorCode) {
+        printf("Вычисления не были завершены\n");
+        return errorCode;
+    }
+    printf("%d", calculate(inputString, &errorCode));
 
     return errorCode;
 }

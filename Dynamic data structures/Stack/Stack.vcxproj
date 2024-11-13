@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{fe59532f-9207-4b82-9720-12d8bbbd92ee}</ProjectGuid>
-    <RootNamespace>PostfixCalculator</RootNamespace>
+    <ProjectGuid>{111058b6-0e49-4fbb-97a8-53ffb9a62108}</ProjectGuid>
+    <RootNamespace>Stack</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,21 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Stack\stack.c" />
-    <ClCompile Include="..\Stack\testsForStack.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="postfixCalculator.c" />
-    <ClCompile Include="testsForPostfixCalculator.c" />
-    <ClCompile Include="testsForUserInput.c" />
-    <ClCompile Include="userInput.c" />
+    <ClCompile Include="stack.c" />
+    <ClCompile Include="testsForStack.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Stack\stack.h" />
-    <ClInclude Include="..\Stack\testsForStack.h" />
-    <ClInclude Include="postfixCalculator.h" />
-    <ClInclude Include="testsForPostfixCalculator.h" />
-    <ClInclude Include="testsForUserInput.h" />
-    <ClInclude Include="userInput.h" />
+    <ClInclude Include="stack.h" />
+    <ClInclude Include="testsForStack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

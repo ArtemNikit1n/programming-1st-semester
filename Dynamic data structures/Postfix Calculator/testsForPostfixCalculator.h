@@ -1,3 +1,4 @@
 #pragma once
 
-bool testCalculate();
+// Tests for the calculator.
+bool testCalculate(bool* errorCode);

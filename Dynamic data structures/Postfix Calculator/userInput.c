@@ -23,13 +23,17 @@ bool checkingUserInput(const char *string) {
     return true;
 }
 
-char* userInput() {
+char* userInput(bool* errorCode) {
     char* inputString = (char*)calloc(1, sizeof(char));
-    assert(inputString != NULL);
+    if (inputString == NULL) {
+        printf("Ошибка выделения памяти\n");
+        *errorCode = true;
+        return NULL;
+    }
     size_t bufferSize = 1;
     size_t lineLength = 0;
 
-    while (1) {
+    while (true) {
         char oneCharacter = getchar();
 
         if (oneCharacter == '\n') {
@@ -39,7 +43,11 @@ char* userInput() {
         if (lineLength + 1 >= bufferSize) {
             bufferSize *= 2;
             char* tmp = (char*)realloc(inputString, bufferSize * sizeof(char));
-            assert(tmp != NULL);
+            if (tmp == NULL) {
+                printf("Ошибка выделения памяти\n");
+                *errorCode = true;
+                return NULL;
+            }
             inputString = tmp;
         }
         inputString[lineLength++] = oneCharacter;
@@ -51,6 +59,6 @@ char* userInput() {
     } else {
         printf("Выражение не должно содержать буквы, попробуйте ещё раз\n");
         free(inputString);
-        userInput();
+        userInput(errorCode);
     }
 }
