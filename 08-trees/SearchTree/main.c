@@ -66,11 +66,6 @@ int getTheFunctionCodeFromTheUser(void) {
     return functionCode;
 }
 
-NodeValue createNodeValueForMain(int key, char* value) {
-    NodeValue nodeValue = { .key = key, .value = value };
-    return nodeValue;
-}
-
 void callTheFunction(int functionCode, bool* errorCode) {
     Node* root = NULL;
     while (functionCode != 0) {
@@ -86,7 +81,7 @@ void callTheFunction(int functionCode, bool* errorCode) {
             }
 
             if (root == NULL) {
-                NodeValue rootValue = createNodeValueForMain(key, value);
+                NodeValue rootValue = createNodeValue(key, value);
                 root = createNode(rootValue, errorCode);
                 if (*errorCode) {
                     *errorCode = false;
@@ -101,10 +96,32 @@ void callTheFunction(int functionCode, bool* errorCode) {
             addToTheDictionary(root, key, value, errorCode);
         }
         if (functionCode == 2) {
-            printf("Не готово\n");
+            printf("Введите ключ:\n");
+            int theKeyForTheSearch = getNumberFromTheUser();
+            char* theFoundString = findValueByTheKey(root, theKeyForTheSearch, errorCode);
+            if (*errorCode) {
+                *errorCode = false;
+                printf("Ошибка поиска, попробуйте в другой раз\n");
+                functionCode = getTheFunctionCodeFromTheUser();
+                continue;
+            }
+            printf("%s\n", theFoundString);
         }
         if (functionCode == 3) {
-            printf("Не готово\n");
+            printf("Введите ключ:\n");
+            int theKeyForTheSearch = getNumberFromTheUser();
+            char* theFoundString = findValueByTheKey(root, theKeyForTheSearch, errorCode);
+            if (*errorCode) {
+                *errorCode = false;
+                printf("Ошибка поиска, попробуйте в другой раз\n");
+                functionCode = getTheFunctionCodeFromTheUser();
+                continue;
+            }
+            if (theFoundString != NULL) {
+                printf("Ключ найден\n");
+            } else {
+                printf("Ключ не найден\n");
+            }
         }
         if (functionCode == 4) {
             printf("Не готово\n");
@@ -118,6 +135,11 @@ int main(void) {
     bool errorCode = false;
 
     runTheTreeTests(&errorCode);
+    if (errorCode) {
+        return errorCode;
+    }
+
+    runTheDictionaryTests(&errorCode);
     if (errorCode) {
         return errorCode;
     }

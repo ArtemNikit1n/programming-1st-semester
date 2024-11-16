@@ -1,15 +1,12 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "../Tree/tree.h"
 
-NodeValue createNodeValue(int key, char* value) {
-    NodeValue nodeValue = { .key = key, .value = value };
-    return nodeValue;
-}
-
 void addToTheDictionary(Node* node, const int key, const char* value, bool* errorCode) {
     if (getValue(node, errorCode).key == key) {
+        free(getValue(node, errorCode).value);
         setValue(node, createNodeValue(key, value), errorCode);
         return;
     }
@@ -45,9 +42,10 @@ void addToTheDictionary(Node* node, const int key, const char* value, bool* erro
     }
 }
 
-char* findItByTheKey(Node* node, const int key, bool* errorCode) {
+char* findValueByTheKey(Node* node, const int key, bool* errorCode) {
+    char* theFoundString = NULL;
     if (*errorCode) {
-        return;
+        return NULL;
     }
 
     if (getValue(node, errorCode).key == key) {
@@ -59,9 +57,10 @@ char* findItByTheKey(Node* node, const int key, bool* errorCode) {
     }
 
     if (getValue(node, errorCode).key < key) {
-        findItByTheKey(getRightChild(node, errorCode), key, errorCode);
+        theFoundString = findValueByTheKey(getRightChild(node, errorCode), key, errorCode);
     }
     if (getValue(node, errorCode).key > key) {
-        findItByTheKey(getLeftChild(node, errorCode), key, errorCode);
+        theFoundString = findValueByTheKey(getLeftChild(node, errorCode), key, errorCode);
     }
+    return theFoundString;
 }

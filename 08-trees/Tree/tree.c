@@ -86,3 +86,7 @@ void disposeNode(Node** node) {
     *node = NULL;
 }
 
+NodeValue createNodeValue(int key, char* value) {
+    NodeValue nodeValue = { .key = key, .value = value };
+    return nodeValue;
+}

@@ -131,11 +131,13 @@
     <ClCompile Include="..\Tree\tree.c" />
     <ClCompile Include="dictionary.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="testsForDictionary.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Tree\testsForTree.h" />
     <ClInclude Include="..\Tree\tree.h" />
     <ClInclude Include="dictionary.h" />
+    <ClInclude Include="testsForDictionary.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
