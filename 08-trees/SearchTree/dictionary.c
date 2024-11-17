@@ -110,9 +110,16 @@ Node* deleteByKey(Node* node, const int key, bool* errorCode) {
             bool theRightSonIsCloserToTheParent = absoluteDifferenceBetweenTheParentAndTheLeftSon > absoluteDifferenceBetweenTheParentAndTheRightSon;
             if (theRightSonIsCloserToTheParent) {
                 Node* replacementNode = deleteByKey(node, getValue(getRightChild(node, errorCode), errorCode).key, errorCode);
+                Node* saveNode = copyNode(node, errorCode);
+                NodeValue replacementNodeValue = getValue(replacementNode, errorCode);
+                setValue(node, replacementNodeValue, errorCode);
+                return saveNode;
             } else {
                 Node* replacementNode = deleteByKey(node, getValue(getLeftChild(node, errorCode), errorCode).key, errorCode);
-
+                Node* saveNode = copyNode(node, errorCode);
+                NodeValue replacementNodeValue = getValue(replacementNode, errorCode);
+                setValue(node, replacementNodeValue, errorCode);
+                return saveNode;
             }
         }
     }
@@ -136,6 +143,7 @@ Node* deleteByKey(Node* node, const int key, bool* errorCode) {
             addRightChild(node, saveTheReturnedNode, errorCode);
             return saveDeletedNode;
         }
+        return theReturnedNode;
     }
     if (getValue(node, errorCode).key > key) {
         Node* theReturnedNode = deleteByKey(getLeftChild(node, errorCode), key, errorCode);
@@ -152,6 +160,6 @@ Node* deleteByKey(Node* node, const int key, bool* errorCode) {
             addLeftChild(node, saveTheReturnedNode, errorCode);
             return saveDeletedNode;
         }
+        return theReturnedNode;
     }
-    return node;
 }

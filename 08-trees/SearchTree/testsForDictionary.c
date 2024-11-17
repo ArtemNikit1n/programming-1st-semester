@@ -42,11 +42,12 @@ bool testDictionary(bool* errorCode) {
     addToTheDictionary(root, 0, "n", errorCode);
     addToTheDictionary(root, -2, "k", errorCode);
 
-    deleteByKey(root, -3, errorCode);
+    deleteByKey(root, -5, errorCode);
+    bool test7 = findValueByTheKey(root, -5, errorCode) == NULL;
 
     disposeNode(&root);
 
-    return test1 && test2 && test3 && test4 && test5 && test6;
+    return test1 && test2 && test3 && test4 && test5 && test6 && test7;
 }
 
 void runTheDictionaryTests(bool* errorCode) {
