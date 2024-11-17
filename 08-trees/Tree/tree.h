@@ -37,3 +37,6 @@ void disposeNode(Node** node);
 
 // Creates a node value.
 NodeValue createNodeValue(int key, char* value);
+
+// Copies the node, creating a new memory location.
+Node* copyNode(const Node* source, bool* errorCode);

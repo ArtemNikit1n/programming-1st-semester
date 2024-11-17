@@ -124,7 +124,9 @@ void callTheFunction(int functionCode, bool* errorCode) {
             }
         }
         if (functionCode == 4) {
-            printf("Не готово\n");
+            printf("Введите ключ:\n");
+            int theKeyToDelete = getNumberFromTheUser();
+            root = deleteByKey(root, theKeyToDelete, errorCode);
         }
         functionCode = getTheFunctionCodeFromTheUser();
     }

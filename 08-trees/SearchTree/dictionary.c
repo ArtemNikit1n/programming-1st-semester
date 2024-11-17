@@ -42,25 +42,116 @@ void addToTheDictionary(Node* node, const int key, const char* value, bool* erro
     }
 }
 
-char* findValueByTheKey(Node* node, const int key, bool* errorCode) {
-    char* theFoundString = NULL;
+Node* nodeSearch(Node* node, const int key, bool* errorCode) {
+    Node* theFoundNode = NULL;
+
     if (*errorCode) {
         return NULL;
     }
 
     if (getValue(node, errorCode).key == key) {
-        return getValue(node, errorCode).value;
+        return node;
     }
 
     if (getLeftChild(node, errorCode) == NULL && getRightChild(node, errorCode) == NULL && getValue(node, errorCode).key != key) {
         return NULL;
     }
 
+    if (getRightChild(node, errorCode) == NULL) {
+        theFoundNode = nodeSearch(getLeftChild(node, errorCode), key, errorCode);
+    }
+    else if (getLeftChild(node, errorCode) == NULL) {
+        theFoundNode = nodeSearch(getRightChild(node, errorCode), key, errorCode);
+    }
+    else if (getValue(node, errorCode).key < key) {
+        theFoundNode = nodeSearch(getRightChild(node, errorCode), key, errorCode);
+    }
+    else if (getValue(node, errorCode).key > key) {
+        theFoundNode = nodeSearch(getLeftChild(node, errorCode), key, errorCode);
+    }
+    return theFoundNode;
+}
+
+char* findValueByTheKey(Node* node, const int key, bool* errorCode) {
+    Node* resultNodeSearch = nodeSearch(node, key, errorCode);
+    if (resultNodeSearch == NULL) {
+        return NULL;
+    }
+    char* theFoundString = getValue(resultNodeSearch, errorCode).value;
+    if (*errorCode) {
+        return NULL;
+    }
+
+    return theFoundString;
+}
+
+void deleteTheNode(Node* theNodeBeingDeleted, const int key, bool* errorCode) {
+
+}
+
+Node* deleteByKey(Node* node, const int key, bool* errorCode) {
+    if (*errorCode) {
+        return node;
+    }
+
+    if (getValue(node, errorCode).key == key) {
+        if (getLeftChild(node, errorCode) == NULL && getRightChild(node, errorCode) == NULL) {
+            return NULL;
+        }
+        if (getLeftChild(node, errorCode) != NULL && getRightChild(node, errorCode) == NULL) {
+            return getLeftChild(node, errorCode);
+        }
+        if (getLeftChild(node, errorCode) == NULL && getRightChild(node, errorCode) != NULL) {
+            return getRightChild(node, errorCode);
+        }
+        if (getLeftChild(node, errorCode) != NULL && getRightChild(node, errorCode) != NULL) {
+            int absoluteDifferenceBetweenTheParentAndTheLeftSon = abs(abs(getValue(getLeftChild(node, errorCode), errorCode).key) - abs(getValue(node, errorCode).key));
+            int absoluteDifferenceBetweenTheParentAndTheRightSon = abs(abs(getValue(getRightChild(node, errorCode), errorCode).key) - abs(getValue(node, errorCode).key));
+            bool theRightSonIsCloserToTheParent = absoluteDifferenceBetweenTheParentAndTheLeftSon > absoluteDifferenceBetweenTheParentAndTheRightSon;
+            if (theRightSonIsCloserToTheParent) {
+                Node* replacementNode = deleteByKey(node, getValue(getRightChild(node, errorCode), errorCode).key, errorCode);
+            } else {
+                Node* replacementNode = deleteByKey(node, getValue(getLeftChild(node, errorCode), errorCode).key, errorCode);
+
+            }
+        }
+    }
+
+    if (getLeftChild(node, errorCode) == NULL && getRightChild(node, errorCode) == NULL && getValue(node, errorCode).key != key) {
+        return node;
+    }
+
     if (getValue(node, errorCode).key < key) {
-        theFoundString = findValueByTheKey(getRightChild(node, errorCode), key, errorCode);
+        Node* theReturnedNode = deleteByKey(getRightChild(node, errorCode), key, errorCode);
+
+        if (theReturnedNode == NULL) {
+            Node* saveDeletedNode = copyNode(getRightChild(node, errorCode), errorCode);
+            addRightChild(node, NULL, errorCode);
+            return saveDeletedNode;
+        }
+        else if (theReturnedNode == getLeftChild(getRightChild(node, errorCode), errorCode) || theReturnedNode == getRightChild(getRightChild(node, errorCode), errorCode)) {
+            Node* saveTheReturnedNode = copyNode(theReturnedNode, errorCode);
+            Node* saveDeletedNode = copyNode(getRightChild(node, errorCode), errorCode);
+            addRightChild(node, NULL, errorCode);
+            addRightChild(node, saveTheReturnedNode, errorCode);
+            return saveDeletedNode;
+        }
     }
     if (getValue(node, errorCode).key > key) {
-        theFoundString = findValueByTheKey(getLeftChild(node, errorCode), key, errorCode);
+        Node* theReturnedNode = deleteByKey(getLeftChild(node, errorCode), key, errorCode);
+
+        if (theReturnedNode == NULL) {
+            Node* saveDeletedNode = copyNode(getLeftChild(node, errorCode), errorCode);
+            addLeftChild(node, NULL, errorCode);
+            return saveDeletedNode;
+        }
+        else if (theReturnedNode == getLeftChild(getLeftChild(node, errorCode), errorCode) || theReturnedNode == getRightChild(getLeftChild(node, errorCode), errorCode)) {
+            Node* saveTheReturnedNode = copyNode(theReturnedNode, errorCode);
+            Node* saveDeletedNode = copyNode(getLeftChild(node, errorCode), errorCode);
+            addLeftChild(node, NULL, errorCode);
+            addLeftChild(node, saveTheReturnedNode, errorCode);
+            return saveDeletedNode;
+        }
     }
-    return theFoundString;
+    return node;
 }

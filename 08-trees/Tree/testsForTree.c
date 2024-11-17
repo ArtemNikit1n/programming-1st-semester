@@ -36,11 +36,9 @@ bool testAddingAndReadingValues(bool* errorCode) {
     addLeftChild(testNode, test1LeftChild, errorCode);
     addLeftChild(testNode, test2LeftChild, errorCode);
 
-    bool test1 = *errorCode;
-    *errorCode = false;
     Node* getLeftChildResult = getLeftChild(testNode, errorCode);
     NodeValue testValue1 = getValue(getLeftChildResult, errorCode);
-    bool test2 = testValue1.key == -123 && testValue1.value == "Left1";
+    bool test1 = testValue1.key == -321 && testValue1.value == "Left2";
 
     addRightChild(testNode, testRightChild, errorCode);
     setValue(test1LeftChild, createValue(123, "Left"), errorCode);
@@ -53,13 +51,12 @@ bool testAddingAndReadingValues(bool* errorCode) {
 
     NodeValue testValue2 = getValue(test1LeftChild, errorCode);
     NodeValue testValue3 = getValue(testRightChild, errorCode);
-    bool test3 = testValue2.key == 123 && testValue2.value == "Left";
-    bool test4 = testValue3.key == 321 && testValue3.value == "Right";
+    bool test2 = testValue2.key == 123 && testValue2.value == "Left";
+    bool test3 = testValue3.key == 321 && testValue3.value == "Right";
 
-    disposeNode(&test2LeftChild);
     disposeNode(&testNode);
 
-    return !*errorCode && test1 && test2 && test3 && test4;
+    return test1 && test2 && test3;
 }
 
 void runTheTreeTests(bool* errorCode) {

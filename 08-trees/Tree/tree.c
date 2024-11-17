@@ -21,8 +21,7 @@ Node* createNode(NodeValue value, bool* errorCode) {
 
 void addLeftChild(Node* node, Node* child, bool* errorCode) {
     if (node->leftChild != NULL) {
-        *errorCode = true;
-        return;
+        disposeNode(&node->leftChild);
     }
     if (node == NULL) {
         *errorCode = true;
@@ -33,8 +32,7 @@ void addLeftChild(Node* node, Node* child, bool* errorCode) {
 
 void addRightChild(Node* node, Node* child, bool* errorCode) {
     if (node->rightChild != NULL) {
-        *errorCode = true;
-        return;
+        disposeNode(&node->rightChild);
     }
     if (node == NULL) {
         *errorCode = true;
@@ -89,4 +87,32 @@ void disposeNode(Node** node) {
 NodeValue createNodeValue(int key, char* value) {
     NodeValue nodeValue = { .key = key, .value = value };
     return nodeValue;
+}
+
+Node* copyNode(const Node* source, bool* errorCode) {
+    if (source == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+
+    Node* destination = createNode(source->value, errorCode);
+    if (*errorCode) {
+        return NULL;
+    }
+
+    if (source->leftChild != NULL) {
+        destination->leftChild = copyNode(source->leftChild, errorCode);
+        if (*errorCode) {
+            disposeNode(&destination);
+            return NULL;
+        }
+    }
+    if (source->rightChild != NULL) {
+        destination->rightChild = copyNode(source->rightChild, errorCode);
+        if (*errorCode) {
+            disposeNode(&destination);
+            return NULL;
+        }
+    }
+    return destination;
 }
