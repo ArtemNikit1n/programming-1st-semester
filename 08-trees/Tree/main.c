@@ -3,6 +3,7 @@
 #include <locale.h>
 
 #include "../Tree/tree.h"
+#include "../Tree/testsForTree.h"
 
 void printNode(Node* node, bool* errorCode) {
     NodeValue value = getValue(node, errorCode);
