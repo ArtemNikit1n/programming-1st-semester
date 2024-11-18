@@ -59,7 +59,7 @@ Node* getRightChild(Node* node, bool* errorCode) {
 
 NodeValue getValue(Node* node, bool* errorCode) {
     if (node == NULL) {
-        NodeValue incorrectNodeValues = { .key = -1, .value = NULL };
+        NodeValue incorrectNodeValues = -1;
         *errorCode = true;
         return incorrectNodeValues;
     }
@@ -82,11 +82,6 @@ void disposeNode(Node** node) {
     disposeNode((&(*node)->rightChild));
     free(*node);
     *node = NULL;
-}
-
-NodeValue createNodeValue(int key, char* value) {
-    NodeValue nodeValue = { .key = key, .value = value };
-    return nodeValue;
 }
 
 Node* copyNode(const Node* source, bool* errorCode) {

@@ -1,10 +1,7 @@
 #pragma once
 
 // Structure for node values.
-typedef struct {
-    char* value;
-    int key;
-} NodeValue;
+typedef int NodeValue;
 
 // Node structure.
 typedef struct Node Node;
@@ -34,9 +31,6 @@ void setValue(Node* node, NodeValue value, bool* errorCode);
 
 // Deletes a subtree.
 void disposeNode(Node** node);
-
-// Creates a node value.
-NodeValue createNodeValue(int key, char* value);
 
 // Copies the node, creating a new memory location.
 Node* copyNode(const Node* source, bool* errorCode);
