@@ -31,21 +31,35 @@ Node* buildTree(FILE* file, bool* errorCode) {
         }
 
         Node* node = createNode(theCurrentCharacter, errorCode);
+        if (*errorCode) {
+            return NULL;
+        }
+
         if (root == NULL) {
             root = node;
             addLeftChild(node, NULL, errorCode);
             addRightChild(node, NULL, errorCode);
+
             push(stack, node, errorCode);
+            if (*errorCode) {
+                return NULL;
+            }
             continue;
         }
 
         Node* previousOperation = getStackValue(stack);
         if (getLeftChild(previousOperation, errorCode) == NULL) {
             addLeftChild(previousOperation, node, errorCode);
+            if (*errorCode) {
+                return NULL;
+            }
         } 
         else if (getRightChild(previousOperation, errorCode) == NULL) {
             addRightChild(previousOperation, node, errorCode);
             pop(stack, errorCode);
+            if (*errorCode) {
+                return NULL;
+            }
         }
 
         if (!isDigit) {
@@ -53,4 +67,26 @@ Node* buildTree(FILE* file, bool* errorCode) {
         }
     }
     return root;
+}
+
+void readingAPostfixEntry(const Node* node, bool* errorCode) {
+    if (node == NULL) {
+        return '\0';
+    }
+
+    readingAPostfixEntry(getLeftChild(node, errorCode), errorCode);
+    if (*errorCode) {
+        return;
+    }
+
+    readingAPostfixEntry(getRightChild(node, errorCode), errorCode);
+    if (*errorCode) {
+        return;
+    }
+
+    if (getLeftChild(node, errorCode) == NULL && getRightChild(node, errorCode) == NULL) {
+        printf("%d ", getValue(node, errorCode));
+    } else {
+        printf("%c ", getValue(node, errorCode));
+    }
 }

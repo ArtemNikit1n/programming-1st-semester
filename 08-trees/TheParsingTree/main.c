@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <locale.h>
+#include <stdlib.h>
 
 #include "../Tree/tree.h"
 #include "../Tree/testsFortree.h"
@@ -21,13 +22,24 @@ int main(void) {
     //if (errorCode) {
     //    return errorCode;
     //}
-    FILE* file = fopen("arithmeticExpression.txt", "r");
+    const FILE* file = fopen("arithmeticExpression.txt", "r");
     if (file == NULL) {
         printf("Файл не найден\n");
         errorCode = true;
         return errorCode;
     }
 
-    Node* tree = buildTree(file, &errorCode);
+    const Node* tree = buildTree(file, &errorCode);
+
+    fseek(file, 0, SEEK_END);
+    long lengthFile = ftell(file);
+    fclose(file);
+
+    char* postfixEntry = calloc(lengthFile, sizeof(char));
+    readingAPostfixEntry(tree, &errorCode);
+    //printf("%s", postfixEntry);
+
+    free(postfixEntry);
+
     return errorCode;
 }
