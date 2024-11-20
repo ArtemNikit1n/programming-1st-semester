@@ -2,45 +2,21 @@
 #include <locale.h>
 #include <stdlib.h>
 
-#include "stack.h"
+#include "../Stack/stack.h"
 #include "advancedBracketBalance.h"
 #include "userInput.h"
 #include "testsForAdvancedBracketBalance.h"
-#include "testsForStack.h"
-
-void runningTests(bool* errorCode) {
-    if (!testAdvancedBracketBalance()) {
-        printf("Тест testAdvancedBracketBalance не пройден\n");
-        *errorCode = true;
-    }
-    if (!testCreateStack()) {
-        printf("Тест testCreateStack не пройден\n");
-        *errorCode = true;
-    }
-    if (!testDeleteStack()) {
-        printf("Тест testDeleteStack не пройден\n");
-        *errorCode = true;
-    }
-    if (!testIsEmpty()) {
-        printf("Тест testIsEmpty не пройден\n");
-        *errorCode = true;
-    }
-    if (!testPushAndStackSize()) {
-        printf("Тест testPushAndStackSize не пройден\n");
-        *errorCode = true;
-    }
-    if (!testPop()) {
-        printf("Тест testPop не пройден\n");
-        *errorCode = true;
-    }
-}
+#include "../Stack/testsForStack.h"
 
 int main(void) {
     setlocale(LC_ALL, "Ru-ru");
 
     bool errorCode = false;
 
-    runningTests(&errorCode);
+    runStackTest(&errorCode);
+    if (errorCode) {
+        return errorCode;
+    }
 
     printf("Введите строку:\n");
     char* inputString = userInput();

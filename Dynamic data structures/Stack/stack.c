@@ -14,51 +14,49 @@ struct Stack {
     StackElement* head;
 };
 
-Stack* createStack() {
-    return (Stack*)calloc(1, sizeof(Stack));
+Stack* createStack(bool *errorCode) {
+    Stack* stack = (Stack*)calloc(1, sizeof(Stack));
+    if (NULL == stack) {
+        *errorCode = true;
+        return NULL;
+    }
+    return stack;
 }
 
-void deleteStack(Stack* stack) {
+void deleteStack(Stack** stackDoublePointer) {
+    Stack* stack = *stackDoublePointer;
     while (stack->head != NULL) {
-        void* next = stack->head->next;
+        StackElement* next = stack->head->next;
         free(stack->head);
         stack->head = next;
     }
+    free(stack);
+    *stackDoublePointer = NULL;
 }
 
 bool isEmpty(Stack* stack) {
-    bool isEmpty = false;
-
-    if (NULL == stack->head) {
-        isEmpty = true;
-    }
-    return isEmpty;
+    return NULL == stack->head;
 }
 
-void push(Stack* stack, int value) {
+void push(Stack* stack, int value, bool *errorCode) {
     StackElement* element = calloc(1, sizeof(StackElement));
-    assert(element != NULL);
+    if (NULL == element) {
+        *errorCode = true;
+        return;
+    }
     element->value = value;
     element->next = stack->head;
     stack->head = element;
 }
 
-int pop(Stack* stack) {
-    assert(stack->head != NULL);
+int pop(Stack* stack, bool *errorCode) {
+    if (stack->head == NULL) {
+        *errorCode = true;
+        return 0;
+    }
     StackElement* tmp = stack->head;
     int value = stack->head->value;
     stack->head = stack->head->next;
     free(tmp);
     return value;
-}
-
-int stackSize(Stack* stack) {
-    int size = 0;
-    void* head = stack->head;
-    while (stack->head != NULL) {
-        stack->head = stack->head->next;
-        ++size;
-    }
-    stack->head = head;
-    return size;
 }

@@ -18,26 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\Stack\stack.c" />
-    <ClCompile Include="..\Stack\testsForStack.c" />
-    <ClCompile Include="advancedBracketBalance.c" />
-    <ClCompile Include="main.c" />
-    <ClCompile Include="testsForAdvancedBracketBalance.c" />
-    <ClCompile Include="userInput.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Stack\stack.h" />
-    <ClInclude Include="..\Stack\testsForStack.h" />
-    <ClInclude Include="advancedBracketBalance.h" />
-    <ClInclude Include="testsForAdvancedBracketBalance.h" />
-    <ClInclude Include="userInput.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{c40617f4-8afa-496e-a2fa-759cfab2bab1}</ProjectGuid>
-    <RootNamespace>Advancedbracketbalance</RootNamespace>
+    <ProjectGuid>{111058b6-0e49-4fbb-97a8-53ffb9a62108}</ProjectGuid>
+    <RootNamespace>Stack</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -141,6 +126,15 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c" />
+    <ClCompile Include="stack.c" />
+    <ClCompile Include="testsForStack.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stack.h" />
+    <ClInclude Include="testsForStack.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
