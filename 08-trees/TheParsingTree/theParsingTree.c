@@ -69,17 +69,17 @@ Node* buildTree(FILE* file, bool* errorCode) {
     return root;
 }
 
-void readingAPostfixEntry(const Node* node, bool* errorCode) {
+void printAPostfixEntry(const Node* node, bool* errorCode) {
     if (node == NULL) {
         return '\0';
     }
 
-    readingAPostfixEntry(getLeftChild(node, errorCode), errorCode);
+    printAPostfixEntry(getLeftChild(node, errorCode), errorCode);
     if (*errorCode) {
         return;
     }
 
-    readingAPostfixEntry(getRightChild(node, errorCode), errorCode);
+    printAPostfixEntry(getRightChild(node, errorCode), errorCode);
     if (*errorCode) {
         return;
     }
@@ -88,5 +88,32 @@ void readingAPostfixEntry(const Node* node, bool* errorCode) {
         printf("%d ", getValue(node, errorCode));
     } else {
         printf("%c ", getValue(node, errorCode));
+    }
+}
+
+int calculateItFromTheTree(Node* node, bool* errorCode) {
+    if (*errorCode) {
+        return 0;
+    }
+
+    if (getLeftChild(node, errorCode) == NULL && getRightChild(node, errorCode) == NULL) {
+        return getValue(node, errorCode);
+    }
+
+    if (getValue(node, errorCode) == '+') {
+        return calculateItFromTheTree(getRightChild(node, errorCode), errorCode) + calculateItFromTheTree(getLeftChild(node, errorCode), errorCode);
+    }
+    if (getValue(node, errorCode) == '-') {
+        return calculateItFromTheTree(getRightChild(node, errorCode), errorCode) - calculateItFromTheTree(getLeftChild(node, errorCode), errorCode);
+    }
+    if (getValue(node, errorCode) == '*') {
+        return calculateItFromTheTree(getRightChild(node, errorCode), errorCode) * calculateItFromTheTree(getLeftChild(node, errorCode), errorCode);
+    }
+    if (getValue(node, errorCode) == '/') {
+        if (calculateItFromTheTree(getRightChild(node, errorCode), errorCode) == 0) {
+            *errorCode = true;
+            return 0;
+        }
+        return calculateItFromTheTree(getRightChild(node, errorCode), errorCode) / calculateItFromTheTree(getLeftChild(node, errorCode), errorCode);
     }
 }

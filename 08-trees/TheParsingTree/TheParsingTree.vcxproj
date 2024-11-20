@@ -132,6 +132,7 @@
     <ClCompile Include="..\Tree\testsForTree.c" />
     <ClCompile Include="..\Tree\tree.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="testsForTheParsingTree.c" />
     <ClCompile Include="theParsingTree.c" />
   </ItemGroup>
   <ItemGroup>
@@ -139,10 +140,13 @@
     <ClInclude Include="..\Stack\testsForStack.h" />
     <ClInclude Include="..\Tree\testsForTree.h" />
     <ClInclude Include="..\Tree\tree.h" />
+    <ClInclude Include="testsForTheParsingTree.h" />
     <ClInclude Include="theParsingTree.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="arithmeticExpression.txt" />
+    <Text Include="test1.txt" />
+    <Text Include="test2.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

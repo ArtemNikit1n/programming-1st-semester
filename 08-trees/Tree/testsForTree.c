@@ -72,6 +72,7 @@ void runTheTreeTests(bool* errorCode) {
             return;
         }
         printf("Код ошибки: 0\n");
+        *errorCode = true;
         return;
     }
 }

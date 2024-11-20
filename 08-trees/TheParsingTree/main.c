@@ -10,18 +10,25 @@
 #include "../Stack/stack.h"
 #include "../Stack/testsForStack.h"
 #include "theParsingTree.h"
+#include "testsForTheParsingTree.h"
 
 int main(void) {
     setlocale(LC_ALL, "Ru-ru");
+
     bool errorCode = false;
     runTheTreeTests(&errorCode);
     if (errorCode) {
         return errorCode;
     }
-    //runStackTest(&errorCode);
-    //if (errorCode) {
-    //    return errorCode;
-    //}
+    runStackTest(&errorCode);
+    if (errorCode) {
+        return errorCode;
+    }
+    runTheParsingTreeTests(&errorCode);
+    if (errorCode) {
+        return errorCode;
+    }
+
     const FILE* file = fopen("arithmeticExpression.txt", "r");
     if (file == NULL) {
         printf("Файл не найден\n");
@@ -29,17 +36,13 @@ int main(void) {
         return errorCode;
     }
 
-    const Node* tree = buildTree(file, &errorCode);
-
-    fseek(file, 0, SEEK_END);
-    long lengthFile = ftell(file);
+    const Node* root = buildTree(file, &errorCode);
     fclose(file);
 
-    char* postfixEntry = calloc(lengthFile, sizeof(char));
-    readingAPostfixEntry(tree, &errorCode);
-    //printf("%s", postfixEntry);
+    printf("Потсфиксная запись выражения из файла:\n");
+    printAPostfixEntry(root, &errorCode);
 
-    free(postfixEntry);
+    printf("\nРезультат вычислений: %d\n", calculateItFromTheTree(root, &errorCode));
 
     return errorCode;
 }
