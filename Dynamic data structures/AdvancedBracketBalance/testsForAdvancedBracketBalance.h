@@ -1,3 +1,4 @@
 #pragma once
 
-bool testAdvancedBracketBalance();
+// Tests the balance of brackets.
+bool testAdvancedBracketBalance(bool *errorCode);

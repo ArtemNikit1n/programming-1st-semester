@@ -1,15 +1,19 @@
 #include <stdio.h>
 #include <locale.h>
 #include <stdlib.h>
-#include <assert.h>
+#include <stdbool.h>
 
-char* userInput() {
+char* userInput(bool *errorCode) {
     char *inputString = (char *)calloc(1, sizeof(char));
-    assert(inputString != NULL);
+    if (inputString == NULL) {
+        printf("Ошибка выделения памяти, попробуйте позже\n");
+        return;
+    }
+
     size_t bufferSize = 1;
     size_t lineLength = 0;
 
-    while (1) {
+    while (true) {
         char oneCharacter = getchar();
 
         if (oneCharacter == '\n') {
@@ -18,8 +22,12 @@ char* userInput() {
 
         if (lineLength + 1 >= bufferSize) {
             bufferSize *= 2;
-            char *tmp = (char*)realloc(inputString, bufferSize * sizeof(char));
-            assert(tmp != NULL);
+            char* tmp = (char*)realloc(inputString, bufferSize * sizeof(char));
+            if (tmp == NULL) {
+                printf("Ошибка выделения памяти, попробуйте позже\n");
+                *errorCode = true;
+                return NULL;
+            }
             inputString = tmp;
         }
         inputString[lineLength++] = oneCharacter;

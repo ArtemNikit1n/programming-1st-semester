@@ -3,10 +3,13 @@
 
 #include "advancedBracketBalance.h"
 
-bool testAdvancedBracketBalance() {
-    bool test1 = advanceBracketBalance("102938");
-    bool test2 = advanceBracketBalance("([{}])()[{}]");
-    bool test3 = advanceBracketBalance("([)]{}");
-    bool test4 = advanceBracketBalance("{{{123}}}(2[])");
-    return !test1 && test2 && !test3 && !test4;
+bool testAdvancedBracketBalance(bool *errorCode) {
+    bool test1 = checkBracketBalance("102938", errorCode);
+    bool test2 = checkBracketBalance("([{}])()[{}]", errorCode);
+    bool test3 = !checkBracketBalance("([)]{}", errorCode);
+    bool test4 = checkBracketBalance("{{{123}}}(2[])", errorCode);
+    if (*errorCode) {
+        return false;
+    }
+    return test1 && test2 && test3 && test4;
 }

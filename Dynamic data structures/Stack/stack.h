@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 
-// A structure with a pointer to the beginning of the stack.
+// The structure for the stack.
 typedef struct Stack Stack;
 
 // Allocating memory for a new stack.

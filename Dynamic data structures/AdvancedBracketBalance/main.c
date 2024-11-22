@@ -18,12 +18,17 @@ int main(void) {
         return errorCode;
     }
 
+    if (!testAdvancedBracketBalance(&errorCode) || errorCode) {
+        printf("Тесты advancedBracketBalance не пройдены\n"); {
+            errorCode = true;
+            return errorCode;
+        }
+    }
+
     printf("Введите строку:\n");
-    char* inputString = userInput();
+    char* inputString = userInput(&errorCode);
 
-    bool balance = advanceBracketBalance(inputString);
-
-    if (!balance) {
+    if (!checkBracketBalance(inputString, &errorCode)) {
         printf("Баланс скобок не соблюдён");
     } else {
         printf("Баланс скобок не нарушен");

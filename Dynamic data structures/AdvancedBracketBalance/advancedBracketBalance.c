@@ -3,52 +3,43 @@
 
 #include "../Stack/stack.h"
 
-Stack* createSupportiveStack(const char *inputString, bool *errorCode) {
-    int i = 0;
-    Stack* stack = createStack();
-    while (inputString[i] != '\0') {
-        if (inputString[i] == ')') {
-            push(stack, 1, errorCode);
-        }
-        if (inputString[i] == '(') {
-            push(stack, -1, errorCode);
-        }
-        if (inputString[i] == ']') {
-            push(stack, 2, errorCode);
-        }
-        if (inputString[i] == '[') {
-            push(stack, -2, errorCode);
-        }
-        if (inputString[i] == '}') {
-            push(stack, 3, errorCode);
-        }
-        if (inputString[i] == '{') {
-            push(stack, -3, errorCode);
-        }
-        ++i;
-    }
-    return stack;
-}
-
-bool advanceBracketBalance(const char* inputString, bool *errorCode) {
-    Stack* stack = createSupportiveStack(inputString, errorCode);
-    int balance = 0;
-    if (stackSize(stack) % 2 == 1 || stackSize(stack) == 0) {
-        return false;
-    }
-    while (isEmpty(stack) == false) {
-        int previousValue = pop(stack, errorCode);
-        int currentValue = pop(stack, errorCode);
-
-        if ((previousValue < currentValue) || (previousValue > 0 && currentValue < 0)) {
-            balance += previousValue + currentValue;
-            if (balance < 0) {
+bool checkBracketBalance(const char* inputString, bool *errorCode) {
+    Stack* stack = createStack(errorCode);
+    bool balance = true;
+    for (int i = 0; inputString[i] != '\0'; ++i) {
+        if (inputString[i] == '(' || inputString[i] == '[' || inputString[i] == '{') {
+            push(stack, inputString[i], errorCode);
+            if (*errorCode) {
+                deleteStack(&stack);
                 return false;
             }
+            continue;
         }
-        else {
-            return false;
+        if (inputString[i] == ')') {
+            balance = pop(stack, errorCode) == '(';
+            if (*errorCode || !balance) {
+                deleteStack(&stack);
+                return false;
+            }
+            continue;
+        }
+        if (inputString[i] == ']') {
+            balance = pop(stack, errorCode) == '[';
+            if (*errorCode || !balance) {
+                deleteStack(&stack);
+                return false;
+            }
+            continue;
+        }
+        if (inputString[i] == '}') {
+            balance = pop(stack, errorCode) == '{';
+            if (*errorCode || !balance) {
+                deleteStack(&stack);
+                return false;
+            }
+            continue;
         }
     }
-    return balance == 0;
+    deleteStack(&stack);
+    return balance;
 }
