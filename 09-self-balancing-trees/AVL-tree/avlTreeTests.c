@@ -42,21 +42,21 @@ bool testAddingAndDeleteNode(bool* errorCode) {
 
     deleteNode(root, "u", errorCode);
     deleteNode(root, "t", errorCode);
-    bool test5 = searchByKey(root, 10) == NULL;
-    bool test6 = searchByKey(root, 5) == NULL;
+    bool test5 = searchByKey(root, "u") == NULL;
+    bool test6 = searchByKey(root, "t") == NULL;
 
     if (*errorCode) {
         deleteTree(&root);
         return false;
     }
 
-    addNode(root, -10, "m", errorCode);
-    addNode(root, -4, "g", errorCode);
-    addNode(root, 0, "n", errorCode);
-    addNode(root, -2, "k", errorCode);
+    addNode(root, "c", "3", errorCode);
+    addNode(root, "e", "5", errorCode);
+    addNode(root, "k", "11", errorCode);
+    addNode(root, "j", "10", errorCode);
 
-    deleteNode(root, -5, errorCode);
-    bool test7 = searchByKey(root, -5) == NULL;
+    deleteNode(root, "f", errorCode);
+    bool test7 = searchByKey(root, "f") == NULL;
 
     deleteTree(&root);
 

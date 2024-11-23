@@ -105,8 +105,32 @@ Node* addNode(Node* node, const char* key, const char* value, bool* errorCode) {
     return balance(node, errorCode);
 }
 
-Node* copyNode(Node* node, bool* errorCode) {
-    return NULL;
+Node* copyNode(const Node* source, bool* errorCode) {
+    if (source == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+
+    Node* destination = createTree(source->value.key, source->value.value, errorCode);
+    if (*errorCode) {
+        return NULL;
+    }
+
+    if (source->left != NULL) {
+        destination->left = copyNode(source->left, errorCode);
+        if (*errorCode) {
+            deleteTree(&destination);
+            return NULL;
+        }
+    }
+    if (source->right != NULL) {
+        destination->right = copyNode(source->right, errorCode);
+        if (*errorCode) {
+            deleteTree(&destination);
+            return NULL;
+        }
+    }
+    return destination;
 }
 
 Node* deleteNode(Node* node, const char* key, bool* errorCode) {
@@ -153,8 +177,7 @@ Node* deleteNode(Node* node, const char* key, bool* errorCode) {
         Node* theReturnedNode = deleteNode(node->right, key, errorCode);
 
         if (theReturnedNode == NULL) {
-            Node* saveDeletedNode = node->right;
-            free(node->right);
+            Node* saveDeletedNode = copyNode(node->right, errorCode);
             node->right = NULL;
             return saveDeletedNode;
         }
