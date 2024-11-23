@@ -57,7 +57,9 @@ NodeValue getValue(Node* node, bool* errorCode) {
     return node->value;
 }
 
+// ???
 const char* searchByKey(Node* node, const char* key) {
+    const char* foundValue = NULL;
     if (strcmp(node->value.key, key) == 0) {
         return node->value.value;
     }
@@ -67,27 +69,30 @@ const char* searchByKey(Node* node, const char* key) {
     }
 
     if (strcmp(node->value.key, key) < 0) {
-        searchByKey(node->right, key);
+        foundValue = searchByKey(node->right, key);
     }
     if (strcmp(node->value.key, key) > 0) {
-        searchByKey(node->left, key);
+        foundValue = searchByKey(node->left, key);
     }
+    return foundValue;
 }
+// ???
 
 Node* balance(Node* node, bool* errorCode) {
-    return NULL;
+    return node;
 }
 
 Node* addNode(Node* node, const char* key, const char* value, bool* errorCode) {
     if (node == NULL) {
         Node* newNode = createTree(key, value, errorCode);
         if (*errorCode) {
-            return;
+            return NULL;
         }
+        return balance(newNode, errorCode);
     }
     if (strcmp(key, node->value.key) == 0) {
         node->value.value = value;
-        return node;
+        return balance(node, errorCode);
     }
     if (strcmp(key, node->value.key) < 0) {
         node->left = addNode(node->left, key, value, errorCode);
@@ -100,77 +105,81 @@ Node* addNode(Node* node, const char* key, const char* value, bool* errorCode) {
     return balance(node, errorCode);
 }
 
-//Node* deleteNode(Node* node, const char* key, bool* errorCode) {
-//    if (*errorCode) {
-//        return node;
-//    }
-//
-//    if (node->value.key == key) {
-//        if (node->left == NULL && node->right == NULL) {
-//            return NULL;
-//        }
-//        if (node->left != NULL && node->right == NULL) {
-//            return node->left;
-//        }
-//        if (node->left == NULL && node->right != NULL) {
-//            return node->right;
-//        }
-//        if (node->left != NULL && node->right != NULL) {
-//            int absoluteDifferenceParentAndLeftSon = abs(abs(node->left->value.key - abs(node->value.key)));
-//            int absoluteDifferenceParentAndRightSon = abs(abs(node->right->value.key) - abs(node->value.key));
-//            bool rightSonIsCloserToParent = absoluteDifferenceParentAndLeftSon > absoluteDifferenceParentAndRightSon;
-//            if (rightSonIsCloserToParent) {
-//                Node* replacementNode = deleteNode(node, node->right->value.key, errorCode);
-//                Node* saveNode = copyNode(node, errorCode);
-//                node->value.key = replacementNode->value.key;
-//                node->value = replacementNode->value;
-//                return saveNode;
-//            }
-//            else {
-//                Node* replacementNode = deleteNode(node, node->left->value.key, errorCode);
-//                Node* saveNode = copyNode(node, errorCode);
-//                node->value.key = replacementNode->value.key;
-//                node->value.value = replacementNode->value.value;
-//                return saveNode;
-//            }
-//        }
-//    }
-//
-//    if (node->left == NULL && node->right == NULL && node->value.key != key) {
-//        return node;
-//    }
-//
-//    if (node->value.key < key) {
-//        Node* theReturnedNode = deleteNode(node->right, key, errorCode);
-//
-//        if (theReturnedNode == NULL) {
-//            Node* saveDeletedNode = node->right;
-//            free(node->right);
-//            node->right = NULL;
-//            return saveDeletedNode;
-//        }
-//        else if (theReturnedNode == node->right->left || theReturnedNode == node->right->right) {
-//            Node* saveTheReturnedNode = copyNode(theReturnedNode, errorCode);
-//            Node* saveDeletedNode = copyNode(node->right, errorCode);
-//            node->right = saveTheReturnedNode;
-//            return saveDeletedNode;
-//        }
-//        return theReturnedNode;
-//    }
-//    if (node->value.key > key) {
-//        Node* theReturnedNode = deleteNode(node->left, key, errorCode);
-//
-//        if (theReturnedNode == NULL) {
-//            Node* saveDeletedNode = copyNode(node->left , errorCode);
-//            node->left = NULL;
-//            return saveDeletedNode;
-//        }
-//        else if (theReturnedNode == node->left->left || theReturnedNode == node->left->right) {
-//            Node* saveTheReturnedNode = copyNode(theReturnedNode, errorCode);
-//            Node* saveDeletedNode = copyNode(node->left, errorCode);
-//            node->left = saveTheReturnedNode;
-//            return saveDeletedNode;
-//        }
-//        return theReturnedNode;
-//    }
-//}
+Node* copyNode(Node* node, bool* errorCode) {
+    return NULL;
+}
+
+Node* deleteNode(Node* node, const char* key, bool* errorCode) {
+    if (*errorCode) {
+        return node;
+    } 
+
+    if (node->value.key == key) {
+        if (node->left == NULL && node->right == NULL) {
+            return NULL;
+        }
+        if (node->left != NULL && node->right == NULL) {
+            return node->left;
+        }
+        if (node->left == NULL && node->right != NULL) {
+            return node->right;
+        }
+        if (node->left != NULL && node->right != NULL) {
+            int absoluteDifferenceParentAndLeftSon = abs(abs(node->left->value.key - abs(node->value.key)));
+            int absoluteDifferenceParentAndRightSon = abs(abs(node->right->value.key) - abs(node->value.key));
+            bool rightSonIsCloserToParent = absoluteDifferenceParentAndLeftSon > absoluteDifferenceParentAndRightSon;
+            if (rightSonIsCloserToParent) {
+                Node* replacementNode = deleteNode(node, node->right->value.key, errorCode);
+                Node* saveNode = copyNode(node, errorCode);
+                node->value.key = replacementNode->value.key;
+                node->value = replacementNode->value;
+                return saveNode;
+            }
+            else {
+                Node* replacementNode = deleteNode(node, node->left->value.key, errorCode); 
+                Node* saveNode = copyNode(node, errorCode);
+                node->value.key = replacementNode->value.key;
+                node->value.value = replacementNode->value.value;
+                return saveNode;
+            }
+        }
+    }
+
+    if (node->left == NULL && node->right == NULL && node->value.key != key) {
+        return node;
+    }
+
+    if (node->value.key < key) {
+        Node* theReturnedNode = deleteNode(node->right, key, errorCode);
+
+        if (theReturnedNode == NULL) {
+            Node* saveDeletedNode = node->right;
+            free(node->right);
+            node->right = NULL;
+            return saveDeletedNode;
+        }
+        else if (theReturnedNode == node->right->left || theReturnedNode == node->right->right) {
+            Node* saveTheReturnedNode = copyNode(theReturnedNode, errorCode);
+            Node* saveDeletedNode = copyNode(node->right, errorCode);
+            node->right = saveTheReturnedNode;
+            return saveDeletedNode;
+        }
+        return theReturnedNode;
+    }
+    if (node->value.key > key) {
+        Node* theReturnedNode = deleteNode(node->left, key, errorCode);
+
+        if (theReturnedNode == NULL) {
+            Node* saveDeletedNode = copyNode(node->left , errorCode);
+            node->left = NULL;
+            return saveDeletedNode;
+        }
+        else if (theReturnedNode == node->left->left || theReturnedNode == node->left->right) {
+            Node* saveTheReturnedNode = copyNode(theReturnedNode, errorCode);
+            Node* saveDeletedNode = copyNode(node->left, errorCode);
+            node->left = saveTheReturnedNode;
+            return saveDeletedNode;
+        }
+        return theReturnedNode;
+    }
+}
