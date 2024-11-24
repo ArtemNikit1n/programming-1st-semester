@@ -116,20 +116,6 @@ Node* copyNode(const Node* source, bool* errorCode) {
         return NULL;
     }
 
-    if (source->left != NULL) {
-        destination->left = copyNode(source->left, errorCode);
-        if (*errorCode) {
-            deleteTree(&destination);
-            return NULL;
-        }
-    }
-    if (source->right != NULL) {
-        destination->right = copyNode(source->right, errorCode);
-        if (*errorCode) {
-            deleteTree(&destination);
-            return NULL;
-        }
-    }
     return destination;
 }
 
@@ -138,7 +124,7 @@ Node* deleteNode(Node* node, const char* key, bool* errorCode) {
         return node;
     } 
 
-    if (node->value.key == key) {
+    if (strcmp(node->value.key, key) == 0) {
         if (node->left == NULL && node->right == NULL) {
             return NULL;
         }
@@ -149,14 +135,15 @@ Node* deleteNode(Node* node, const char* key, bool* errorCode) {
             return node->right;
         }
         if (node->left != NULL && node->right != NULL) {
-            int absoluteDifferenceParentAndLeftSon = abs(abs(node->left->value.key - abs(node->value.key)));
-            int absoluteDifferenceParentAndRightSon = abs(abs(node->right->value.key) - abs(node->value.key));
-            bool rightSonIsCloserToParent = absoluteDifferenceParentAndLeftSon > absoluteDifferenceParentAndRightSon;
+            int absoluteDifferenceParentAndLeftSon = abs(strcmp(node->left->value.key, node->value.key));
+            int absoluteDifferenceParentAndRightSon = abs(strcmp(node->right->value.key, node->value.key));
+            bool rightSonIsCloserToParent = true /*absoluteDifferenceParentAndLeftSon > absoluteDifferenceParentAndRightSon*/;
             if (rightSonIsCloserToParent) {
                 Node* replacementNode = deleteNode(node, node->right->value.key, errorCode);
                 Node* saveNode = copyNode(node, errorCode);
                 node->value.key = replacementNode->value.key;
                 node->value = replacementNode->value;
+                free(replacementNode);
                 return saveNode;
             }
             else {
@@ -164,45 +151,52 @@ Node* deleteNode(Node* node, const char* key, bool* errorCode) {
                 Node* saveNode = copyNode(node, errorCode);
                 node->value.key = replacementNode->value.key;
                 node->value.value = replacementNode->value.value;
+                free(replacementNode);
                 return saveNode;
             }
         }
     }
 
-    if (node->left == NULL && node->right == NULL && node->value.key != key) {
+    if (node->left == NULL && node->right == NULL && strcmp(node->value.key, key) != 0) {
         return node;
     }
 
-    if (node->value.key < key) {
-        Node* theReturnedNode = deleteNode(node->right, key, errorCode);
+    Node* theReturnedNode = NULL;
+    if (strcmp(node->value.key, key) < 0) {
+        theReturnedNode = deleteNode(node->right, key, errorCode);
 
         if (theReturnedNode == NULL) {
             Node* saveDeletedNode = copyNode(node->right, errorCode);
+            free(node->right);
             node->right = NULL;
             return saveDeletedNode;
         }
         else if (theReturnedNode == node->right->left || theReturnedNode == node->right->right) {
-            Node* saveTheReturnedNode = copyNode(theReturnedNode, errorCode);
             Node* saveDeletedNode = copyNode(node->right, errorCode);
-            node->right = saveTheReturnedNode;
+            free(node->right);
+            node->right = theReturnedNode;
             return saveDeletedNode;
         }
         return theReturnedNode;
     }
-    if (node->value.key > key) {
-        Node* theReturnedNode = deleteNode(node->left, key, errorCode);
+    if (strcmp(node->value.key, key) > 0) {
+        theReturnedNode = deleteNode(node->left, key, errorCode);
 
         if (theReturnedNode == NULL) {
-            Node* saveDeletedNode = copyNode(node->left , errorCode);
+            Node* saveDeletedNode = copyNode(node->left, errorCode);
+            free(node->left);
             node->left = NULL;
             return saveDeletedNode;
         }
         else if (theReturnedNode == node->left->left || theReturnedNode == node->left->right) {
-            Node* saveTheReturnedNode = copyNode(theReturnedNode, errorCode);
             Node* saveDeletedNode = copyNode(node->left, errorCode);
-            node->left = saveTheReturnedNode;
+            free(node->left);
+            node->left = theReturnedNode;
             return saveDeletedNode;
         }
         return theReturnedNode;
+    }
+    if (theReturnedNode != NULL) {
+        free(theReturnedNode);
     }
 }

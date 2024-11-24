@@ -50,8 +50,8 @@ bool testAddingAndDeleteNode(bool* errorCode) {
         return false;
     }
 
-    addNode(root, "c", "3", errorCode);
-    addNode(root, "e", "5", errorCode);
+    addNode(root, "a", "1", errorCode);
+    addNode(root, "g", "7", errorCode);
     addNode(root, "k", "11", errorCode);
     addNode(root, "j", "10", errorCode);
 
@@ -59,7 +59,7 @@ bool testAddingAndDeleteNode(bool* errorCode) {
     bool test7 = searchByKey(root, "f") == NULL;
 
     deleteTree(&root);
-
+    return test1 && test2 && test3 && test4 && test5 && test6 && test7;
 }
 
 void runAVLTreeTests(bool* errorCode) {
