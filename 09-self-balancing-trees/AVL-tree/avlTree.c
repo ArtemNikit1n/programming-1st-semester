@@ -114,8 +114,6 @@ Node* balance(Node* node, bool* errorCode) {
 }
 
 bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
-    static bool changeBalance = false;
-
     if (strcmp(key, node->value.key) == 0) {
         node->value.value = value;
         return false;
@@ -152,10 +150,10 @@ bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
         }
     }
 
-    bool needChangeBalance = false;
+    bool isHeightChanged = false;
     if (strcmp(key, node->value.key) > 0) {
-        needChangeBalance = addNode(node->right, key, value, errorCode);
-        if (needChangeBalance) {
+        isHeightChanged = addNode(node->right, key, value, errorCode);
+        if (isHeightChanged) {
             ++node->balance;
             if (node->balance == 0) {
                 return false;
@@ -167,8 +165,8 @@ bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
         return false;
     }
     if (strcmp(key, node->value.key) < 0) {
-        needChangeBalance = addNode(node->left, key, value, errorCode);
-        if (needChangeBalance) {
+        isHeightChanged = addNode(node->left, key, value, errorCode);
+        if (isHeightChanged) {
             --node->balance;
             if (node->balance == 0) {
                 return false;
@@ -195,23 +193,26 @@ Node* copyNode(const Node* source, bool* errorCode) {
     return destination;
 }
 
-Node* deleteNode(Node* node, const char* key, bool* errorCode) {
+Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* errorCode) {
     if (*errorCode) {
         return node;
     } 
 
     if (strcmp(node->value.key, key) == 0) {
         if (node->left == NULL && node->right == NULL) {
+            *isHeightChanged = true;
             return NULL;
         }
         if (node->left != NULL && node->right == NULL) {
+            *isHeightChanged = true;
             return node->left;
         }
         if (node->left == NULL && node->right != NULL) {
+            *isHeightChanged = true;
             return node->right;
         }
         if (node->left != NULL && node->right != NULL) {
-            Node* replacementNode = deleteNode(node, node->right->value.key, errorCode);
+            Node* replacementNode = deleteNode(node, node->right->value.key, isHeightChanged, errorCode);
             Node* saveNode = copyNode(node, errorCode);
             node->value.key = replacementNode->value.key;
             node->value = replacementNode->value;
@@ -224,42 +225,80 @@ Node* deleteNode(Node* node, const char* key, bool* errorCode) {
         return node;
     }
 
-    Node* theReturnedNode = NULL;
+    Node* returnedNode = NULL;
     if (strcmp(node->value.key, key) < 0) {
-        theReturnedNode = deleteNode(node->right, key, errorCode);
+        returnedNode = deleteNode(node->right, key, isHeightChanged, errorCode);
 
-        if (theReturnedNode == NULL) {
+        if (returnedNode == NULL) {
             Node* saveDeletedNode = copyNode(node->right, errorCode);
             free(node->right);
             node->right = NULL;
+            if (*isHeightChanged) {
+                --node->balance;
+                if (abs(node->balance) >= 1) {
+                    *isHeightChanged = false;
+                }
+            }
             return saveDeletedNode;
         }
-        else if (theReturnedNode == node->right->left || theReturnedNode == node->right->right) {
+        else if (returnedNode == node->right->left || returnedNode == node->right->right) {
             Node* saveDeletedNode = copyNode(node->right, errorCode);
             free(node->right);
-            node->right = theReturnedNode;
+            node->right = returnedNode;
+            if (*isHeightChanged) {
+                --node->balance;
+                if (abs(node->balance) >= 1) {
+                    *isHeightChanged = false;
+                }
+            }
             return saveDeletedNode;
         }
-        return theReturnedNode;
+
+        if (*isHeightChanged) {
+            --node->balance;
+            if (abs(node->balance) >= 1) {
+                *isHeightChanged = false;
+            }
+        }
+        return returnedNode;
     }
     if (strcmp(node->value.key, key) > 0) {
-        theReturnedNode = deleteNode(node->left, key, errorCode);
+        returnedNode = deleteNode(node->left, key, isHeightChanged, errorCode);
 
-        if (theReturnedNode == NULL) {
+        if (returnedNode == NULL) {
             Node* saveDeletedNode = copyNode(node->left, errorCode);
             free(node->left);
             node->left = NULL;
+            if (*isHeightChanged) {
+                ++node->balance;
+                if (abs(node->balance) >= 1) {
+                    *isHeightChanged = false;
+                }
+            }
             return saveDeletedNode;
         }
-        else if (theReturnedNode == node->left->left || theReturnedNode == node->left->right) {
+        else if (returnedNode == node->left->left || returnedNode == node->left->right) {
             Node* saveDeletedNode = copyNode(node->left, errorCode);
             free(node->left);
-            node->left = theReturnedNode;
+            node->left = returnedNode;
+            if (*isHeightChanged) {
+                ++node->balance;
+                if (abs(node->balance) >= 1) {
+                    *isHeightChanged = false;
+                }
+            }
             return saveDeletedNode;
         }
-        return theReturnedNode;
+
+        if (*isHeightChanged) {
+            ++node->balance;
+            if (abs(node->balance) >= 1) {
+                *isHeightChanged = false;
+            }
+        }
+        return returnedNode;
     }
-    if (theReturnedNode != NULL) {
-        free(theReturnedNode);
+    if (returnedNode != NULL) {
+        free(returnedNode);
     }
 }
