@@ -40,8 +40,8 @@ bool testAddingAndDeleteNode(bool* errorCode) {
         return false;
     }
 
-    //deleteNode(root, "u", errorCode);
-    //deleteNode(root, "t", errorCode);
+    deleteNode(root, "u", errorCode);
+    deleteNode(root, "t", errorCode);
     bool test5 = searchByKey(root, "u") == NULL;
     bool test6 = searchByKey(root, "t") == NULL;
 
@@ -55,7 +55,7 @@ bool testAddingAndDeleteNode(bool* errorCode) {
     addNode(root, "k", "11", errorCode);
     addNode(root, "j", "10", errorCode);
 
-    //deleteNode(root, "f", errorCode);
+    deleteNode(root, "f", errorCode);
     bool test7 = searchByKey(root, "f") == NULL;
 
     deleteTree(&root);

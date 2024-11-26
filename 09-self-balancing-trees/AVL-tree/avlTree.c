@@ -113,36 +113,38 @@ Node* balance(Node* node, bool* errorCode) {
     return node;
 }
 
-Node* addNode(Node* node, const char* key, const char* value, bool* errorCode) {
+bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
     static bool changeBalance = false;
-
-    if (node == NULL) {
-        Node* newNode = createTree(key, value, errorCode);
-        if (*errorCode) {
-            return NULL;
-        }
-        changeBalance = true;
-        return balance(newNode, errorCode);
-    }
 
     if (strcmp(key, node->value.key) == 0) {
         node->value.value = value;
-        return balance(node, errorCode);
+        return false;
     }
 
-    if (strcmp(key, node->value.key) < 0) {
-        node->left = addNode(node->left, key, value, errorCode); 
-        if (changeBalance) {
-            --node->balance;
+    if (node->left == NULL && strcmp(key, node->value.key) < 0) {
+        Node* newNode = createTree(key, value, errorCode);
+        if (*errorCode) {
+            return false;
         }
+        node->left = newNode;
+        return true;
     }
+    else if (node->right == NULL && strcmp(key, node->value.key) > 0) {
+        Node* newNode = createTree(key, value, errorCode);
+        if (*errorCode) {
+            return false;
+        }
+        node->right = newNode;
+        return true;
+    }
+
     if (strcmp(key, node->value.key) > 0) {
-        node->right = addNode(node->right, key, value, errorCode);
-        if (changeBalance) {
-            ++node->balance;
-        }
+        addNode(node->right, key, value, errorCode);
     }
-    return balance(node, errorCode);
+    if (strcmp(key, node->value.key) < 0) {
+        addNode(node->left, key, value, errorCode);
+    }
+    balance(node, errorCode);
 }
 
 Node* copyNode(const Node* source, bool* errorCode) {
