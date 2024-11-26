@@ -127,7 +127,14 @@ bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
             return false;
         }
         node->left = newNode;
-        return true;
+
+        --node->balance;
+        if (node->balance == 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
     else if (node->right == NULL && strcmp(key, node->value.key) > 0) {
         Node* newNode = createTree(key, value, errorCode);
@@ -135,16 +142,43 @@ bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
             return false;
         }
         node->right = newNode;
-        return true;
+
+        ++node->balance;
+        if (node->balance == 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
+    bool needChangeBalance = false;
     if (strcmp(key, node->value.key) > 0) {
-        addNode(node->right, key, value, errorCode);
+        needChangeBalance = addNode(node->right, key, value, errorCode);
+        if (needChangeBalance) {
+            ++node->balance;
+            if (node->balance == 0) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        return false;
     }
     if (strcmp(key, node->value.key) < 0) {
-        addNode(node->left, key, value, errorCode);
+        needChangeBalance = addNode(node->left, key, value, errorCode);
+        if (needChangeBalance) {
+            --node->balance;
+            if (node->balance == 0) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        return false;
     }
-    balance(node, errorCode);
 }
 
 Node* copyNode(const Node* source, bool* errorCode) {
@@ -177,25 +211,12 @@ Node* deleteNode(Node* node, const char* key, bool* errorCode) {
             return node->right;
         }
         if (node->left != NULL && node->right != NULL) {
-            int absoluteDifferenceParentAndLeftSon = abs(strcmp(node->left->value.key, node->value.key));
-            int absoluteDifferenceParentAndRightSon = abs(strcmp(node->right->value.key, node->value.key));
-            bool rightSonIsCloserToParent = true /*absoluteDifferenceParentAndLeftSon > absoluteDifferenceParentAndRightSon*/;
-            if (rightSonIsCloserToParent) {
-                Node* replacementNode = deleteNode(node, node->right->value.key, errorCode);
-                Node* saveNode = copyNode(node, errorCode);
-                node->value.key = replacementNode->value.key;
-                node->value = replacementNode->value;
-                free(replacementNode);
-                return saveNode;
-            }
-            else {
-                Node* replacementNode = deleteNode(node, node->left->value.key, errorCode); 
-                Node* saveNode = copyNode(node, errorCode);
-                node->value.key = replacementNode->value.key;
-                node->value.value = replacementNode->value.value;
-                free(replacementNode);
-                return saveNode;
-            }
+            Node* replacementNode = deleteNode(node, node->right->value.key, errorCode);
+            Node* saveNode = copyNode(node, errorCode);
+            node->value.key = replacementNode->value.key;
+            node->value = replacementNode->value;
+            free(replacementNode);
+            return saveNode;
         }
     }
 
