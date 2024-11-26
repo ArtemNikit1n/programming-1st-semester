@@ -81,20 +81,25 @@ Node* rotateLeft(Node* a) {
     Node* c = b->left;
     b->left = a;
     a->right = c;
-    return a;
     return b;
 }
 
-Node* rotateRight(Node* node) {
-    return node;
+Node* rotateRight(Node* a) {
+    Node* b = a->left;
+    Node* c = b->right;
+    b->right = a;
+    a->left = c;
+    return b;
 }
 
-Node* bigRotateLeft(Node* node) {
-    return node;
+Node* bigRotateLeft(Node* a) {
+    a->right = rotateRight(a->right);
+    return rotateLeft(a);
 }
 
-Node* bigRotateRight(Node* node) {
-    return node;
+Node* bigRotateRight(Node* a) {
+    a->left = rotateLeft(a->left);
+    return rotateRight(a);
 }
 
 Node* balance(Node* node, bool* errorCode) {
