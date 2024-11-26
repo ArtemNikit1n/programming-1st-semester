@@ -57,7 +57,6 @@ NodeValue getValue(Node* node, bool* errorCode) {
     return node->value;
 }
 
-// ???
 const char* searchByKey(Node* node, const char* key) {
     const char* foundValue = NULL;
     if (strcmp(node->value.key, key) == 0) {
@@ -76,31 +75,72 @@ const char* searchByKey(Node* node, const char* key) {
     }
     return foundValue;
 }
-// ???
+
+Node* rotateLeft(Node* a) {
+    Node* b = a->right;
+    Node* c = b->left;
+    b->left = a;
+    a->right = c;
+    return a;
+    return b;
+}
+
+Node* rotateRight(Node* node) {
+    return node;
+}
+
+Node* bigRotateLeft(Node* node) {
+    return node;
+}
+
+Node* bigRotateRight(Node* node) {
+    return node;
+}
 
 Node* balance(Node* node, bool* errorCode) {
+    if (node->balance == 2) {
+        if (node->right->balance >= 0) {
+            return rotateLeft(node);
+        }
+        return bigRotateLeft(node);
+    }
+    if (node->balance == -2) {
+        if (node->left->balance <= 0) {
+            return rotateRight(node);
+        }
+        return bigRotateRight(node);
+    }
     return node;
 }
 
 Node* addNode(Node* node, const char* key, const char* value, bool* errorCode) {
+    static bool changeBalance = false;
+
     if (node == NULL) {
         Node* newNode = createTree(key, value, errorCode);
         if (*errorCode) {
             return NULL;
         }
+        changeBalance = true;
         return balance(newNode, errorCode);
     }
+
     if (strcmp(key, node->value.key) == 0) {
         node->value.value = value;
         return balance(node, errorCode);
     }
+
     if (strcmp(key, node->value.key) < 0) {
-        node->left = addNode(node->left, key, value, errorCode);
-        --node->balance;
+        node->left = addNode(node->left, key, value, errorCode); 
+        if (changeBalance) {
+            --node->balance;
+        }
     }
     if (strcmp(key, node->value.key) > 0) {
         node->right = addNode(node->right, key, value, errorCode);
-        ++node->balance;
+        if (changeBalance) {
+            ++node->balance;
+        }
     }
     return balance(node, errorCode);
 }
