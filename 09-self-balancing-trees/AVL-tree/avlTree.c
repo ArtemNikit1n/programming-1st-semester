@@ -102,15 +102,21 @@ Node* bigRotateRight(Node* a) {
     return rotateRight(a);
 }
 
-Node* balance(Node* node, bool* errorCode) {
+Node* balance(Node* node) {
     if (node->balance == 2) {
         if (node->right->balance >= 0) {
+            --node->balance;
+            --node->right->balance;
             return rotateLeft(node);
         }
+        node->balance -= 2;
+        ++node->right->balance;
         return bigRotateLeft(node);
     }
     if (node->balance == -2) {
         if (node->left->balance <= 0) {
+            ++node->balance;
+            ++node->left->balance;
             return rotateRight(node);
         }
         return bigRotateRight(node);
@@ -132,6 +138,7 @@ bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
         node->left = newNode;
 
         --node->balance;
+        node = balance(node);
         if (node->balance == 0) {
             return false;
         }
@@ -147,6 +154,7 @@ bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
         node->right = newNode;
 
         ++node->balance;
+        node = balance(node);
         if (node->balance == 0) {
             return false;
         }
@@ -160,6 +168,7 @@ bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
         isHeightChanged = addNode(node->right, key, value, errorCode);
         if (isHeightChanged) {
             ++node->balance;
+            node = balance(node);
             if (node->balance == 0) {
                 return false;
             }
@@ -173,6 +182,7 @@ bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
         isHeightChanged = addNode(node->left, key, value, errorCode);
         if (isHeightChanged) {
             --node->balance;
+            node = balance(node);
             if (node->balance == 0) {
                 return false;
             }
@@ -306,4 +316,9 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
     if (returnedNode != NULL) {
         free(returnedNode);
     }
+}
+
+NodeValue createNodeValue(const char* key, const char* value) {
+    NodeValue nodeValue = { .key = key, .value = value };
+    return nodeValue;
 }
