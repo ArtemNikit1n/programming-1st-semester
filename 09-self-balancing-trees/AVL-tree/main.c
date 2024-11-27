@@ -1,9 +1,8 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include <locale.h>
 #include <string.h>
 
 #include "avlTree.h"
@@ -11,11 +10,11 @@
 
 void printTheBackgroundInformation() {
     printf(
-        "0 – Выход\n"
-        "1 – Äîáàâèòü çíà÷åíèå â ñëîâàðü\n"
-        "2 – Âûâåñòè çíà÷åíèå ïî êëþ÷ó\n"
-        "3 – Ïðîâåðèòü íàëè÷èå çàäàííîãî êëþ÷à â ñëîâàðå\n"
-        "4 - Óäàëèòü çàäàííûé êëþ÷ è ñâÿçàííîå ñ íèì çíà÷åíèå èç ñëîâàðÿ\n\n"
+        "0 - Exit\n"
+        "1 - Add a value by key to the dictionary. If such a key already exists, the value is replaced with a new one.\n"
+        "2 - Get the key value from the dictionary.\n"
+        "3 - Check for the specified key.\n"
+        "4 - Delete the specified key and its associated value from the dictionary.\n\n"
     );
 }
 
@@ -31,10 +30,10 @@ char* getValueFromTheUser(bool* errorCode) {
         *errorCode = true;
         return NULL;
     }
-    printf("Ââåäèòå çíà÷åíèå:\n");
+
     scanf("%101s", value);
     while (strlen(value) == buffer) {
-        printf("Ââåäåíà ñëèøêîì äëèííàÿ ñòðîêà, ïîïðîáóéòå åù¸ ðàç\n");
+        printf("The string size is too large. Try again\n");
         clearBuffer();
         scanf("%101s", value);
     }
@@ -46,7 +45,7 @@ int getTheFunctionCodeFromTheUser(void) {
     printTheBackgroundInformation();
     int scanfReturns = scanf("%d", &functionCode);
     while (functionCode > 4 || functionCode < 0 || scanfReturns != 1) {
-        printf("Ââåä¸í íåêîððåêòíûé íîìåð êîìàíäû, ïîïðîáóéòå åù¸ ðàç:\n");
+        printf("Incorrect number. Please try again:\n");
         printTheBackgroundInformation();
         clearBuffer();
         scanfReturns = scanf("%d", &functionCode);
@@ -58,12 +57,13 @@ void callTheFunction(int functionCode, bool* errorCode) {
     Node* root = NULL;
     while (functionCode != 0) {
         if (functionCode == 1) {
-            printf("Ââåäèòå êëþ÷:\n");
+            printf("Enter the key:\n");
             const char* key = getValueFromTheUser(errorCode);
+            printf("Enter the value:\n");
             const char* value = getValueFromTheUser(errorCode);
             if (*errorCode) {
                 *errorCode = false;
-                printf("Îøèáêà âûäåëåíèÿ ïàìÿòè, ïîïðîáóéòå â äðóãîé ðàç\n");
+                printf("Memory allocation error. Try again\n");
                 functionCode = getTheFunctionCodeFromTheUser();
                 continue;
             }
@@ -73,7 +73,7 @@ void callTheFunction(int functionCode, bool* errorCode) {
                 if (*errorCode) {
                     *errorCode = false;
                     free(value);
-                    printf("Îøèáêà âûäåëåíèÿ ïàìÿòè, ïîïðîáóéòå â äðóãîé ðàç\n");
+                    printf("Memory allocation error. Try again\n");
                     functionCode = getTheFunctionCodeFromTheUser();
                     continue;
                 }
@@ -83,40 +83,46 @@ void callTheFunction(int functionCode, bool* errorCode) {
             addNode(root, key, value, errorCode);
         }
         if (functionCode == 2) {
-            printf("Ââåäèòå êëþ÷:\n");
+            printf("Enter the key:\n");
             const char* theKeyForTheSearch = getValueFromTheUser(errorCode);
             const char* theFoundString = searchByKey(root, theKeyForTheSearch);
             if (*errorCode) {
                 *errorCode = false;
-                printf("Îøèáêà ïîèñêà, ïîïðîáóéòå â äðóãîé ðàç\n");
-                functionCode = getTheFunctionCodeFromTheUser();
-                continue;
-            }
-            printf("%s\n", theFoundString);
-        }
-        if (functionCode == 3) {
-            printf("Ââåäèòå êëþ÷:\n");
-            const char* theKeyForTheSearch = getValueFromTheUser(errorCode);
-            const char* theFoundString = searchByKey(root, theKeyForTheSearch);
-            if (*errorCode) {
-                *errorCode = false;
-                printf("Îøèáêà ïîèñêà, ïîïðîáóéòå â äðóãîé ðàç\n");
+                printf("Error. Try again later\n");
                 functionCode = getTheFunctionCodeFromTheUser();
                 continue;
             }
             if (theFoundString != NULL) {
-                printf("Êëþ÷ íàéäåí\n");
+                printf("%s\n", theFoundString);
             }
             else {
-                printf("Êëþ÷ íå íàéäåí\n");
+                printf("The key was not found\n");
+            }
+        }
+        if (functionCode == 3) {
+            printf("Enter the key:\n");
+            const char* keyForSearch = getValueFromTheUser(errorCode);
+            const char* theFoundString = searchByKey(root, keyForSearch);
+            if (*errorCode) {
+                *errorCode = false;
+                printf("Error. Try again later\n");
+                functionCode = getTheFunctionCodeFromTheUser();
+                continue;
+            }
+            if (theFoundString != NULL) {
+                printf("The key was found\n");
+            }
+            else {
+                printf("The key was not found\n");
             }
         }
         if (functionCode == 4) {
-            printf("Ââåäèòå êëþ÷:\n");
+            printf("Enter the key:\n");
             const char* theKeyToDelete = getValueFromTheUser(errorCode);
             bool isHeightChanged = false;
             root = deleteNode(root, theKeyToDelete, &isHeightChanged, errorCode);
             isHeightChanged = false;
+            printf("The value has been deleted!\n");
         }
         functionCode = getTheFunctionCodeFromTheUser();
     }

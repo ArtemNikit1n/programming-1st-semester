@@ -58,6 +58,10 @@ NodeValue getValue(Node* node, bool* errorCode) {
 }
 
 const char* searchByKey(Node* node, const char* key) {
+    if (node == NULL) {
+        return NULL;
+    }
+
     const char* foundValue = NULL;
     if (strcmp(node->value.key, key) == 0) {
         return node->value.value;
