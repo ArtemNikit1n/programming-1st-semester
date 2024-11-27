@@ -55,6 +55,8 @@ int getTheFunctionCodeFromTheUser(void) {
 
 void callTheFunction(int functionCode, bool* errorCode) {
     Node* root = NULL;
+    bool isHeightChanged = false;
+
     while (functionCode != 0) {
         if (functionCode == 1) {
             printf("Enter the key:\n");
@@ -80,7 +82,8 @@ void callTheFunction(int functionCode, bool* errorCode) {
                 functionCode = getTheFunctionCodeFromTheUser();
                 continue;
             }
-            addNode(root, key, value, errorCode);
+            root = addNode(root, key, value, &isHeightChanged, errorCode);
+            isHeightChanged = false;
         }
         if (functionCode == 2) {
             printf("Enter the key:\n");
@@ -119,7 +122,6 @@ void callTheFunction(int functionCode, bool* errorCode) {
         if (functionCode == 4) {
             printf("Enter the key:\n");
             const char* theKeyToDelete = getValueFromTheUser(errorCode);
-            bool isHeightChanged = false;
             root = deleteNode(root, theKeyToDelete, &isHeightChanged, errorCode);
             isHeightChanged = false;
             printf("The value has been deleted!\n");

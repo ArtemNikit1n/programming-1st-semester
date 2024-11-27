@@ -19,11 +19,18 @@ bool testDeleteTreeAndCreateTree(bool* errorCode) {
 
 bool testAddingAndDeleteNode(bool* errorCode) {
     Node* root = createTree("o", "15", errorCode);
-    addNode(root, "f", "6", errorCode);
-    addNode(root, "t", "20", errorCode);
-    addNode(root, "s", "19", errorCode);
-    addNode(root, "u", "21", errorCode);
-    addNode(root, "h", "8", errorCode);
+    bool isHeightChanged = false;
+
+    root = addNode(root, "f", "6", &isHeightChanged, errorCode);
+    isHeightChanged = false;
+    root = addNode(root, "t", "20", &isHeightChanged, errorCode);
+    isHeightChanged = false;
+    root = addNode(root, "s", "19", &isHeightChanged, errorCode);
+    isHeightChanged = false;
+    root = addNode(root, "u", "21", &isHeightChanged, errorCode);
+    isHeightChanged = false;
+    root = addNode(root, "h", "8", &isHeightChanged, errorCode);
+    isHeightChanged = false;
 
     if (*errorCode) {
         deleteTree(&root);
@@ -39,10 +46,10 @@ bool testAddingAndDeleteNode(bool* errorCode) {
         deleteTree(&root);
         return false;
     }
-    bool isHeightChanged = false;
     deleteNode(root, "u", &isHeightChanged, errorCode);
     isHeightChanged = false;
     deleteNode(root, "t", &isHeightChanged, errorCode);
+    isHeightChanged = false;
     bool test5 = searchByKey(root, "u") == NULL;
     bool test6 = searchByKey(root, "t") == NULL;
 
@@ -51,10 +58,14 @@ bool testAddingAndDeleteNode(bool* errorCode) {
         return false;
     }
 
-    addNode(root, "a", "1", errorCode);
-    addNode(root, "g", "7", errorCode);
-    addNode(root, "k", "11", errorCode);
-    addNode(root, "j", "10", errorCode);
+    root = addNode(root, "a", "1", &isHeightChanged, errorCode);
+    isHeightChanged = false;
+    root = addNode(root, "g", "7", &isHeightChanged, errorCode);
+    isHeightChanged = false;
+    root = addNode(root, "k", "11", &isHeightChanged, errorCode);
+    isHeightChanged = false;
+    root = addNode(root, "j", "10", &isHeightChanged, errorCode);
+    isHeightChanged = false;
 
     isHeightChanged = false;
     deleteNode(root, "f", &isHeightChanged, errorCode);

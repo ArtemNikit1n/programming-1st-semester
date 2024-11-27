@@ -109,92 +109,144 @@ Node* bigRotateRight(Node* a) {
 Node* balance(Node* node) {
     if (node->balance == 2) {
         if (node->right->balance >= 0) {
-            --node->balance;
-            --node->right->balance;
+            if (node->right->balance == 1) {
+                node->balance = 0;
+                node->right->balance = 0;
+            } else {
+                node->balance = 1;
+                node->right->balance = -1;
+            }
             return rotateLeft(node);
         }
-        node->balance -= 2;
-        ++node->right->balance;
+
+        if (node->right->balance == -1 && node->right->left->balance == -1) {
+            node->balance = 0;
+            node->right->balance = 1;
+            node->right->left->balance = 0;
+        }
+        if (node->right->balance == -1 && node->right->left->balance == 1) {
+            node->balance = -1;
+            node->right->balance = 0;
+            node->right->left->balance = 0;
+        }
+        if (node->right->balance == -1 && node->right->left->balance == 0) {
+            node->balance = 0;
+            node->right->balance = 0;
+            node->right->left->balance = 0;
+        }
         return bigRotateLeft(node);
     }
     if (node->balance == -2) {
         if (node->left->balance <= 0) {
-            ++node->balance;
-            ++node->left->balance;
+            if (node->left->balance == -1) {
+                node->balance = 0;
+                node->left->balance = 0;
+            } else {
+                node->balance = -1;
+                node->left->balance = 1;
+            }
             return rotateRight(node);
+        }
+
+        if (node->left->balance == 1 && node->left->right->balance == 1) {
+            node->balance = 0;
+            node->left->balance = -1;
+            node->left->right->balance = 0;
+        }
+        if (node->left->balance == 1 && node->left->right->balance == -1) {
+            node->balance = 1;
+            node->left->balance = 0;
+            node->left->right->balance = 0;
+        }
+        if (node->left->balance == 1 && node->left->right->balance == 0) {
+            node->balance = 0;
+            node->left->balance = 0;
+            node->left->right->balance = 0;
         }
         return bigRotateRight(node);
     }
     return node;
 }
 
-bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
+Node* addNode(Node* node, const char* key, const char* value, bool* isHeightChanged, bool* errorCode) {
     if (strcmp(key, node->value.key) == 0) {
         node->value.value = value;
-        return false;
+        *isHeightChanged = false;
+        return node;
     }
 
     if (node->left == NULL && strcmp(key, node->value.key) < 0) {
         Node* newNode = createTree(key, value, errorCode);
         if (*errorCode) {
-            return false;
+            *isHeightChanged = false;
+            return node;
         }
         node->left = newNode;
 
         --node->balance;
         node = balance(node);
         if (node->balance == 0) {
-            return false;
+            *isHeightChanged = false;
+            return node;
         }
         else {
-            return true;
+            *isHeightChanged = true;
+            return node;
         }
     }
     else if (node->right == NULL && strcmp(key, node->value.key) > 0) {
         Node* newNode = createTree(key, value, errorCode);
         if (*errorCode) {
-            return false;
+            *isHeightChanged = false;
+            return node;
         }
         node->right = newNode;
 
         ++node->balance;
         node = balance(node);
         if (node->balance == 0) {
-            return false;
+            *isHeightChanged = false;
+            return node;
         }
         else {
-            return true;
+            *isHeightChanged = true;
+            return node;
         }
     }
 
-    bool isHeightChanged = false;
     if (strcmp(key, node->value.key) > 0) {
-        isHeightChanged = addNode(node->right, key, value, errorCode);
-        if (isHeightChanged) {
+        addNode(node->right, key, value, isHeightChanged, errorCode);
+        if (*isHeightChanged) {
             ++node->balance;
             node = balance(node);
             if (node->balance == 0) {
-                return false;
+                *isHeightChanged = false;
+                return node;
             }
             else {
-                return true;
+                *isHeightChanged = true;
+                return node;
             }
         }
-        return false;
+        *isHeightChanged = false;
+        return node;
     }
     if (strcmp(key, node->value.key) < 0) {
-        isHeightChanged = addNode(node->left, key, value, errorCode);
-        if (isHeightChanged) {
+        addNode(node->left, key, value, isHeightChanged, errorCode);
+        if (*isHeightChanged) {
             --node->balance;
             node = balance(node);
             if (node->balance == 0) {
-                return false;
+                *isHeightChanged = false;
+                return node;
             }
             else {
-                return true;
+                *isHeightChanged = true;
+                return node;
             }
         }
-        return false;
+        *isHeightChanged = false;
+        return node;
     }
 }
 
@@ -254,6 +306,7 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
             node->right = NULL;
             if (*isHeightChanged) {
                 --node->balance;
+                node = balance(node);
                 if (abs(node->balance) >= 1) {
                     *isHeightChanged = false;
                 }
@@ -266,6 +319,7 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
             node->right = returnedNode;
             if (*isHeightChanged) {
                 --node->balance;
+                node = balance(node);
                 if (abs(node->balance) >= 1) {
                     *isHeightChanged = false;
                 }
@@ -275,6 +329,7 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
 
         if (*isHeightChanged) {
             --node->balance;
+            node = balance(node);
             if (abs(node->balance) >= 1) {
                 *isHeightChanged = false;
             }
@@ -290,6 +345,7 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
             node->left = NULL;
             if (*isHeightChanged) {
                 ++node->balance;
+                node = balance(node);
                 if (abs(node->balance) >= 1) {
                     *isHeightChanged = false;
                 }
@@ -302,6 +358,7 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
             node->left = returnedNode;
             if (*isHeightChanged) {
                 ++node->balance;
+                node = balance(node);
                 if (abs(node->balance) >= 1) {
                     *isHeightChanged = false;
                 }
@@ -311,6 +368,7 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
 
         if (*isHeightChanged) {
             ++node->balance;
+            node = balance(node);
             if (abs(node->balance) >= 1) {
                 *isHeightChanged = false;
             }
@@ -320,6 +378,7 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
     if (returnedNode != NULL) {
         free(returnedNode);
     }
+    return node;
 }
 
 NodeValue createNodeValue(const char* key, const char* value) {
