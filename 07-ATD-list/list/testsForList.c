@@ -20,17 +20,18 @@ bool testAddAndRemove(bool* errorCode) {
         deleteList(&list);
         return false;
     }
-    add(list, 0, 1, errorCode);
-    add(list, 1, 2, errorCode);
-    add(list, 2, 3, errorCode);
+    add(list, first(list, errorCode), 1, errorCode);
+    add(list, next(first(list, errorCode), errorCode), 2, errorCode);
+    add(list, next(next(first(list, errorCode), errorCode), errorCode), 3, errorCode);
     if (*errorCode) {
         deleteList(&list);
         return false;
     }
-    bool test1 = removeListElement(list, 2, errorCode) == 3;
-    bool test2 = removeListElement(list, 1, errorCode) == 2;
-    bool test3 = removeListElement(list, 0, errorCode) == 1;
 
+    bool test1 = removeListElement(list, next(first(list, errorCode), errorCode), errorCode) == 2;
+    bool test2 = getValue(next(first(list, errorCode), errorCode), errorCode) == 1;
+    bool test3 = removeListElement(list, first(list, errorCode), errorCode) == 1;
+    removeListElement(list, first(list, errorCode), errorCode);
     if (*errorCode) {
         deleteList(&list);
         return false;

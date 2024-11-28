@@ -4,8 +4,6 @@
 
 #include "../list/list.h"
 
-typedef struct ListElement* Position;
-
 typedef struct ListElement {
     Value value;
     struct ListElement* next;
@@ -15,7 +13,7 @@ struct List {
     ListElement* head;
 };
 
-bool listIsEmpty(List* list, bool *errorCode) {
+bool listIsEmpty(List* list, bool* errorCode) {
     if (list == NULL) {
         *errorCode = true;
         return true;
@@ -52,41 +50,18 @@ void deleteList(List** listDoublePointer) {
     *listDoublePointer = NULL;
 }
 
-Position calculateThePosition(List* list, int position, bool *errorCode) {
-    if (position < 0) {
-        *errorCode = true;
-        return errorCode;
-    }
-    Position theSelectedElement = NULL;
-    ListElement* head = list->head;
-    for (int i = 0; i < position; ++i) {
-        if (list->head == NULL) {
-            *errorCode = true;
-            return NULL;
-        }
-        list->head = list->head->next;
-    }
-    theSelectedElement = list->head;
-    list->head = head;
-    return theSelectedElement;
-}
-
-Value removeListElement(List* list, int position, bool* errorCode) {
-    if (list == NULL) {
+Value removeListElement(List* list, Position position, bool* errorCode) {
+    if (list == NULL || NULL == position) {
         *errorCode = true;
         return true;
     }
-    Position theSelectedElement = calculateThePosition(list, position, errorCode);
-    if (*errorCode || NULL == theSelectedElement) {
-        return errorCode;
-    }
-    ListElement* temp = theSelectedElement->next;
+    ListElement* temp = position->next;
     if (temp == NULL) {
         *errorCode = true;
         return NULL;
     }
     Value value = temp->value;
-    theSelectedElement->next = theSelectedElement->next->next;
+    position->next = position->next->next;
     free(temp);
     if (list->head == NULL) {
         *errorCode = true;
@@ -95,23 +70,68 @@ Value removeListElement(List* list, int position, bool* errorCode) {
     return value;
 }
 
-bool add(List* list, int position, Value value, bool *errorCode) {
-    if (list == NULL) {
+Position add(List* list, Position position, Value value, bool* errorCode) {
+    if (list == NULL || position == NULL) {
         *errorCode = true;
-        return true;
+        return NULL;
     }
-    Position theSelectedElement = calculateThePosition(list, position, errorCode);
-    if (*errorCode || NULL == theSelectedElement) {
-        return errorCode;
-    }
+
     ListElement* new = calloc(1, sizeof(ListElement));
     if (new == NULL) {
         *errorCode = true;
-        return errorCode;
+        return NULL;
     }
     new->value = value;
-    ListElement* temp = theSelectedElement->next;
-    theSelectedElement->next = new;
+
+    ListElement* temp = position->next;
+    position->next = new;
     new->next = temp;
-    return false;
+    return new;
+}
+
+Position first(List* list, bool* errorCode) {
+    if (list == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    return list->head;
+}
+
+Position next(Position position, bool* errorCode) {
+    if (position == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    return position->next;
+}
+
+Value getValue(Position position, bool* errorCode) {
+    if (position == NULL) {
+        *errorCode = true;
+        return 0;
+    }
+    return position->value;
+}
+
+void setValue(Position position, Value value, bool* errorCode) {
+    if (position == NULL) {
+        *errorCode = true;
+        return;
+    }
+    position->value = value;
+}
+
+Position last(List* list, bool* errorCode) {
+    if (list == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    Position i = first(list, errorCode);
+    while (next(i, errorCode) != NULL) {
+        i = next(i, errorCode);
+        if (*errorCode) {
+            return NULL;
+        }
+    }
+    return i;
 }
