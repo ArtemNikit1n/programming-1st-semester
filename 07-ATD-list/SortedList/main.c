@@ -6,6 +6,7 @@
 
 #include "sortedList.h"
 #include "../list/list.h"
+#include "../merge-sort/testForMergeSort.h"
 #include "../list/testsForlist.h"
 #include "testsForSortedList.h"
 
@@ -17,6 +18,17 @@ void printTheBackgroundInformation() {
         "3 – распечатать список\n");
 }
 
+int getIntValueFromUser(void) {
+    int value = -1;
+    int scanfReturns = scanf("%d", &value);
+    while (scanfReturns != 1) {
+        printf("Число введено некорректно, попробуйте ещё раз\n");
+        while (getchar() != '\n');
+        scanfReturns = scanf("%d", &value);
+    }
+    return value;
+}
+
 void callTheFunction(int functionCode, bool* errorCode) {
     List* list = createList(errorCode);
     int listLength = 0;
@@ -26,7 +38,9 @@ void callTheFunction(int functionCode, bool* errorCode) {
     }
     while (functionCode != 0) {
         if (functionCode == 1) {
-            addItToTheSortedList(list, errorCode);
+            printf("Введите число, которое вы хотите добавить в список\n");
+            addItToSortedList(list, getIntValueFromUser(), errorCode);
+
             if (*errorCode) {
                 printf("При добавлении числа произошла ошибка\n");
                 *errorCode = false;
@@ -34,19 +48,30 @@ void callTheFunction(int functionCode, bool* errorCode) {
                 ++listLength;
                 printf("Число было успешно добавлено!\n");
             }
-            sortTheList(list, listLength, errorCode);
-            if (*errorCode) {
-                printf("При сортировке произошла ошибка\n");
-                *errorCode = false;
-            }
         }
+
         if (functionCode == 2) {
             if (listLength == 0) {
                 printf("Список пуст\n");
-                functionCode = getTheFunctionCodeFromTheUser();
+                functionCode = getIntValueFromUser();
+                while (functionCode > 3 || functionCode < 0) {
+                    printf("Числа могут быть только от 1 до 3\n");
+                    functionCode = getIntValueFromUser();
+                }
                 continue;
             }
-            removeANumberFromTheSortedList(list, listLength, errorCode);
+
+            printf(
+                "Введите позицию, которую вы хотите удалить из списка\n"
+                "(От 1 до %d)\n", listLength);
+
+            int position = getIntValueFromUser();
+            while (position <= 0 || position > listLength) {
+                printf("В вашем списке нет такой позиции. Попробуйте ещё раз\n");
+                position = getIntValueFromUser();
+            }
+            deleteFromSortedList(list, position, errorCode);
+
             if (*errorCode) {
                 printf("При удалении числа произошла ошибка\n");
                 *errorCode = false;
@@ -55,30 +80,22 @@ void callTheFunction(int functionCode, bool* errorCode) {
                 --listLength;
             }
         }
+
         if (functionCode == 3) {
-            printList(list, listLength, errorCode);
+            if (listLength == 0) {
+                printf("Список пуст\n");
+            } else {
+                printList(list, errorCode);
+            }
         }
-        functionCode = getTheFunctionCodeFromTheUser();
+
+        functionCode = getIntValueFromUser();
+        while (functionCode > 3 || functionCode < 0) {
+            printf("Числа могут быть только от 1 до 3\n");
+            functionCode = getIntValueFromUser();
+        }
     }
     deleteList(&list);
-}
-
-void clearBuffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
-
-int getTheFunctionCodeFromTheUser(void) {
-    int functionCode = -1;
-    printTheBackgroundInformation();
-    int scanfReturns = scanf("%d", &functionCode);
-    while (functionCode > 3 || functionCode < 0 || scanfReturns != 1) {
-        printf("Команда введена некорректно, попробуйте ещё раз\n");
-        printTheBackgroundInformation();
-        clearBuffer();
-        scanfReturns = scanf("%d", &functionCode);
-    }
-    return functionCode;
 }
 
 int main(void) {
@@ -88,12 +105,22 @@ int main(void) {
     if (errorCode) {
         return errorCode;
     }
+    runMergeSortingTests(&errorCode);
+    if (errorCode) {
+        return errorCode;
+    }
     runTheSortedListTests(&errorCode);
     if (errorCode) {
         return errorCode;
     }
 
-    callTheFunction(getTheFunctionCodeFromTheUser(), &errorCode);
+    printTheBackgroundInformation();
+    int functionCode = getIntValueFromUser();
+    while (functionCode > 3 || functionCode < 0) {
+        printf("Числа могут быть только от 1 до 3\n");
+        functionCode = getIntValueFromUser();
+    }
+    callTheFunction(functionCode, &errorCode);
 
     return errorCode;
 }

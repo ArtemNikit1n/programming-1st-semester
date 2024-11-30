@@ -27,11 +27,13 @@ Value removeListElement(List* list, Position position, bool* errorCode);
 // Returns a pointer to the first added element.
 Position first(List* list, bool* errorCode);
 
-// Returns a pointer to the last added element.
-Position last(List* list, bool* errorCode);
-
 // Returns a pointer to the next element.
 Position next(Position position, bool* errorCode);
 
 // Returns the value at the passed position.
 Value getValue(Position position, bool* errorCode);
+
+// Sets a value to a list item.
+void setValue(Position position, Value value, bool* errorCode);
+
+Position last(List* list, bool* errorCode);
