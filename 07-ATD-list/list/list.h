@@ -36,4 +36,5 @@ Value getValue(Position position, bool* errorCode);
 // Sets a value to a list item.
 void setValue(Position position, Value value, bool* errorCode);
 
+// Returns the last item in the list.
 Position last(List* list, bool* errorCode);
