@@ -12,11 +12,6 @@
 #include "../list/list.h"
 #include "../list/testsForList.h"
 
-typedef struct NamesAndPhones {
-    List* phones;
-    List* names;
-} NamesAndPhones;
-
 void printTheBackgroundInformation() {
     printf(
         "0 – выйти\n"
@@ -28,33 +23,23 @@ void printTheBackgroundInformation() {
 
 void printList(const List* list, bool* errorCode) {
     for (Position i = first(list, errorCode); i != last(list, errorCode); i = next(i, errorCode)) {
-        printf("%s ", getValue(next(i, errorCode), errorCode));
+        printf("%s - %s\n", getValue(next(i, errorCode), errorCode).name, getValue(next(i, errorCode), errorCode).phone);
         if (*errorCode) {
-            printf("Модуль списка сработал некорректно\n");
+            printf("Ошибка. Вывод ваших контактов остановлен.\n");
             return;
         }
     }
     printf("\n");
 }
 
-void readFromTheFile(NamesAndPhones* records, const char* filename, bool* errorCode) {
+void readFromTheFile(List* records, const char* filename, bool* errorCode) {
     FILE* file = fopen(filename, "r");
-    if (file == NULL) {
+    if (file == NULL || records == NULL) {
         *errorCode = true;
         return;
     }
 
-    List* names = createList(errorCode);
-    Position i = first(names, errorCode);
-
-    List* phones = createList(errorCode);
-    Position j = first(phones, errorCode);
-
-    if (*errorCode) {
-        deleteList(&names);
-        deleteList(&phones);
-        return;
-    }
+    Position i = first(records, errorCode);
     int scanfResult = 2;
     while (scanfResult == 2) {
         char* name = calloc(1, sizeof(char) * MAX_NAME_LENGTH);
@@ -64,90 +49,60 @@ void readFromTheFile(NamesAndPhones* records, const char* filename, bool* errorC
             break;
         }
 
-        add(names, i, name, errorCode);
+        NameAndPhone currentData = { .name = name, .phone = phone };
+        add(records, i, currentData, errorCode);
         i = next(i, errorCode);
-        if (*errorCode) {
-            deleteList(&names);
-            deleteList(&phones);
-            return;
-        }
-
-        add(phones, j, phone, errorCode);
-        j = next(j, errorCode);
-        if (*errorCode) {
-            deleteList(&names);
-            deleteList(&phones);
-            return;
-        }
     }
-    records->names = names;
-    records->phones = phones;
     fclose(file);
 }
 
 void callTheFunction(int functionCode, bool* errorCode) {
-    NamesAndPhones* records = calloc(1, sizeof(NamesAndPhones));
-    if (records == NULL) {
-        *errorCode = true;
-        free(records);
+    List* records = createList(errorCode);
+    if (*errorCode == true) {
         printf("Ошибка выделения памяти");
         return;
     }
     readFromTheFile(records, "phoneDatabase.txt", errorCode);
     if (*errorCode) {
-        deleteList(&records->phones);
-        deleteList(&records->names);
-        free(records);
-        printf("Ошибка в чтении из файла памяти");
+        deleteList(&records);
+        printf("Ошибка при чтении из файла");
         return;
     }
     while (functionCode != 0) {
         if (functionCode == 1) {
-            sortByMerging(records->phones, first(records->phones, errorCode), NULL, errorCode);
+            sortByMerging(records, next(first(records, errorCode), errorCode), NULL, phone, errorCode);
             if (*errorCode) {
-                deleteList(&records->phones);
-                deleteList(&records->names);
-                printf("Произошла ошибка\n");
+                deleteList(&records);
+                printf("Произошла ошибка, попробуйте позже\n");
                 return;
             }
-            printf("Список был успешно отсортирован!\n");
+            printf("Номера телефонов были успешно отсортированы!\n");
         }
         if (functionCode == 2) {
-            sortByMerging(records->names, first(records->names, errorCode), NULL, errorCode);
+            sortByMerging(records, next(first(records, errorCode), errorCode), NULL, name, errorCode);
             if (*errorCode) {
-                deleteList(&records->phones);
-                deleteList(&records->names);
-                printf("Произошла ошибка\n");
+                deleteList(&records);
+                printf("Произошла ошибка, попробуйте позже\n");
                 return;
             }
-            printf("Список был успешно отсортирован!\n");
+            printf("Имена контактов были успешно отсортированы!\n");
         }
         if (functionCode == 3) {
-            printf("Имена:\n");
-            printList(records->names, errorCode);
-            printf("Номера телефонов:\n");
-            printList(records->phones, errorCode);
+            printf("Ваши контакты:\n");
+            printList(records, errorCode);
         }
         functionCode = getTheFunctionCodeFromTheUser();
     }
-    deleteList(&records->phones);
-    deleteList(&records->names);
-    free(records);
-}
-
-void clearBuffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    deleteList(&records);
 }
 
 int getTheFunctionCodeFromTheUser(void) {
     int functionCode = -1;
-    printTheBackgroundInformation();
     int scanfReturns = scanf("%d", &functionCode);
     while (functionCode > 3 || functionCode < 0 || scanfReturns != 1) {
         printf("Номер команды введён некорректно, попробуйте ещё раз\n");
         printTheBackgroundInformation();
-        clearBuffer();
+        while (getchar() != '\n');
         scanfReturns = scanf("%d", &functionCode);
     }
     return functionCode;
@@ -164,6 +119,8 @@ int main(void) {
     if (errorCode) {
         return errorCode;
     }
+
+    printTheBackgroundInformation();
     callTheFunction(getTheFunctionCodeFromTheUser(), &errorCode);
 
     return errorCode;

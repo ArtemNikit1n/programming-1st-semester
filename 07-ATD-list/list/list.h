@@ -1,7 +1,17 @@
 #pragma once
 
+typedef enum {
+    phone,
+    name
+} SortingCriteria;
+
+typedef struct NameAndPhone {
+    char* phone;
+    char* name;
+} NameAndPhone;
+
 // This is necessary to quickly change the type of data stored in the list.
-typedef char* Value;
+typedef NameAndPhone Value;
 
 // This is a list type declaration.
 typedef struct List List;
@@ -22,6 +32,7 @@ List* createList(bool* errorCode);
 Position add(List* list, Position position, Value value, bool* errorCode);
 
 // Deletes an element from the specified location.
+// Depending on the criteria you specify, you will receive either numbers or phone numbers
 Value removeListElement(List* list, Position position, bool* errorCode);
 
 // Returns a pointer to the first added element.
@@ -34,6 +45,7 @@ Position next(Position position, bool* errorCode);
 Value getValue(Position position, bool* errorCode);
 
 // Sets a value to a list item.
-void setValue(Position position, Value value, bool* errorCode);
+Value setValue(Position position, Value value, bool* errorCode);
 
+// Returns the last item in the list.
 Position last(List* list, bool* errorCode);

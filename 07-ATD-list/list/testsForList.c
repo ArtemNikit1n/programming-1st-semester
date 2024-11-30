@@ -20,21 +20,21 @@ bool testAddAndRemove(bool* errorCode) {
         deleteList(&list);
         return false;
     }
-    const char* testString1 = "abcd";
-    const char* testString2 = "\0";
-    const char* testString3 = "-43243432434";
+    NameAndPhone testStruct1 = { .name = "Artem", .phone = "89123599486" };
+    NameAndPhone testStruct2 = { .name = '\0', .phone = '\0'};
+    NameAndPhone testStruct3 = { .name = "Мишка", .phone = "Мёд" };
 
-    add(list, first(list, errorCode), testString1, errorCode);
-    add(list, next(first(list, errorCode), errorCode), testString2, errorCode);
-    add(list, next(next(first(list, errorCode), errorCode), errorCode), testString3, errorCode);
+    add(list, first(list, errorCode), testStruct1, errorCode);
+    add(list, next(first(list, errorCode), errorCode), testStruct2, errorCode);
+    add(list, next(next(first(list, errorCode), errorCode), errorCode), testStruct3, errorCode);
     if (*errorCode) {
         deleteList(&list);
         return false;
     }
 
-    bool test1 = removeListElement(list, next(first(list, errorCode), errorCode), errorCode) == testString2;
-    bool test2 = getValue(next(first(list, errorCode), errorCode), errorCode) == testString1;
-    bool test3 = removeListElement(list, first(list, errorCode), errorCode) == testString1;
+    bool test1 = removeListElement(list, next(first(list, errorCode), errorCode), errorCode).phone == testStruct2.phone;
+    bool test2 = strcmp(getValue(next(first(list, errorCode), errorCode), errorCode).phone, testStruct1.phone) == 0;
+    bool test3 = strcmp(removeListElement(list, first(list, errorCode), errorCode).name, testStruct1.name) == 0;
     removeListElement(list, first(list, errorCode), errorCode);
     if (*errorCode) {
         deleteList(&list);

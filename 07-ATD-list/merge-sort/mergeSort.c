@@ -5,7 +5,7 @@
 #include "mergeSort.h"
 #include "../list/list.h"
 
-void merge(List* list, Position left, Position middle, Position right, bool* errorCode) {
+void merge(List* list, Position left, Position middle, Position right, SortingCriteria criteria, bool* errorCode) {
     List* result = createList(errorCode);
     Position i = first(result, errorCode);
     if (*errorCode) {
@@ -15,7 +15,33 @@ void merge(List* list, Position left, Position middle, Position right, bool* err
     Position saveMiddle = middle;
 
     while (left != saveMiddle && middle != right) {
-        if (strcmp(getValue(left, errorCode), getValue(middle, errorCode)) < 0) {
+        char* leftValue = NULL;
+        char* middleValue = NULL;
+        if (criteria == name) {
+            leftValue = getValue(left, errorCode).name;
+            middleValue = getValue(middle, errorCode).name;
+        }
+        if (criteria == phone) {
+            leftValue = getValue(left, errorCode).phone;
+            middleValue = getValue(middle, errorCode).phone;
+        }
+
+        int strcmpResult = -2;
+        if (leftValue == '\0' || middleValue == '\0') {
+            if (leftValue == '\0' && middleValue != '\0') {
+                strcmpResult = -1;
+            }
+            if (leftValue != '\0' && middleValue == '\0') {
+                strcmpResult = 1;
+            }
+            if (leftValue == '\0' && middleValue == '\0') {
+                strcmpResult = 0;
+            }
+        } else {
+            strcmpResult = strcmp(leftValue, middleValue);
+        }
+
+        if (strcmpResult < 0) {
             add(result, i, getValue(left, errorCode), errorCode);
             i = next(i, errorCode);
             left = next(left, errorCode);
@@ -87,11 +113,7 @@ Position calculateTheMiddle(List* list, Position left, Position right, bool* err
     return i;
 }
 
-void sortByMerging(List* list, Position left, Position right, bool* errorCode) {
-    if (getValue(left, errorCode) == NULL) {
-        left = next(left, errorCode);
-    }
-
+void sortByMerging(List* list, Position left, Position right, SortingCriteria criteria, bool* errorCode) {
     if (next(left, errorCode) == right) {
         return;
     }
@@ -111,13 +133,13 @@ void sortByMerging(List* list, Position left, Position right, bool* errorCode) {
     if (*errorCode) {
         return;
     }
-    sortByMerging(list, left, middle, errorCode);
+    sortByMerging(list, left, middle, criteria, errorCode);
     if (*errorCode) {
         return;
     }
-    sortByMerging(list, middle, right, errorCode);
+    sortByMerging(list, middle, right, criteria, errorCode);
     if (*errorCode) {
         return;
     }
-    merge(list, left, middle, right, errorCode);
+    merge(list, left, middle, right, criteria, errorCode);
 }

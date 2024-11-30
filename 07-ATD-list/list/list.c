@@ -54,20 +54,23 @@ void deleteList(List** listDoublePointer) {
 Value removeListElement(List* list, Position position, bool* errorCode) {
     if (list == NULL || NULL == position) {
         *errorCode = true;
-        return true;
+        Value emptyValue = { .name = NULL, .phone = NULL };
+        return emptyValue;
     }
     ListElement* temp = position->next;
     if (temp == NULL) {
         *errorCode = true;
-        return NULL;
+        Value emptyValue = { .name = NULL, .phone = NULL };
+        return emptyValue;
     }
     Value value = temp->value;
     position->next = position->next->next;
     free(temp);
     if (list->head == NULL) {
-        *errorCode = true;
-        return NULL;
+        Value emptyValue = { .name = NULL, .phone = NULL };
+        return emptyValue;
     }
+
     return value;
 }
 
@@ -109,15 +112,17 @@ Position next(Position position, bool* errorCode) {
 Value getValue(Position position, bool* errorCode) {
     if (position == NULL) {
         *errorCode = true;
-        return 0;
+        Value emptyValue = { .name = NULL, .phone = NULL };
+        return emptyValue;
     }
     return position->value;
 }
 
-void setValue(Position position, Value value, bool* errorCode) {
+Value setValue(Position position, Value value, bool* errorCode) {
     if (position == NULL) {
         *errorCode = true;
-        return;
+        Value emptyValue = { .name = NULL, .phone = NULL };
+        return emptyValue;
     }
     position->value = value;
 }
