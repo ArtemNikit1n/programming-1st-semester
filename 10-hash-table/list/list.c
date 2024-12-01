@@ -7,6 +7,7 @@
 
 typedef struct ListElement {
     Value value;
+    int frequency;
     struct ListElement* next;
 } ListElement;
 
@@ -83,6 +84,7 @@ Position add(List* list, Position position, Value value, bool* errorCode) {
         return NULL;
     }
     new->value = value;
+    new->frequency = 1;
 
     ListElement* temp = position->next;
     position->next = new;
@@ -103,11 +105,23 @@ Position next(Position position, bool* errorCode) {
         *errorCode = true;
         return NULL;
     }
-    if (position->next == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
     return position->next;
+}
+
+void setFrequency(Position position, int frequency, bool* errorCode) {
+    if (position == NULL) {
+        *errorCode = true;
+        return;
+    }
+    position->frequency = frequency;
+}
+
+int getFrequency(Position position, bool* errorCode) {
+    if (position == NULL) {
+        *errorCode = true;
+        return;
+    }
+    return position->frequency;
 }
 
 Value getValue(Position position, bool* errorCode) {

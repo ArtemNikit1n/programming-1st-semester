@@ -129,11 +129,16 @@
   <ItemGroup>
     <ClCompile Include="..\list\list.c" />
     <ClCompile Include="..\list\testsForList.c" />
+    <ClCompile Include="hashTable.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\07-ATD-list\list\list.h" />
+    <ClInclude Include="..\list\list.h" />
     <ClInclude Include="..\list\testsForList.h" />
+    <ClInclude Include="hashTable.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="text.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

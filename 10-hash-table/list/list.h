@@ -35,3 +35,9 @@ Position next(Position position, bool* errorCode);
 
 // Returns the value at the passed position.
 Value getValue(Position position, bool* errorCode);
+
+// Allows you to set the frequency parameters.
+void setFrequency(Position position, int frequency, bool* errorCode);
+
+// Get the string frequency.
+int getFrequency(Position position, bool* errorCode);
