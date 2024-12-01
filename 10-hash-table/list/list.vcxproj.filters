@@ -18,18 +18,18 @@
     <ClCompile Include="main.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\list\testsForList.c">
+    <ClCompile Include="list.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\list\list.c">
+    <ClCompile Include="testsForList.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\07-ATD-list\list\list.h">
+    <ClInclude Include="list.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="..\list\testsForList.h">
+    <ClInclude Include="testsForList.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

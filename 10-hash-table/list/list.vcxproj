@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{105a647a-09e8-4dc2-a08b-0944d3902c73}</ProjectGuid>
-    <RootNamespace>HashTable</RootNamespace>
+    <ProjectGuid>{ecd7df93-c5eb-4e99-a388-cc69954ad77f}</ProjectGuid>
+    <RootNamespace>list</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,13 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\list\list.c" />
-    <ClCompile Include="..\list\testsForList.c" />
+    <ClCompile Include="list.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="testsForList.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\07-ATD-list\list\list.h" />
-    <ClInclude Include="..\list\testsForList.h" />
+    <ClInclude Include="list.h" />
+    <ClInclude Include="testsForList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
