@@ -3,7 +3,7 @@
 #include "../list/list.h"
 
 // Builds a hash table with words from a file.
-void buildHashTable(List* hashTable[], const char* fileName, bool* errorCode);
+float* buildHashTable(List* hashTable[], const char* fileName, int *hashTableSize, bool* errorCode);
 
 // Displaying words and their frequencies on the screen.
-void printHashTable(List* hashTable[], bool* errorCode);
+void printHashTable(List* hashTable[], int* hashTableSize, bool* errorCode);

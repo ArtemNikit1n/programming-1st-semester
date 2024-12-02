@@ -5,9 +5,9 @@
 
 #include "../list/list.h"
 
-void printHashTable(List* hashTable[], bool *errorCode) {
+void printHashTable(List* hashTable[], int *hashTableSize, bool *errorCode) {
     printf("<Word> - <Frequency>\n");
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < *hashTableSize; ++i) {
         if (hashTable[i] == NULL) {
             continue;
         }
@@ -40,8 +40,12 @@ bool isSpecialCharacters(const char symbol) {
     return false;
 }
 
-void buildHashTable(List* hashTable[], const char* fileName, bool* errorCode) {
+float* buildHashTable(List* hashTable[], const char* fileName, int* hashTableSize, bool* errorCode) {
     FILE* file = fopen(fileName, "r");
+
+    int numberOfFilledCells = 0;
+    int maxLengthOfList = -1;
+    int numberOfWords = 0;
 
     char* buffer = calloc(50, sizeof(char));
     if (buffer == NULL) {
@@ -51,7 +55,6 @@ void buildHashTable(List* hashTable[], const char* fileName, bool* errorCode) {
 
     char symbol = fgetc(file);
     int wordLength = 0;
-
 
     if (!isSpecialCharacters(symbol)) {
         buffer[wordLength] = symbol;
@@ -70,12 +73,13 @@ void buildHashTable(List* hashTable[], const char* fileName, bool* errorCode) {
                 continue;
             }
 
-            int hash = hashStringPolynomial(buffer, 1000);
+            int hash = hashStringPolynomial(buffer, *hashTableSize);
             if (hashTable[hash] == NULL) {
                 hashTable[hash] = createList(errorCode);
             }
 
             bool isStringRepeating = false;
+            int numberOfWordsInCurrentList = 0;
             for (Position i = next(first(hashTable[hash], errorCode), errorCode); i != NULL; i = next(i, errorCode)) {
                 if (strcmp(getValue(i, errorCode), buffer) == 0) {
                     setFrequency(i, getFrequency(i, errorCode) + 1, errorCode);
@@ -86,10 +90,16 @@ void buildHashTable(List* hashTable[], const char* fileName, bool* errorCode) {
                         return;
                     }
                     isStringRepeating = true;
-                    break;
                 }
+                ++numberOfWordsInCurrentList;
+                maxLengthOfList = max(maxLengthOfList, numberOfWordsInCurrentList);
             }
             if (!isStringRepeating) {
+                if (next(first(hashTable[hash], errorCode), errorCode) == NULL) {
+                    ++numberOfFilledCells;
+                }
+                ++numberOfWords;
+
                 add(hashTable[hash], first(hashTable[hash], errorCode), buffer, errorCode);
                 buffer = calloc(50, sizeof(char));
                 if (buffer == NULL) {
@@ -104,4 +114,10 @@ void buildHashTable(List* hashTable[], const char* fileName, bool* errorCode) {
         ++wordLength;
     }
     fclose(file);
+
+    float hashTableFillFactor = (float)numberOfFilledCells / (float)*hashTableSize;
+    float averageLengthOfList = (float)numberOfWords / (float)numberOfFilledCells;
+    float hashTableStatistics[3] = { hashTableFillFactor, averageLengthOfList, maxLengthOfList };
+
+    return &hashTableStatistics;
 }
