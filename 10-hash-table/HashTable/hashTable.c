@@ -40,7 +40,57 @@ bool isSpecialCharacters(const char symbol) {
     return false;
 }
 
-float* buildHashTable(List* hashTable[], const char* fileName, int* hashTableSize, bool* errorCode) {
+List** doubleHashTable(List* hashTable[], int *hashTableSize, bool* errorCode) {
+    List** copyOfHashTable = calloc(*hashTableSize, sizeof(List*));
+    if (copyOfHashTable == NULL) {
+        *errorCode = true;
+        return;
+    }
+    for (int i = 0; i < *hashTableSize; ++i) {
+        if (hashTable[i] != NULL) {
+            List* copyOfList = createList(errorCode);
+            for (Position j = next(first(hashTable[i], errorCode), errorCode); j != NULL; j = next(j, errorCode)) {
+                add(copyOfList, first(copyOfList, errorCode), getValue(j, errorCode), errorCode);
+                setFrequency(next(first(copyOfList, errorCode), errorCode), getFrequency(j, errorCode), errorCode);
+            }
+            if (*errorCode) {
+                return;
+            }
+            copyOfHashTable[i] = copyOfList;
+            deleteList(&hashTable[i]);
+        }
+    }
+
+    *hashTableSize *= 2;
+    hashTable = realloc(hashTable, *hashTableSize * sizeof(List*));
+    if (hashTable == NULL) {
+        *errorCode = true;
+        return;
+    }
+    memset(hashTable, NULL, *hashTableSize * sizeof(List*));
+
+    for (int i = 0; i < *hashTableSize / 2; ++i) {
+        if (copyOfHashTable[i] != NULL) {
+            for (Position j = next(first(copyOfHashTable[i], errorCode), errorCode); j != NULL; j = next(j, errorCode)) {
+                int hash = hashStringPolynomial(getValue(j, errorCode), *hashTableSize);
+                if (hashTable[hash] == NULL) {
+                    hashTable[hash] = createList(errorCode);
+                }
+
+                add(hashTable[hash], first(hashTable[hash], errorCode), getValue(j, errorCode), errorCode);
+                setFrequency(next(first(hashTable[hash], errorCode), errorCode), getFrequency(j, errorCode), errorCode);
+            }
+            if (*errorCode) {
+                return;
+            }
+            deleteList(&copyOfHashTable[i]);
+        }
+    }
+
+    return hashTable;
+}
+
+List** buildHashTable(List* hashTable[], const char* fileName, int* hashTableSize, bool* errorCode) {
     FILE* file = fopen(fileName, "r");
 
     int numberOfFilledCells = 0;
@@ -115,9 +165,12 @@ float* buildHashTable(List* hashTable[], const char* fileName, int* hashTableSiz
     }
     fclose(file);
 
-    float hashTableFillFactor = (float)numberOfFilledCells / (float)*hashTableSize;
+    float hashTableFillFactor = (float)numberOfWords / (float)*hashTableSize;
     float averageLengthOfList = (float)numberOfWords / (float)numberOfFilledCells;
     float hashTableStatistics[3] = { hashTableFillFactor, averageLengthOfList, maxLengthOfList };
 
-    return &hashTableStatistics;
+    if (hashTableFillFactor > 1.1) {
+        hashTable = doubleHashTable(hashTable, hashTableSize, errorCode);
+    }
+    return hashTable;
 }
