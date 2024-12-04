@@ -19,7 +19,6 @@ int main(void) {
         errorCode = true;
         return;
     }
-    //float* hashTableStatistics = buildHashTable(hashTable, "text.txt", &hashTableSize, &errorCode);
     hashTable = buildHashTable(hashTable, "text.txt", &hashTableSize, &errorCode);
 
     printHashTable(hashTable, &hashTableSize, &errorCode);

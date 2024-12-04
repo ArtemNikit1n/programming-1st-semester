@@ -93,8 +93,6 @@ List** doubleHashTable(List* hashTable[], int *hashTableSize, bool* errorCode) {
 List** buildHashTable(List* hashTable[], const char* fileName, int* hashTableSize, bool* errorCode) {
     FILE* file = fopen(fileName, "r");
 
-    int numberOfFilledCells = 0;
-    int maxLengthOfList = -1;
     int numberOfWords = 0;
 
     char* buffer = calloc(50, sizeof(char));
@@ -129,7 +127,6 @@ List** buildHashTable(List* hashTable[], const char* fileName, int* hashTableSiz
             }
 
             bool isStringRepeating = false;
-            int numberOfWordsInCurrentList = 0;
             for (Position i = next(first(hashTable[hash], errorCode), errorCode); i != NULL; i = next(i, errorCode)) {
                 if (strcmp(getValue(i, errorCode), buffer) == 0) {
                     setFrequency(i, getFrequency(i, errorCode) + 1, errorCode);
@@ -141,13 +138,8 @@ List** buildHashTable(List* hashTable[], const char* fileName, int* hashTableSiz
                     }
                     isStringRepeating = true;
                 }
-                ++numberOfWordsInCurrentList;
-                maxLengthOfList = max(maxLengthOfList, numberOfWordsInCurrentList);
             }
             if (!isStringRepeating) {
-                if (next(first(hashTable[hash], errorCode), errorCode) == NULL) {
-                    ++numberOfFilledCells;
-                }
                 ++numberOfWords;
 
                 add(hashTable[hash], first(hashTable[hash], errorCode), buffer, errorCode);
@@ -166,11 +158,10 @@ List** buildHashTable(List* hashTable[], const char* fileName, int* hashTableSiz
     fclose(file);
 
     float hashTableFillFactor = (float)numberOfWords / (float)*hashTableSize;
-    float averageLengthOfList = (float)numberOfWords / (float)numberOfFilledCells;
-    float hashTableStatistics[3] = { hashTableFillFactor, averageLengthOfList, maxLengthOfList };
 
-    if (hashTableFillFactor > 1.1) {
+    while (hashTableFillFactor > 1.1) {
         hashTable = doubleHashTable(hashTable, hashTableSize, errorCode);
+        hashTableFillFactor = (float)numberOfWords / (float)*hashTableSize;
     }
     return hashTable;
 }
