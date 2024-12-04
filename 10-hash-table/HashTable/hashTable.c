@@ -40,7 +40,7 @@ bool isSpecialCharacters(const char symbol) {
     return false;
 }
 
-List** doubleHashTable(List* hashTable[], int *hashTableSize, bool* errorCode) {
+List** doubleHashTable(List* hashTable[], int* hashTableSize, bool* errorCode) {
     List** copyOfHashTable = calloc(*hashTableSize, sizeof(List*));
     if (copyOfHashTable == NULL) {
         *errorCode = true;
