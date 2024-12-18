@@ -2,13 +2,8 @@
 
 #include <stdbool.h>
 
-// To get a vertex, you need to refer to the graph as an array. 
-// The index will be the vertex number.
-// The vertex number corresponds to the order in which it was added (numbering from zero).
-typedef struct Graph* Graph;
-
-// The vertex of the graph.
-typedef struct Vertex* Vertex;
+// A structure for storing vertices.
+typedef struct Graph Graph;
 
 // The value that is stored at the vertex.
 typedef struct VertexValue {
@@ -16,20 +11,15 @@ typedef struct VertexValue {
     bool isCapital;
 } VertexValue;
 
-
 // Creates an array of vertices.
-void createGraph(Vertex* vertex, bool* errorCode);
+Graph* createGraph(VertexValue value, bool* errorCode);
 
 // Deletes the entire graph.
-void deleteGraph(Graph* graph, bool* errorCode);
-
-Vertex* createVertex(VertexValue value, bool* errorCode);
+void deleteGraph(Graph** pointerToGraph, bool* errorCode);
 
 // Adds a new vertex to the graph.
-void addVertex(VertexValue value, bool* errorCode);
-
-// Allows you to find out the value at the vertex.
-VertexValue getVertexValue(Vertex* vertex, bool* errorCode);
+// The key for the node is set automatically and is equal to the number of nodes already added.
+void addVertex(Graph* graph, VertexValue value, bool* errorCode);
 
 // Connects two vertices.
-void connectVertices(Vertex* vertex, Vertex* newVertex, bool* errorCode);
+void connectVertices(Graph* graph, int key1, int key2, bool* errorCode);
