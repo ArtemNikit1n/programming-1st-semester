@@ -7,12 +7,13 @@ typedef struct Graph Graph;
 
 // The value that is stored at the vertex.
 typedef struct VertexValue {
+    int key;
     int stateNumber;
     bool isCapital;
 } VertexValue;
 
 // Creates an array of vertices.
-Graph* createGraph(VertexValue value, bool* errorCode);
+Graph* createGraph(int initialSizeOfGraph, bool* errorCode);
 
 // Deletes the entire graph.
 void deleteGraph(Graph** pointerToGraph, bool* errorCode);

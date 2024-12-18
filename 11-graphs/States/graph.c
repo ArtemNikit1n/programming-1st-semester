@@ -25,15 +25,21 @@ Vertex* createVertex(VertexValue value, bool* errorCode) {
 }
 
 void addVertex(Graph* graph, VertexValue value, bool* errorCode) {
-    Vertex** newMemory = realloc(graph->vertices, (graph->numberVertices + 1) * sizeof(Vertex*));
-    if (newMemory == NULL) {
-        *errorCode = true;
-        return;
+    if (graph->vertices == NULL) {
+        graph->vertices = calloc(1, value.key * sizeof(Vertex*));
     }
 
-    graph->vertices = newMemory;
-    graph->vertices[graph->numberVertices] = createVertex(value, errorCode);
-    ++graph->numberVertices;
+    if (value.key >= graph->numberVertices) {
+        Vertex** newMemory = realloc(graph->vertices, value.key * sizeof(Vertex*));
+        if (newMemory == NULL) {
+            *errorCode = true;
+            return;
+        }
+        graph->vertices = newMemory;
+    }
+
+    graph->vertices[value.key] = createVertex(value, errorCode);
+    graph->numberVertices = max(graph->numberVertices, value.key + 1);
 }
 
 void addVertexToListOfAdjacentOnes(Vertex* vertex, Vertex* newVertex, bool* errorCode) {
@@ -84,24 +90,24 @@ void connectVertices(Graph* graph, int key1, int key2, bool* errorCode) {
     }
 }
 
-Graph* createGraph(VertexValue value, bool* errorCode) {
+Graph* createGraph(int initialSizeOfGraph, bool* errorCode) {
     Graph* graph = calloc(1, sizeof(Graph));
     if (graph == NULL) {
         *errorCode = true;
         return NULL;
     }
 
-    graph->numberVertices = 1;
-
-    Vertex** vertices = calloc(1, sizeof(Vertex));
+    if (initialSizeOfGraph <= 0) {
+        *errorCode = true;
+        return NULL;
+    }
+    Vertex** vertices = calloc(initialSizeOfGraph, sizeof(Vertex*));
     if (vertices == NULL) {
         *errorCode = true;
         return NULL;
     }
-
-    vertices[0] = createVertex(value, errorCode);
     graph->vertices = vertices;
-
+    graph->numberVertices = initialSizeOfGraph;
     return graph;
 }
 
