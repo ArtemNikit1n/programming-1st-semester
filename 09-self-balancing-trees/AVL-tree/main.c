@@ -48,6 +48,9 @@ int getTheFunctionCodeFromTheUser(void) {
         printf("Incorrect number. Please try again:\n");
         printTheBackgroundInformation();
         clearBuffer();
+        if (scanfReturns == EOF || feof(stdin)) {
+            return -1;
+        }
         scanfReturns = scanf("%d", &functionCode);
     }
     return functionCode;
@@ -137,7 +140,11 @@ int main(void) {
         return errorCode;
     }
 
-    callTheFunction(getTheFunctionCodeFromTheUser(), &errorCode);
+    int functionCode = getTheFunctionCodeFromTheUser();
+    if (functionCode == -1) {
+        return errorCode;
+    }
+    callTheFunction(functionCode, &errorCode);
 
     return errorCode;
 }

@@ -7,6 +7,7 @@ for /f "delims=" %%a in (config.txt) do (
   set "RelativePath=%%a"
   set "FullPath=!ScriptDir!!RelativePath!"
   set "SolutionName=%%~nxa"
+  set "SolutionNameWithoutExt=%%~na"
 
   echo Processing solution: !SolutionName! (!FullPath!)
 
@@ -16,12 +17,20 @@ for /f "delims=" %%a in (config.txt) do (
       echo Error building "!SolutionName!".
     ) else (
       echo Successfully built "!SolutionName!"
-       for %%a in ("!ScriptDir!!RelativePath!") do (
-         set "FullPath=%%~dpa"
-       )
-      echo !FullPath!x64\Release\!SolutionName!.exe
-      set "ProgramPath=!FullPath!\Release\x64\!SolutionName!.exe"
-      
+      for %%a in ("!ScriptDir!!RelativePath!") do (
+        set "FullPath=%%~dpa"
+      )
+      set "ProgramPath=!FullPath!x64\Release\!SolutionNameWithoutExt!.exe"
+      if exist "!ProgramPath!" (
+        call "!ProgramPath!" <nul >nul
+        if %errorlevel% == 0 (
+          echo Tests for "!SolutionName!" PASSED.
+        ) else (
+          echo Tests for "!SolutionName!" FAILED.
+        )
+      ) else (
+        echo Error: Executable file not found for "!SolutionName!" at "!ProgramPath!".
+      )
     )
   ) else (
     echo Error: Solution file "!FullPath!" not found.
