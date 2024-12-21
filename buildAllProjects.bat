@@ -9,7 +9,7 @@ for /f "delims=" %%a in (config.txt) do (
   set "SolutionName=%%~nxa"
   set "SolutionNameWithoutExt=%%~na"
 
-  echo Processing solution: !SolutionName! (!FullPath!)
+  echo "Processing solution: !SolutionName! (!FullPath!)"
 
   if exist "!FullPath!" (
     msbuild "!FullPath!" /t:Rebuild /p:Configuration=Release /p:Platform=x64 /nologo /clp:ErrorsOnly
@@ -24,9 +24,9 @@ for /f "delims=" %%a in (config.txt) do (
       if exist "!ProgramPath!" (
         call "!ProgramPath!" <nul >nul
         if %errorlevel% == 0 (
-          echo Tests for "!SolutionName!" PASSED.
+          echo Tests for "!SolutionNameWithoutExt!" PASSED.
         ) else (
-          echo Tests for "!SolutionName!" FAILED.
+          echo Tests for "!SolutionNameWithoutExt!" FAILED.
         )
       ) else (
         echo Error: Executable file not found for "!SolutionName!" at "!ProgramPath!".

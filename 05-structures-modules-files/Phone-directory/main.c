@@ -31,6 +31,9 @@ short userInput(bool *errorCode) {
     scanf("%s", strCommandNumber);
     commandNumber = (short)strtol(strCommandNumber, &endptrCommandNumber, 10);
 
+    if (feof(stdin)) {
+        return -1;
+    }
     if (commandNumber < 0 || commandNumber > 6 || *endptrCommandNumber != '\0') {
         printf("\nНекорректный номер команды, попробуйте ещё раз\n");
         free(strCommandNumber);
@@ -95,6 +98,9 @@ int main(void) {
     }
 
     short commandNumber = userInput(&errorCode);
+    if (commandNumber == -1) {
+        return errorCode;
+    }
     struct NameAndPhoneNumber records = {
         .numberOfEntries = 0,
         .names = { { '\0' } },
