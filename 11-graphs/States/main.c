@@ -42,7 +42,7 @@ Graph* buildGraph(const char* fileName, bool* errorCode) {
         int edgeWeight = -1;
         fscanf(file, "%d ", &edgeWeight);
 
-        connectVertices(graph, firstKey, secondKey, edgeWeight, errorCode);
+        graph = connectVertices(graph, firstKey, secondKey, edgeWeight, errorCode);
         if (*errorCode) {
             deleteGraph(&graph, errorCode);
             return NULL;

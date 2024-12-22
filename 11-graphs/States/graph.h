@@ -23,7 +23,7 @@ void deleteGraph(Graph** pointerToGraph, bool* errorCode);
 void addVertex(Graph* graph, VertexValue value, bool* errorCode);
 
 // Connects two vertices.
-void connectVertices(Graph* graph, int key1, int key2, int edgeWeight, bool* errorCode);
+Graph* connectVertices(Graph* graph, int key1, int key2, int edgeWeight, bool* errorCode);
 
 // Prints the adjacency matrix.
 void printMatrix(Graph* graph);

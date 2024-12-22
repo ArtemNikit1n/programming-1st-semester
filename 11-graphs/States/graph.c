@@ -88,7 +88,7 @@ void addVertex(Graph* graph, VertexValue value, bool* errorCode) {
     graph->numberVertices = max(graph->numberVertices, value.key + 1);
 }
 
-void addVertexToListOfAdjacentOnes(Vertex* vertex, Vertex* newVertex, bool* errorCode) {
+Vertex* addVertexToListOfAdjacentOnes(Vertex* vertex, Vertex* newVertex, bool* errorCode) {
     if (vertex->adjacentVertices == NULL) {
         vertex->adjacentVertices = calloc(1, sizeof(Vertex*));
         if (vertex->adjacentVertices == NULL) {
@@ -109,31 +109,31 @@ void addVertexToListOfAdjacentOnes(Vertex* vertex, Vertex* newVertex, bool* erro
         vertex->adjacentVertices[vertex->numberOfAdjacentVertices] = newVertex;
         ++vertex->numberOfAdjacentVertices;
     }
+    return vertex;
 }
 
-void connectVertices(Graph* graph, int key1, int key2, int edgeWeight, bool* errorCode) {
+Graph* connectVertices(Graph* graph, int key1, int key2, int edgeWeight, bool* errorCode) {
     if (graph == NULL) {
         *errorCode = true;
         return;
     }
 
-    if (key1 >= graph->numberVertices || key2 >= graph->numberVertices) {
+    if (key1 >= graph->numberVertices || key2 >= graph->numberVertices || key2 < 0 || key1 < 0) {
         *errorCode = true;
         return;
     }
 
-    Vertex* vertex1 = graph->vertices[key1];
-    Vertex* vertex2 = graph->vertices[key2];
     graph->adjacencyMatrix[key1][key2] = edgeWeight;
 
-    addVertexToListOfAdjacentOnes(vertex1, vertex2, errorCode);
+    graph->vertices[key1] = addVertexToListOfAdjacentOnes(graph->vertices[key1], graph->vertices[key2], errorCode);
     if (*errorCode) {
         return;
     }
-    addVertexToListOfAdjacentOnes(vertex2, vertex1, errorCode);
+    graph->vertices[key2] = addVertexToListOfAdjacentOnes(graph->vertices[key2], graph->vertices[key1], errorCode);
     if (*errorCode) {
         return;
     }
+    return graph;
 }
 
 void deleteMatrix(int*** matrix, int size) {
@@ -292,6 +292,7 @@ void createStates(Graph* graph, int graphSize, bool* errorCode) {
         }
     }
     graph->numberOfCitiesOutsideState = graphSize;
+    printMatrix(graph);
     while (graph->numberOfCitiesOutsideState != 0) {
         int selectedCity = dequeue(capitals, errorCode);
         enqueue(capitals, selectedCity, errorCode);

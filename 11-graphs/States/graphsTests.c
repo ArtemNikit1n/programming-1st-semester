@@ -23,8 +23,8 @@ void testConnectVertices(bool* errorCode) {
     addVertex(testGraph1, value2, errorCode);
     addVertex(testGraph1, value3, errorCode);
 
-    connectVertices(testGraph1, 0, 5, 10, errorCode);
-    connectVertices(testGraph1, 0, 1, 7, errorCode);
+    testGraph1 = connectVertices(testGraph1, 0, 5, 10, errorCode);
+    testGraph1 = connectVertices(testGraph1, 0, 1, 7, errorCode);
 
     deleteGraph(&testGraph1, errorCode);
     if (*errorCode) {
@@ -40,8 +40,8 @@ void testConnectVertices(bool* errorCode) {
     addVertex(testGraph2, value5, errorCode);
     addVertex(testGraph2, value6, errorCode);
 
-    connectVertices(testGraph2, 0, 1, 10, errorCode);
-    connectVertices(testGraph2, 0, 5, 7, errorCode);
+    testGraph2 = connectVertices(testGraph2, 0, 1, 10, errorCode);
+    testGraph2 = connectVertices(testGraph2, 0, 5, 7, errorCode);
     deleteGraph(&testGraph2, errorCode);
 }
 
