@@ -1,4 +1,5 @@
 #include "graph.h"
+#include "queue.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -10,6 +11,7 @@ typedef struct Vertex {
 } Vertex;
 
 struct Graph {
+    int numberOfCitiesOutsideState;
     int numberVertices;
     int** adjacencyMatrix;
     Vertex** vertices;
@@ -232,6 +234,74 @@ void printMatrix(Graph* graph) {
     }
 }
 
-void addNearestCity(Graph* graph, const int city, bool* errorCode) {
+int getGraphSize(Graph* graph) {
+    return graph->numberVertices;
+}
 
+void addNearestCity(Graph* graph, const int city, bool* errorCode) {
+    if (graph == NULL) {
+        *errorCode = true;
+        return;
+    }
+    if (city < 0 || graph->numberVertices < city) {
+        *errorCode = true;
+        return;
+    }
+
+    int shortestRoad = INT_MAX;
+    int nearestCity = -1;
+    for (int i = 0; i < graph->numberVertices; ++i) {
+        if (graph->vertices[i]->value.stateNumber != city) {
+            continue;
+        }
+        for (int j = 0; j < graph->vertices[i]->numberOfAdjacentVertices; ++j) {
+            if (graph->vertices[i]->adjacentVertices[j]->value.stateNumber == -1) {
+                shortestRoad = min(shortestRoad, graph->adjacencyMatrix[i][j]);
+                if (shortestRoad == graph->adjacencyMatrix[i][j]) {
+                    nearestCity = graph->vertices[i]->adjacentVertices[j]->value.key;
+                }
+            }
+        }
+    }
+    graph->vertices[nearestCity]->value.stateNumber = city;
+}
+
+bool isCapital(Graph* graph, int key, bool* errorCode) {
+    if (graph == NULL) {
+        *errorCode = true;
+        return false;
+    }
+    if (key < 0 || graph->numberVertices < key) {
+        *errorCode = true;
+        return false;
+    }
+    return graph->vertices[key]->value.isCapital;
+}
+
+void createStates(Graph* graph, int graphSize, bool* errorCode) {
+    Queue* capitals = createQueue(*errorCode);
+    if (*errorCode) {
+        return;
+    }
+    for (int i = 0; i < graphSize; ++i) {
+        if (isCapital(graph, i, errorCode)) {
+            enqueue(capitals, i, errorCode);
+            if (*errorCode) {
+                return;
+            }
+        }
+    }
+    graph->numberOfCitiesOutsideState = graphSize;
+    while (graph->numberOfCitiesOutsideState != 0) {
+        int selectedCity = dequeue(capitals, errorCode);
+        enqueue(capitals, selectedCity, errorCode);
+        if (*errorCode) {
+            return;
+        }
+        addNearestCity(graph, selectedCity, errorCode);
+        if (*errorCode) {
+            return;
+        }
+        --graph->numberOfCitiesOutsideState;
+    }
 }

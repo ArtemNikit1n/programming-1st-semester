@@ -31,4 +31,14 @@ void printMatrix(Graph* graph);
 // Sets the capital by the key.
 void setCapital(Graph* graph, int key, bool* errorCode);
 
+// Adds the nearest city.
 void addNearestCity(Graph* graph, const int city, bool* errorCode);
+
+// Checks whether the vertex is the capital.
+bool isCapital(Graph* graph, int key, bool* errorCode);
+
+// Unites the graph into states.
+void createStates(Graph* graph, int graphSize, bool* errorCode);
+
+// Allows you to find out the size of the graph.
+int getGraphSize(Graph* graph);

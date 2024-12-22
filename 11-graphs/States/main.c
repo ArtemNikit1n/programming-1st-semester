@@ -2,6 +2,7 @@
 
 #include "graphsTests.h"
 #include "graph.h"
+#include "testsForQueue.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -55,6 +56,7 @@ Graph* buildGraph(const char* fileName, bool* errorCode) {
         fscanf(file, "%d ", &city);
         setCapital(graph, city, errorCode);
     }
+    return graph;
 }
 
 int main(void) {
@@ -63,11 +65,15 @@ int main(void) {
     if (errorCode) {
         return errorCode;
     }
+    testQueue(&errorCode);
+    if (errorCode) {
+        return errorCode;
+    }
 
     Graph* graph = buildGraph("graphData.txt", &errorCode);
     if (errorCode) {
         return errorCode;
     }
-
+    createStates(graph, getGraphSize(graph), &errorCode);
     return errorCode;
 } 
