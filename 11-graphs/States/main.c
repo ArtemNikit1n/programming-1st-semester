@@ -18,10 +18,43 @@ Graph* buildGraph(const char* fileName, bool* errorCode) {
     int numberOfEdges = 0;
     fscanf(file, "%d ", &numberOfEdges);
     int numberOfVerticesCreated = 0;
-    //while (numberOfVerticesCreated < numberOfEdges) {
+    for (int i = 0; i < numberOfEdges; ++i) {
+        VertexValue value = { .isCapital = false, .key = -1, .stateNumber = -1 };
+        int firstKey = -1;
+        fscanf(file, "%d ", &firstKey);
+        value.key = firstKey;
+        addVertex(graph, value, errorCode);
+        if (*errorCode) {
+            deleteGraph(&graph, errorCode);
+            return NULL;
+        }
 
-    //    fscanf(file, "%d ", &numberOfVertices);
-    //}
+        int secondKey = -1;
+        fscanf(file, "%d ", &secondKey);
+        value.key = secondKey;
+        addVertex(graph, value, errorCode);
+        if (*errorCode) {
+            deleteGraph(&graph, errorCode);
+            return NULL;
+        }
+
+        int edgeWeight = -1;
+        fscanf(file, "%d ", &edgeWeight);
+
+        connectVertices(graph, firstKey, secondKey, edgeWeight, errorCode);
+        if (*errorCode) {
+            deleteGraph(&graph, errorCode);
+            return NULL;
+        }
+    }
+
+    int numberOfCapitals = -1;
+    fscanf(file, "%d ", &numberOfCapitals);
+    for (int i = 0; i < numberOfCapitals; ++i) {
+        int city = -1;
+        fscanf(file, "%d ", &city);
+        setCapital(graph, city, errorCode);
+    }
 }
 
 int main(void) {
@@ -30,11 +63,11 @@ int main(void) {
     if (errorCode) {
         return errorCode;
     }
-    
+
     Graph* graph = buildGraph("graphData.txt", &errorCode);
     if (errorCode) {
         return errorCode;
     }
 
     return errorCode;
-}
+} 

@@ -23,4 +23,12 @@ void deleteGraph(Graph** pointerToGraph, bool* errorCode);
 void addVertex(Graph* graph, VertexValue value, bool* errorCode);
 
 // Connects two vertices.
-void connectVertices(Graph* graph, int key1, int key2, bool* errorCode);
+void connectVertices(Graph* graph, int key1, int key2, int edgeWeight, bool* errorCode);
+
+// Prints the adjacency matrix.
+void printMatrix(Graph* graph);
+
+// Sets the capital by the key.
+void setCapital(Graph* graph, int key, bool* errorCode);
+
+void addNearestCity(Graph* graph, const int city, bool* errorCode);
