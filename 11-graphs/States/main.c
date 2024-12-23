@@ -56,6 +56,7 @@ Graph* buildGraph(const char* fileName, bool* errorCode) {
         fscanf(file, "%d ", &city);
         setCapital(graph, city, errorCode);
     }
+    printMatrix(graph);
     return graph;
 }
 
