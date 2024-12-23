@@ -1,10 +1,12 @@
-﻿#include <stdbool.h>
+﻿#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdbool.h>
 #include <stdio.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <errno.h>
 
-#define _CRT_SECURE_NO_WARNINGS
+#define SIZEOF 32
 
 bool comparingTwoArrays(bool firstArray[], bool secondArray[], int arrayLength) {
     bool errorCode = true;
@@ -23,26 +25,9 @@ void printBoolArray(bool boolArray[], int boolArrayLength) {
     }
 }
 
-int exponentiationLogTime(int baseOfDegree, int exponent) {
-    int result = 1;
-
-    if (exponent == 0) {
-        return result;
-    }
-    while (exponent > 0) {
-        if (exponent % 2 == 1) {
-            result *= baseOfDegree;
-        }
-        exponent /= 2;
-        baseOfDegree *= baseOfDegree;
-    }
-
-    return result;
-}
-
 void binarySum(bool binaryFirstNumber[], bool binarySecondNumber[], bool binarySumArray[]) {
     bool theAdditionalTerm = 0;
-    for (int i = 31; i >= 0; --i) {
+    for (int i = SIZEOF - 1; i >= 0; --i) {
         bool oneAndZero = (binaryFirstNumber[i] && !binarySecondNumber[i]) || (!binaryFirstNumber[i] && binarySecondNumber[i]);
         if (!binaryFirstNumber[i] && !binarySecondNumber[i]) {
             if (theAdditionalTerm) {
@@ -76,31 +61,22 @@ void binarySum(bool binaryFirstNumber[], bool binarySecondNumber[], bool binaryS
 }
 
 int conversionToDecimal(bool binaryNumber[]) {
-    if (binaryNumber[0]) {
-        int decimalNumber = -1;
+    int decimalNumber = 0;
 
-        bool minusOne[32] = { 1 };
-        binarySum(binaryNumber, minusOne, binaryNumber);
-        for (int i = 1; i < 32; ++i) {
-            decimalNumber -= !binaryNumber[i] * exponentiationLogTime(2, 31 - i);
-        }
-        return decimalNumber;
-    } else {
-        int decimalNumber = 0;
-
-        for (int i = 1; i < 32; ++i) {
-            decimalNumber += binaryNumber[i] * exponentiationLogTime(2, 31 - i);
-        }
-        return decimalNumber;
+    int k = 1;
+    for (int i = SIZEOF - 1; i >= 0; --i) {
+        decimalNumber += binaryNumber[i] * k;
+        k *= 2;
     }
+    return decimalNumber;
 }
 
 void getBinaryNumber(int decimalNumber, bool binaryNumber[]) {
-    for (int i = 0; i < 32; ++i) {
+    for (int i = 0; i < SIZEOF; ++i) {
         if ((decimalNumber) & (1 << i)) {
-            binaryNumber[31 - i] = 1;
+            binaryNumber[SIZEOF - 1 - i] = 1;
         } else {
-            binaryNumber[31 - i] = 0;
+            binaryNumber[SIZEOF - 1 - i] = 0;
         }
     }
 }
@@ -151,54 +127,48 @@ bool testComparingTwoArrays() {
     return !comparingTwoArrays(firstArray, secondArray, 6) && comparingTwoArrays(firstArray, firstArray, 6);
 }
 
-bool testExponentiationLogTime() {
-    bool test1ExponentiationLogTime = exponentiationLogTime(5, 2) == 25;
-    bool test2ExponentiationLogTime = exponentiationLogTime(2, 20) == 1048576;
-    return test1ExponentiationLogTime && test2ExponentiationLogTime;
-}
-
 bool testGetBinaryNumber() {
     int positiveNumber = 2048;
     int negativeNumber = -1025;
-    bool positiveNumberArray[32] = { 0 };
+    bool positiveNumberArray[SIZEOF] = { 0 };
     positiveNumberArray[20] = 1;
-    bool negativeNumberArray[32] = { 0 };
+    bool negativeNumberArray[SIZEOF] = { 0 };
     for (int i = 0; i < 32; i++) {
         negativeNumberArray[i] = 1;
     }
     negativeNumberArray[21] = 0;
-    bool theResultIsForThePositive[32] = { 0 };
-    bool theResultIsForTheNegative[32] = { 0 };
+    bool theResultIsForThePositive[SIZEOF] = { 0 };
+    bool theResultIsForTheNegative[SIZEOF] = { 0 };
     getBinaryNumber(positiveNumber, theResultIsForThePositive);
     getBinaryNumber(negativeNumber, theResultIsForTheNegative);
 
-    return comparingTwoArrays(positiveNumberArray, theResultIsForThePositive, 32) && comparingTwoArrays(negativeNumberArray, theResultIsForTheNegative, 32);
+    return comparingTwoArrays(positiveNumberArray, theResultIsForThePositive, SIZEOF) && comparingTwoArrays(negativeNumberArray, theResultIsForTheNegative, SIZEOF);
 }
 
 bool testBinarySum() {
-    bool theFirstSummand[32] = { 0 };
-    for (int i = 1; i < 32; i++) {
+    bool theFirstSummand[SIZEOF] = { 0 };
+    for (int i = 1; i < SIZEOF; i++) {
         theFirstSummand[i] = 1;
     }
-    bool theSecondSummand[32] = { 0 };
-    for (int i = 0; i < 32; i++) {
+    bool theSecondSummand[SIZEOF] = { 0 };
+    for (int i = 0; i < SIZEOF; i++) {
         theSecondSummand[i] = 1;
     }
-    bool expectedResult[32] = { 0 };
-    for (int i = 1; i < 31; i++) {
+    bool expectedResult[SIZEOF] = { 0 };
+    for (int i = 1; i < SIZEOF - 1; i++) {
         expectedResult[i] = 1;
     }
 
-    bool result[32] = { 0 };
+    bool result[SIZEOF] = { 0 };
     binarySum(theFirstSummand, theSecondSummand, result);
-    return comparingTwoArrays(result, expectedResult, 32);
+    return comparingTwoArrays(result, expectedResult, SIZEOF);
 }
 
 bool testConversionToDecimal() {
-    bool positiveNumberArray[32] = { 0 };
+    bool positiveNumberArray[SIZEOF] = { 0 };
     positiveNumberArray[20] = 1;
-    bool negativeNumberArray[32] = { 0 };
-    for (int i = 0; i < 32; i++) {
+    bool negativeNumberArray[SIZEOF] = { 0 };
+    for (int i = 0; i < SIZEOF; i++) {
         negativeNumberArray[i] = 1;
     }
     negativeNumberArray[21] = 0;
@@ -209,9 +179,9 @@ int main(void) {
     int firstNumber = -1;
     int secondNumber = -1;
     int decimalSumNumber = -1;
-    bool binaryFirstNumber[32] = { 0 };
-    bool binarySecondNumber[32] = { 0 };
-    bool binarySumArray[32] = { 0 };
+    bool binaryFirstNumber[SIZEOF] = { 0 };
+    bool binarySecondNumber[SIZEOF] = { 0 };
+    bool binarySumArray[SIZEOF] = { 0 };
 
     bool errorCode = false;
 
@@ -219,12 +189,6 @@ int main(void) {
 
     if (!testComparingTwoArrays()) {
         printf("Тест comparingTwoArrays не пройден\n");
-        errorCode = true;
-        return errorCode;
-    }
-
-    if (!testExponentiationLogTime()) {
-        printf("Тест exponentiationLogTime не пройден\n");
         errorCode = true;
         return errorCode;
     }
@@ -261,11 +225,11 @@ int main(void) {
     binarySum(binaryFirstNumber, binarySecondNumber, binarySumArray);
 
     printf("Двоичное представление первого числа в дополнительном коде:\n");
-    printBoolArray(binaryFirstNumber, 32);
+    printBoolArray(binaryFirstNumber, SIZEOF);
     printf("\nДвоичное представление второго числа в дополнительном коде:\n");
-    printBoolArray(binarySecondNumber, 32);
+    printBoolArray(binarySecondNumber, SIZEOF);
     printf("\nДвоичная сумма:\n");
-    printBoolArray(binarySumArray, 32);
+    printBoolArray(binarySumArray, SIZEOF);
     decimalSumNumber = conversionToDecimal(binarySumArray);
     printf("\nДесятичная сумма:\n%d", decimalSumNumber);
 
