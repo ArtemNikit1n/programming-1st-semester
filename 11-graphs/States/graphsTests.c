@@ -44,9 +44,68 @@ void testConnectVertices(bool* errorCode) {
     deleteGraph(&testGraph2, errorCode);
 }
 
-void testCreateStates(bool* errorCode) {
+bool areArraysEqual(int array1[], int array2[], int arraySize) {
+    for (int i = 0; i < arraySize; ++i) {
+        if (array1[i] != array2[i]) {
+            return false;
+        }
+    }
+    return true;
+}
 
-    return;
+void testCreateStates(bool* errorCode) {
+    int graphSize = 10;
+    Graph* graph = createGraph(graphSize, errorCode);
+    if (*errorCode) {
+        return;
+    }
+
+    for (int i = 0; i < graphSize; ++i) {
+        VertexValue value = { .isCapital = false, .key = i, .stateNumber = -1 };
+        addVertex(graph, value, errorCode);
+        if (*errorCode) {
+            deleteGraph(&graph, errorCode);
+            return;
+        }
+    }
+    connectVertices(graph, 0, 4, 1, errorCode);
+    connectVertices(graph, 0, 1, 3, errorCode);
+    connectVertices(graph, 0, 5, 5, errorCode);
+    connectVertices(graph, 1, 2, 2, errorCode);
+    connectVertices(graph, 2, 5, 20, errorCode);
+    connectVertices(graph, 2, 3, 7, errorCode);
+    connectVertices(graph, 3, 7, 5, errorCode);
+    connectVertices(graph, 3, 8, 4, errorCode);
+    connectVertices(graph, 5, 6, 6, errorCode);
+    connectVertices(graph, 7, 8, 1, errorCode);
+    connectVertices(graph, 7, 9, 2, errorCode);
+    if (*errorCode) {
+        deleteGraph(&graph, errorCode);
+        return;
+    }
+    setCapital(graph, 0, errorCode);
+    setCapital(graph, 8, errorCode);
+    if (*errorCode) {
+        deleteGraph(&graph, errorCode);
+        return;
+    }
+
+    createStates(graph, errorCode);
+    if (*errorCode) {
+        deleteGraph(&graph, errorCode);
+        return;
+    }
+    int expectedResult[10] = { 0, 0, 0, 8, 0, 0, 0, 8, 8, 8 };
+    int* informationAboutStates = giveInformationAboutStates(graph, &errorCode);
+    if (*errorCode) {
+        deleteGraph(&graph, &errorCode);
+        return;
+    }
+    if (!areArraysEqual(expectedResult, informationAboutStates, graphSize)) {
+        *errorCode = true;
+        deleteGraph(&graph, &errorCode);
+        return;
+    }
 }
 
 void testGraph(bool* errorCode) {

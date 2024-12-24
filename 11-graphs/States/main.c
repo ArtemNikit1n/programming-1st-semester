@@ -84,12 +84,14 @@ int main(void) {
         deleteGraph(&graph, &errorCode);
         return errorCode;
     }
+    int graphSize = getGraphSize(graph, &errorCode);
+
     printf("City number:\n");
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < graphSize; ++i) {
         printf("%d\t", i);
     }
     printf("\nState number:\n");
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < graphSize; ++i) {
         printf("%d\t", informationAboutStates[i]);
     }
     return errorCode;

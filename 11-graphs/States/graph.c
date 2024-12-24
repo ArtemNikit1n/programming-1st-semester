@@ -310,3 +310,11 @@ int* giveInformationAboutStates(Graph* graph, bool* errorCode) {
     }
     return information;
 }
+
+int getGraphSize(Graph* graph, bool* errorCode) {
+    if (graph == NULL) {
+        *errorCode = true;
+        return 0;
+    }
+    return graph->numberVertices;
+}
