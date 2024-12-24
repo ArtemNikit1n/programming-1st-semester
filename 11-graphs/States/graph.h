@@ -34,11 +34,8 @@ void setCapital(Graph* graph, int key, bool* errorCode);
 // Adds the nearest city.
 void addNearestCity(Graph* graph, const int city, bool* errorCode);
 
-// Checks whether the vertex is the capital.
-bool isCapital(Graph* graph, int key, bool* errorCode);
-
 // Unites the graph into states.
-void createStates(Graph* graph, int graphSize, bool* errorCode);
+void createStates(Graph* graph, bool* errorCode);
 
-// Allows you to find out the size of the graph.
-int getGraphSize(Graph* graph);
+// Returns an array whose indexes are keys, and the values in the cell are the state to which the vertex belongs according to this key (index).
+int* giveInformationAboutStates(Graph* graph, bool* errorCode);

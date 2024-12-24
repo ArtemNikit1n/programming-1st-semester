@@ -234,10 +234,6 @@ void printMatrix(Graph* graph) {
     }
 }
 
-int getGraphSize(Graph* graph) {
-    return graph->numberVertices;
-}
-
 void addNearestCity(Graph* graph, const int city, bool* errorCode) {
     if (graph == NULL) {
         *errorCode = true;
@@ -272,25 +268,15 @@ void addNearestCity(Graph* graph, const int city, bool* errorCode) {
     graph->vertices[nearestCity]->value.stateNumber = city;
 }
 
-bool isCapital(Graph* graph, int key, bool* errorCode) {
-    if (graph == NULL) {
-        *errorCode = true;
-        return false;
-    }
-    if (key < 0 || graph->numberVertices < key) {
-        *errorCode = true;
-        return false;
-    }
-    return graph->vertices[key]->value.isCapital;
-}
+void createStates(Graph* graph, bool* errorCode) {
+    int graphSize = graph->numberVertices;
 
-void createStates(Graph* graph, int graphSize, bool* errorCode) {
     Queue* capitals = createQueue(*errorCode);
     if (*errorCode) {
         return;
     }
     for (int i = 0; i < graphSize; ++i) {
-        if (isCapital(graph, i, errorCode)) {
+        if (graph->vertices[i]->value.isCapital) {
             enqueue(capitals, i, errorCode);
             if (*errorCode) {
                 return;
@@ -310,4 +296,17 @@ void createStates(Graph* graph, int graphSize, bool* errorCode) {
         }
         --graph->numberOfCitiesOutsideState;
     }
+}
+
+int* giveInformationAboutStates(Graph* graph, bool* errorCode) {
+    int* information = calloc(graph->numberVertices, sizeof(int));
+    if (information == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+
+    for (int i = 0; i < graph->numberVertices; ++i) {
+        information[i] = graph->vertices[i]->value.stateNumber;
+    }
+    return information;
 }

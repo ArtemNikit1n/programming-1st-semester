@@ -74,6 +74,23 @@ int main(void) {
     if (errorCode) {
         return errorCode;
     }
-    createStates(graph, getGraphSize(graph), &errorCode);
+    createStates(graph, &errorCode);
+    if (errorCode) {
+        deleteGraph(&graph, &errorCode);
+        return errorCode;
+    }
+    int* informationAboutStates = giveInformationAboutStates(graph, &errorCode);
+    if (errorCode) {
+        deleteGraph(&graph, &errorCode);
+        return errorCode;
+    }
+    printf("City number:\n");
+    for (int i = 0; i < 6; ++i) {
+        printf("%d\t", i);
+    }
+    printf("\nState number:\n");
+    for (int i = 0; i < 6; ++i) {
+        printf("%d\t", informationAboutStates[i]);
+    }
     return errorCode;
 } 

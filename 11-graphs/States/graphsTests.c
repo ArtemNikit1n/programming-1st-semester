@@ -44,7 +44,13 @@ void testConnectVertices(bool* errorCode) {
     deleteGraph(&testGraph2, errorCode);
 }
 
+void testCreateStates(bool* errorCode) {
+
+    return;
+}
+
 void testGraph(bool* errorCode) {
     testCreateAndDelete(errorCode);
     testConnectVertices(errorCode);
+    testCreateStates(errorCode);
 }
