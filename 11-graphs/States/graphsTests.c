@@ -36,7 +36,6 @@ void testConnectVertices(bool* errorCode) {
 
     Graph* testGraph2 = createGraph(3, errorCode);
     addVertex(testGraph2, value4, errorCode);
-    addVertex(testGraph2, value4, errorCode);
     addVertex(testGraph2, value5, errorCode);
     addVertex(testGraph2, value6, errorCode);
 

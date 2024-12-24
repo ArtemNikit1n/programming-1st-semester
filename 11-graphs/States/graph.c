@@ -82,7 +82,7 @@ void addVertex(Graph* graph, VertexValue value, bool* errorCode) {
     }
 
     if (graph->vertices[value.key] != NULL) {
-        free(graph->vertices[value.key]);
+        return;
     }
     graph->vertices[value.key] = createVertex(value, errorCode);
     graph->numberVertices = max(graph->numberVertices, value.key + 1);
@@ -249,19 +249,25 @@ void addNearestCity(Graph* graph, const int city, bool* errorCode) {
     }
 
     int shortestRoad = INT_MAX;
-    int nearestCity = -1;
+    int nearestCity = -2;
     for (int i = 0; i < graph->numberVertices; ++i) {
-        if (graph->vertices[i]->value.stateNumber != city) {
+        Vertex* selectedCityOfState = graph->vertices[i];
+        int stateNumber = selectedCityOfState->value.stateNumber;
+        if (stateNumber != city) {
             continue;
         }
-        for (int j = 0; j < graph->vertices[i]->numberOfAdjacentVertices; ++j) {
-            if (graph->vertices[i]->adjacentVertices[j]->value.stateNumber == -1) {
-                shortestRoad = min(shortestRoad, graph->adjacencyMatrix[i][j]);
-                if (shortestRoad == graph->adjacencyMatrix[i][j]) {
-                    nearestCity = graph->vertices[i]->adjacentVertices[j]->value.key;
+        for (int j = 0; j < selectedCityOfState->numberOfAdjacentVertices; ++j) {
+            int candidatesNumberForNearestCity = selectedCityOfState->adjacentVertices[j]->value.key;
+            if (selectedCityOfState->adjacentVertices[j]->value.stateNumber == -1) {
+                shortestRoad = min(shortestRoad, graph->adjacencyMatrix[i][candidatesNumberForNearestCity]);
+                if (shortestRoad == graph->adjacencyMatrix[i][candidatesNumberForNearestCity]) {
+                    nearestCity = candidatesNumberForNearestCity;
                 }
             }
         }
+    }
+    if (nearestCity == -2) {
+        return;
     }
     graph->vertices[nearestCity]->value.stateNumber = city;
 }
@@ -292,7 +298,6 @@ void createStates(Graph* graph, int graphSize, bool* errorCode) {
         }
     }
     graph->numberOfCitiesOutsideState = graphSize;
-    printMatrix(graph);
     while (graph->numberOfCitiesOutsideState != 0) {
         int selectedCity = dequeue(capitals, errorCode);
         enqueue(capitals, selectedCity, errorCode);
