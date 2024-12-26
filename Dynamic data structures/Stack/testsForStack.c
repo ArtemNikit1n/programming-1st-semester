@@ -1,121 +1,105 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "../stack/stack.h"
+#include "stack.h"
 
-bool testCreateStack(bool *errorCode) {
+void testCreateStack(bool* errorCode) {
     Stack* testStack = createStack(errorCode);
     if (*errorCode) {
-        printf("Функция сработала с ошибкой\n");
-        deleteStack(&testStack);
-        return false;
+        return;
     }
-    bool testIsPassed = testStack != NULL;
+    if (testStack == NULL) {
+        *errorCode = true;
+        return;
+    }
     deleteStack(&testStack);
-    return testIsPassed;
+    if (testStack != NULL) {
+        *errorCode = true;
+        return;
+    }
 }
 
-bool testDeleteStack(bool* errorCode) {
+void testDeleteStack(bool* errorCode) {
     Stack* testStack = createStack(errorCode);
     if (*errorCode) {
-        printf("Функция сработала с ошибкой\n");
-        deleteStack(&testStack);
-        return false;
+        return;
     }
     push(testStack, 1, errorCode);
     push(testStack, 2, errorCode);
     push(testStack, 3, errorCode);
     if (*errorCode) {
-        printf("Функция сработала с ошибкой\n");
         deleteStack(&testStack);
-        return false;
+        return;
     }
     deleteStack(&testStack);
-    return testStack == NULL;
+    if (testStack != NULL) {
+        *errorCode = true;
+        return;
+    }
 }
 
-bool testIsEmpty(bool* errorCode) {
+void testIsEmpty(bool* errorCode) {
     Stack* testStack = createStack(errorCode);
     if (*errorCode) {
-        printf("Функция сработала с ошибкой\n");
         deleteStack(&testStack);
-        return false;
+        return;
     }
     bool test1IsPassed = isEmpty(testStack);
 
     push(testStack, 1, errorCode);
     if (*errorCode) {
-        printf("Функция сработала с ошибкой\n");
         deleteStack(&testStack);
-        return false;
+        return;
     }
     bool test2IsPassed = !isEmpty(testStack);
     deleteStack(&testStack);
-    return test1IsPassed && test2IsPassed;
+    if (!(test1IsPassed && test2IsPassed)) {
+        *errorCode = true;
+    }
 }
 
-bool testPush(bool* errorCode) {
+void testPush(bool* errorCode) {
     Stack* testStack = createStack(errorCode);
     if (*errorCode) {
-        printf("Функция сработала с ошибкой\n");
         deleteStack(&testStack);
-        return false;
+        return;
     }
     push(testStack, 1, errorCode);
     push(testStack, 2, errorCode);
     push(testStack, 3, errorCode);
     if (*errorCode) {
-        printf("Функция сработала с ошибкой\n");
         deleteStack(&testStack);
-        return false;
+        return;
     }
     bool testIsPassed = !isEmpty(testStack);
     deleteStack(&testStack);
-    return testIsPassed;
+    if (!testIsPassed) {
+        *errorCode = true;
+    }
 }
 
-bool testPop(bool* errorCode) {
+void testPop(bool* errorCode) {
     Stack* testStack = createStack(errorCode);
     if (*errorCode) {
-        printf("Функция сработала с ошибкой\n");
         deleteStack(&testStack);
-        return false;
+        return;
     }
     push(testStack, 1, errorCode);
     bool testIsPassed = pop(testStack, errorCode) == 1;
     if (*errorCode) {
-        printf("Функция сработала с ошибкой\n");
         deleteStack(&testStack);
-        return false;
+        return;
     }
     deleteStack(&testStack);
-    return testIsPassed;
+    if (!testIsPassed) {
+        *errorCode = true;
+    }
 }
 
 void runStackTest(bool* errorCode) {
-    if (!testCreateStack(errorCode)) {
-        printf("Тест testCreateStack не пройден\n");
-        *errorCode = true;
-        return;
-    }
-    if (!testDeleteStack(errorCode)) {
-        printf("Тест testDeleteStack не пройден\n");
-        *errorCode = true;
-        return;
-    }
-    if (!testIsEmpty(errorCode)) {
-        printf("Тест testIsEmpty не пройден\n");
-        *errorCode = true;
-        return;
-    }
-    if (!testPush(errorCode)) {
-        printf("Тест testPushAndStackSize не пройден\n");
-        *errorCode = true;
-        return;
-    }
-    if (!testPop(errorCode)) {
-        printf("Тест testPop не пройден\n");
-        *errorCode = true;
-        return;
-    }
+    testCreateStack(errorCode);
+    testDeleteStack(errorCode);
+    testIsEmpty(errorCode);
+    testPush(errorCode);
+    testPop(errorCode);
 }
