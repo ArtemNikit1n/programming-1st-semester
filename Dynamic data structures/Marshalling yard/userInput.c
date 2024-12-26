@@ -46,48 +46,56 @@ bool checkingUserInput(const char* string) {
     return true;
 }
 
-char* userInput(bool *errorCode) {
+char* userInput(bool* errorCode) {
     char* inputString = (char*)calloc(1, sizeof(char));
     if (inputString == NULL) {
-        printf("Ошибка выделения памяти");
+        printf("Ошибка выделения памяти\n");
         *errorCode = true;
         return NULL;
     }
-    size_t bufferSize = 1;
-    size_t lineLength = 0;
 
-    while (true) {
-        char oneCharacter = getchar();
+    bool isInputIncorrect = false;
+    do {
+        isInputIncorrect = false;
+        size_t bufferSize = 1;
+        size_t lineLength = 0;
+        while (true) {
+            char oneCharacter = getchar();
 
-        if (oneCharacter == '\n') {
-            break;
+            if (oneCharacter == '\n') {
+                break;
+            }
+
+            if (lineLength + 1 >= bufferSize) {
+                bufferSize *= 2;
+                char* tmp = (char*)realloc(inputString, bufferSize * sizeof(char));
+                if (tmp == NULL) {
+                    printf("Ошибка выделения памяти\n");
+                    *errorCode = true;
+                    return NULL;
+                }
+                inputString = tmp;
+            }
+            inputString[lineLength++] = oneCharacter;
         }
 
-        if (lineLength + 1 >= bufferSize) {
-            bufferSize *= 2;
-            char* tmp = (char*)realloc(inputString, bufferSize * sizeof(char));
-            if (tmp == NULL) {
-                printf("Ошибка выделения памяти");
+        inputString[lineLength] = '\0';
+        if (!checkingUserInput(inputString)) {
+            isInputIncorrect = true;
+            free(inputString);
+            printf("Строка должна содержать только символы указанные выше, попробуйте ещё раз\n");
+            inputString = (char*)calloc(1, sizeof(char));
+            if (inputString == NULL) {
+                printf("Ошибка выделения памяти\n");
                 *errorCode = true;
                 return NULL;
             }
-            inputString = tmp;
         }
-        inputString[lineLength++] = oneCharacter;
-    }
-
-    inputString[lineLength] = '\0';
-    if (checkingUserInput(inputString) && checkingTheBalanceOfBrackets(inputString)) {
-        return inputString;
-    }
-    else if (!checkingUserInput(inputString)) {
-        printf("Строка должна содержать только символы указанные выше, попробуйте ещё раз\n");
-        free(inputString);
-        userInput(errorCode);
-    }
-    else if (!checkingTheBalanceOfBrackets(inputString)) {
-        printf("Не выполняется баланс скобок, попробуйте ещё раз\n");
-        free(inputString);
-        userInput(errorCode);
-    }
+        else if (!checkingTheBalanceOfBrackets(inputString)) {
+            printf("Не выполняется баланс скобок, попробуйте ещё раз\n");
+            free(inputString);
+            userInput(errorCode);
+        }
+    } while (isInputIncorrect);
+    return inputString;
 }

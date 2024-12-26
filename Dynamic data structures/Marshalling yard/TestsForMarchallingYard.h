@@ -1,4 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
+
 // Test for infixToPostfix.
-bool testTheMarshallingYard(bool* errorCode);
+void testTheMarshallingYard(bool* errorCode);

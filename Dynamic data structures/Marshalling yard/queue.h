@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdbool.h>
+
 // The structure indicating the beginning and end of the queue.
 typedef struct Queue Queue;
 

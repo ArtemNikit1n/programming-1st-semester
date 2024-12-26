@@ -21,9 +21,6 @@
     <ClCompile Include="userInput.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="testsForUserInput.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="marchallingYard.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -39,15 +36,12 @@
     <ClCompile Include="testsForQueue.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="TestsForMarchallingYard.c">
+    <ClCompile Include="testsForMarchallingYard.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="userInput.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="testsForUserInput.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="marchallingYard.h">
@@ -65,7 +59,7 @@
     <ClInclude Include="testsForQueue.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="TestsForMarchallingYard.h">
+    <ClInclude Include="testsForMarchallingYard.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

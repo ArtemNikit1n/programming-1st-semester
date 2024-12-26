@@ -1,4 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
+
 // Test for enqueue and dequeue.
-bool testForEnqueueAndDequeue(bool* errorCode);
+void testForEnqueueAndDequeue(bool* errorCode);

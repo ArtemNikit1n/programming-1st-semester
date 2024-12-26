@@ -5,29 +5,23 @@
 #include "marchallingYard.h"
 #include "userInput.h"
 #include "TestsForMarchallingYard.h"
-#include "testsForUserInput.h"
 #include "testsForQueue.h"
 #include "../stack/testsForStack.h"
 
 void runTests(bool* errorCode) {
-    if (!testTheMarshallingYard(errorCode)) {
-        printf("Тест testTheMarshallingYard() не пройден\n");
+    runStackTest(&errorCode);
+    if (*errorCode) {
+        return errorCode;
+    }
+    testForEnqueueAndDequeue(errorCode);
+    if (*errorCode) {
+        printf("Тест enqueueAndDequeue не пройден\n");
         *errorCode = true;
         return;
     }
-    if (!testForEnqueueAndDequeue(errorCode)) {
-        printf("Тест testForEnqueueAndDequeue() не пройден\n");
-        *errorCode = true;
-        return;
-    }
-    if (!testCheckingTheBalanceOfBrackets()) {
-        printf("Тест testCheckingTheBalanceOfBrackets() не пройден\n");
-        *errorCode = true;
-        return;
-    }
-    if (!testCheckingUserInput()) {
-        printf("Тест testCheckingUserInput не пройден\n");
-        *errorCode = true;
+    testTheMarshallingYard(errorCode);
+    if (*errorCode) {
+        printf("Тест marshallingYard не пройден\n");
         return;
     }
 }
@@ -38,15 +32,11 @@ int main(void) {
     bool errorCode = false;
 
     runTests(&errorCode);
-    runStackTest(&errorCode);
-    if (errorCode) {
-        return errorCode;
-    }
 
-    printf("Введите выражение в постфиксной форме:\n"
+    printf("Введите выражение в инфиксной форме:\n"
         "Разрешённые символы: {0123456789+-*/( )}\n");
 
-    char* infixForm = userInput();
+    char* infixForm = userInput(&errorCode);
     if (errorCode) {
         return errorCode;
     }
@@ -59,6 +49,8 @@ int main(void) {
         printf("Программа завершена с ошибкой\n");
         return errorCode;
     }
+    printf("Ваше выражение в постфиксной форме:\n");
+
     printf("%s", postfixForm);
     return errorCode;
  }

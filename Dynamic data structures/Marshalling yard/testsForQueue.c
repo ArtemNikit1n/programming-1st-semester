@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include "queue.h"
 
-bool testForEnqueueAndDequeue(bool *errorCode) {
+void testForEnqueueAndDequeue(bool *errorCode) {
     Queue* queue = createQueue(errorCode);
     if (*errorCode) {
         printf("Функция сработала с ошибкой\n");
@@ -25,5 +25,8 @@ bool testForEnqueueAndDequeue(bool *errorCode) {
     }
     bool testIsPassed = queueIsEmpty(queue);
     deleteQueue(&queue);
-    return testIsPassed;
+    if (!testIsPassed) {
+        *errorCode = true;
+        return;
+    }
 };
