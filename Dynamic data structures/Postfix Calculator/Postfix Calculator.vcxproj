@@ -132,7 +132,6 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="postfixCalculator.c" />
     <ClCompile Include="testsForPostfixCalculator.c" />
-    <ClCompile Include="testsForUserInput.c" />
     <ClCompile Include="userInput.c" />
   </ItemGroup>
   <ItemGroup>

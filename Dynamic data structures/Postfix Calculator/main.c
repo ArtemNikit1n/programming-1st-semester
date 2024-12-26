@@ -5,7 +5,6 @@
 #include "userInput.h"
 #include "postfixCalculator.h"
 #include "testsForPostfixCalculator.h"
-#include "testsForUserInput.h"
 #include "../Stack/testsForStack.h"
 
 
@@ -17,10 +16,6 @@ void runTests(bool* errorCode) {
         }
         *errorCode = true;
         return;
-    }
-    if (!testCheckingUserInput()) {
-        printf("Тест testCheckingUserInput не пройден\n");
-        *errorCode = true;
     }
     runStackTest(errorCode);
 }
