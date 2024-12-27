@@ -18,12 +18,6 @@
     <ClCompile Include="main.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\Tree\tree.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Tree\testsForTree.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="dictionary.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -32,12 +26,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Tree\tree.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Tree\testsForTree.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="dictionary.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>

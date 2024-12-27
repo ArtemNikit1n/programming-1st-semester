@@ -2,63 +2,82 @@
 #include <stdbool.h>
 
 #include "dictionary.h"
-#include "../Tree/tree.h"
 
-bool testDictionary(bool* errorCode) {
-    Node* root = createNode(createNodeValue(1, "a"), errorCode);
-    addToTheDictionary(root, 5, "b", errorCode);
-    addToTheDictionary(root, 3, "c", errorCode);
-    addToTheDictionary(root, 10, "f", errorCode);
-    addToTheDictionary(root, -5, "d", errorCode);
-    addToTheDictionary(root, -3, "e", errorCode);
+void testDeleteTreeAndCreateTree(bool* errorCode) {
+    Node* testNode1 = createTree(32, "abc", errorCode);
+    deleteTree(&testNode1);
+    testNode1 = createTree(456, "def", errorCode);
+    bool test1 = strcmp(searchByKey(testNode1, 456), "def") == 0;
+    bool test2 = !(searchByKey(testNode1, 321), "def") == NULL;
+    deleteTree(&testNode1);
+    deleteTree(&testNode1);
+    if (*errorCode) {
+        return;
+    }
+
+    if (!(test1 && test2 && testNode1 == NULL)) {
+        *errorCode = true;
+        return;
+    }
+}
+
+void testAddingAndDeleteNode(bool* errorCode) {
+    Node* root = createTree(15, "15", errorCode);
+
+    root = addNode(root, 6, "6", errorCode);
+    root = addNode(root, 20, "20", errorCode);
+    root = addNode(root, 19, "19", errorCode);
+    root = addNode(root, 21, "21", errorCode);
+    root = addNode(root, 8, "8", errorCode);
 
     if (*errorCode) {
-        disposeNode(&root);
+        deleteTree(&root);
         return false;
     }
 
-    bool test1 = findValueByTheKey(root, 3, errorCode) == "c";
-    bool test2 = findValueByTheKey(root, 1, errorCode) == "a";
-    bool test3 = findValueByTheKey(root, -3, errorCode) == "e";
-    bool test4 = findValueByTheKey(root, 0, errorCode) == NULL;
+    bool test1 = searchByKey(root, 88) == NULL;
+    bool test2 = strcmp(searchByKey(root, 8), "8") == 0;
+    bool test3 = strcmp(searchByKey(root, 20), "20") == 0;
+    bool test4 = strcmp(searchByKey(root, 15), "15") == 0;
 
     if (*errorCode) {
-        disposeNode(&root);
+        deleteTree(&root);
+        return false;
+    }
+    deleteNode(root, 21, errorCode);
+    deleteNode(root, 20, errorCode);
+    bool test5 = searchByKey(root, 21) == NULL;
+    bool test6 = searchByKey(root, 20) == NULL;
+
+    if (*errorCode) {
+        deleteTree(&root);
         return false;
     }
 
-    deleteByKey(root, 10, errorCode);
-    deleteByKey(root, 5, errorCode);
-    bool test5 = findValueByTheKey(root, 10, errorCode) == NULL;
-    bool test6 = findValueByTheKey(root, 5, errorCode) == NULL;
+    root = addNode(root, 1, "1", errorCode);
+    root = addNode(root, 7, "7", errorCode);
+    root = addNode(root, 11, "11", errorCode);
+    root = addNode(root, 10, "10", errorCode);
 
-    if (*errorCode) {
-        disposeNode(&root);
-        return false;
+    deleteNode(root, 6, errorCode);
+    bool test7 = searchByKey(root, 6) == NULL;
+
+    deleteTree(&root);
+    if (!(test1 && test2 && test3 && test4 && test5 && test6 && test7)) {
+        *errorCode = true;
+        return;
     }
-
-    addToTheDictionary(root, -10, "m", errorCode);
-    addToTheDictionary(root, -4, "g", errorCode);
-    addToTheDictionary(root, 0, "n", errorCode);
-    addToTheDictionary(root, -2, "k", errorCode);
-
-    deleteByKey(root, -5, errorCode);
-    bool test7 = findValueByTheKey(root, -5, errorCode) == NULL;
-
-    disposeNode(&root);
-
-    return test1 && test2 && test3 && test4 && test5 && test6 && test7;
 }
 
 void runTheDictionaryTests(bool* errorCode) {
-    if (!testDictionary(errorCode)) {
-        printf("Тест testDictionary не пройден\n");
-        if (*errorCode) {
-            printf("Код ошибки: 1\n");
-            return;
-        }
-        printf("Код ошибки: 0\n");
-        *errorCode = true;
+    testDeleteTreeAndCreateTree(errorCode);
+    if (*errorCode) {
+        printf("Dictionary test FAILED\n");
+        return;
+    }
+    testAddingAndDeleteNode(errorCode);
+    if (*errorCode) {
+        printf("Dictionary test FAILED\n");
         return;
     }
 }

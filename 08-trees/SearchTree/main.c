@@ -81,8 +81,7 @@ void callTheFunction(int functionCode, bool* errorCode) {
             }
 
             if (root == NULL) {
-                NodeValue rootValue = createNodeValue(key, value);
-                root = createNode(rootValue, errorCode);
+                root = createTree(key, value, errorCode);
                 if (*errorCode) {
                     *errorCode = false;
                     free(value);
@@ -93,30 +92,18 @@ void callTheFunction(int functionCode, bool* errorCode) {
                 functionCode = getTheFunctionCodeFromTheUser();
                 continue;
             }
-            addToTheDictionary(root, key, value, errorCode);
+            addNode(root, key, value, errorCode);
         }
         if (functionCode == 2) {
             printf("Введите ключ:\n");
             int theKeyForTheSearch = getNumberFromTheUser();
-            char* theFoundString = findValueByTheKey(root, theKeyForTheSearch, errorCode);
-            if (*errorCode) {
-                *errorCode = false;
-                printf("Ошибка поиска, попробуйте в другой раз\n");
-                functionCode = getTheFunctionCodeFromTheUser();
-                continue;
-            }
+            char* theFoundString = searchByKey(root, theKeyForTheSearch);
             printf("%s\n", theFoundString);
         }
         if (functionCode == 3) {
             printf("Введите ключ:\n");
             int theKeyForTheSearch = getNumberFromTheUser();
-            char* theFoundString = findValueByTheKey(root, theKeyForTheSearch, errorCode);
-            if (*errorCode) {
-                *errorCode = false;
-                printf("Ошибка поиска, попробуйте в другой раз\n");
-                functionCode = getTheFunctionCodeFromTheUser();
-                continue;
-            }
+            char* theFoundString = searchByKey(root, theKeyForTheSearch);
             if (theFoundString != NULL) {
                 printf("Ключ найден\n");
             } else {
@@ -126,7 +113,8 @@ void callTheFunction(int functionCode, bool* errorCode) {
         if (functionCode == 4) {
             printf("Введите ключ:\n");
             int theKeyToDelete = getNumberFromTheUser();
-            root = deleteByKey(root, theKeyToDelete, errorCode);
+            root = deleteNode(root, theKeyToDelete, errorCode);
+            printf("Ключ успешно удалён!\n");
         }
         functionCode = getTheFunctionCodeFromTheUser();
     }
@@ -135,11 +123,6 @@ void callTheFunction(int functionCode, bool* errorCode) {
 int main(void) {
     setlocale(LC_ALL, "Ru-ru");
     bool errorCode = false;
-
-    runTheTreeTests(&errorCode);
-    if (errorCode) {
-        return errorCode;
-    }
 
     runTheDictionaryTests(&errorCode);
     if (errorCode) {

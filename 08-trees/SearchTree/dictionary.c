@@ -2,164 +2,203 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "../Tree/tree.h"
+#include "dictionary.h"
 
-void addToTheDictionary(Node* node, const int key, const char* value, bool* errorCode) {
-    if (getValue(node, errorCode).key == key) {
-        free(getValue(node, errorCode).value);
-        setValue(node, createNodeValue(key, value), errorCode);
-        return;
-    }
+typedef struct Node {
+    NodeValue value;
+    Node* left;
+    Node* right;
+} Node;
 
-    if (getLeftChild(node, errorCode) == NULL && getValue(node, errorCode).key > key) {
-        if (*errorCode) {
-            return;
-        }
-        Node* newNode = createNode(createNodeValue(key, value), errorCode);
-        if (*errorCode) {
-            return;
-        }
-        addLeftChild(node, newNode, errorCode);
-        return;
-    }
-    else if (getRightChild(node, errorCode) == NULL && getValue(node, errorCode).key < key) {
-        if (*errorCode) {
-            return;
-        }
-        Node* newNode = createNode(createNodeValue(key, value), errorCode);
-        if (*errorCode) {
-            return;
-        }
-        addRightChild(node, newNode, errorCode);
-        return;
-    }
-
-    if (getValue(node, errorCode).key < key) {
-        addToTheDictionary(getRightChild(node, errorCode), key, value, errorCode);
-    }
-    if (getValue(node, errorCode).key > key) {
-        addToTheDictionary(getLeftChild(node, errorCode), key, value, errorCode);
-    }
-}
-
-Node* nodeSearch(Node* node, const int key, bool* errorCode) {
-    Node* theFoundNode = NULL;
-
-    if (*errorCode) {
+Node* createNode(NodeValue value, bool* errorCode) {
+    Node* node = calloc(1, sizeof(Node));
+    if (node == NULL) {
+        *errorCode = true;
         return NULL;
     }
+    node->value = value;
+    return node;
+}
 
-    if (getValue(node, errorCode).key == key) {
+NodeValue getValue(Node* node, bool* errorCode) {
+    if (node == NULL) {
+        NodeValue incorrectNodeValues = { .key = -1, .value = NULL };
+        *errorCode = true;
+        return incorrectNodeValues;
+    }
+    return node->value;
+}
+
+void setValue(Node* node, NodeValue value, bool* errorCode) {
+    if (node == NULL) {
+        *errorCode = true;
+        return;
+    }
+    node->value = value;
+}
+
+Node* createTree(const int key, const char* value, bool* errorCode) {
+    Node* root = calloc(1, sizeof(Node));
+    if (root == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    root->value.key = key;
+    root->value.value = value;
+    return root;
+}
+
+void deleteTree(Node** root) {
+    if (*root == NULL) {
+        return;
+    }
+    deleteTree((&(*root)->left));
+    deleteTree((&(*root)->right));
+    free(*root);
+    *root = NULL;
+}
+
+NodeValue createNodeValue(int key, char* value) {
+    NodeValue nodeValue = { .key = key, .value = value };
+    return nodeValue;
+}
+
+Node* addNode(Node* node, const int key, const char* value, bool* errorCode) {
+    if (key == node->value.key) {
+        node->value.value = value;
         return node;
     }
 
-    if (getLeftChild(node, errorCode) == NULL && getRightChild(node, errorCode) == NULL && getValue(node, errorCode).key != key) {
-        return NULL;
+    if (node->left == NULL && key < node->value.key) {
+        Node* newNode = createTree(key, value, errorCode);
+        if (*errorCode) {
+            return node;
+        }
+        node->left = newNode;
+        return node;
+    }
+    else if (node->right == NULL && key > node->value.key) {
+        Node* newNode = createTree(key, value, errorCode);
+        if (*errorCode) {
+            return node;
+        }
+        node->right = newNode;
+        return node;
     }
 
-    if (getRightChild(node, errorCode) == NULL) {
-        theFoundNode = nodeSearch(getLeftChild(node, errorCode), key, errorCode);
+    if (key > node->value.key) {
+        addNode(node->right, key, value, errorCode);
+        return node;
     }
-    else if (getLeftChild(node, errorCode) == NULL) {
-        theFoundNode = nodeSearch(getRightChild(node, errorCode), key, errorCode);
+    if (key < node->value.key) {
+        addNode(node->left, key, value, errorCode);
+        return node;
     }
-    else if (getValue(node, errorCode).key < key) {
-        theFoundNode = nodeSearch(getRightChild(node, errorCode), key, errorCode);
-    }
-    else if (getValue(node, errorCode).key > key) {
-        theFoundNode = nodeSearch(getLeftChild(node, errorCode), key, errorCode);
-    }
-    return theFoundNode;
 }
 
-char* findValueByTheKey(Node* node, const int key, bool* errorCode) {
-    Node* resultNodeSearch = nodeSearch(node, key, errorCode);
-    if (resultNodeSearch == NULL) {
+char* searchByKey(Node* node, const int key) {
+    if (node == NULL) {
         return NULL;
     }
-    char* theFoundString = getValue(resultNodeSearch, errorCode).value;
+
+    const char* foundValue = NULL;
+    if (node->value.key == key) {
+        return node->value.value;
+    }
+
+    if ((node->left == NULL && node->value.key > key) || (node->right == NULL && node->value.key < key)) {
+        return NULL;
+    }
+
+    if (node->value.key < key) {
+        foundValue = searchByKey(node->right, key);
+    }
+    if (node->value.key > key) {
+        foundValue = searchByKey(node->left, key);
+    }
+    return foundValue;
+}
+
+Node* copyNode(const Node* source, bool* errorCode) {
+    if (source == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+
+    Node* destination = createTree(source->value.key, source->value.value, errorCode);
     if (*errorCode) {
         return NULL;
     }
 
-    return theFoundString;
+    return destination;
 }
 
-void deleteTheNode(Node* theNodeBeingDeleted, const int key, bool* errorCode) {
-
-}
-
-Node* deleteByKey(Node* node, const int key, bool* errorCode) {
+Node* deleteNode(Node* node, const int key, bool* errorCode) {
     if (*errorCode) {
         return node;
     }
 
-    if (getValue(node, errorCode).key == key) {
-        if (getLeftChild(node, errorCode) == NULL && getRightChild(node, errorCode) == NULL) {
+    if (node->value.key == key) {
+        if (node->left == NULL && node->right == NULL) {
             return NULL;
         }
-        if (getLeftChild(node, errorCode) != NULL && getRightChild(node, errorCode) == NULL) {
-            return getLeftChild(node, errorCode);
+        if (node->left != NULL && node->right == NULL) {
+            return node->left;
         }
-        if (getLeftChild(node, errorCode) == NULL && getRightChild(node, errorCode) != NULL) {
-            return getRightChild(node, errorCode);
+        if (node->left == NULL && node->right != NULL) {
+            return node->right;
         }
-        if (getLeftChild(node, errorCode) != NULL && getRightChild(node, errorCode) != NULL) {
-            int absoluteDifferenceBetweenTheParentAndTheLeftSon = abs(abs(getValue(getLeftChild(node, errorCode), errorCode).key) - abs(getValue(node, errorCode).key));
-            int absoluteDifferenceBetweenTheParentAndTheRightSon = abs(abs(getValue(getRightChild(node, errorCode), errorCode).key) - abs(getValue(node, errorCode).key));
-            bool theRightSonIsCloserToTheParent = absoluteDifferenceBetweenTheParentAndTheLeftSon > absoluteDifferenceBetweenTheParentAndTheRightSon;
-            if (theRightSonIsCloserToTheParent) {
-                Node* replacementNode = deleteByKey(node, getValue(getRightChild(node, errorCode), errorCode).key, errorCode);
-                Node* saveNode = copyNode(node, errorCode);
-                NodeValue replacementNodeValue = getValue(replacementNode, errorCode);
-                setValue(node, replacementNodeValue, errorCode);
-                return saveNode;
-            } else {
-                Node* replacementNode = deleteByKey(node, getValue(getLeftChild(node, errorCode), errorCode).key, errorCode);
-                Node* saveNode = copyNode(node, errorCode);
-                NodeValue replacementNodeValue = getValue(replacementNode, errorCode);
-                setValue(node, replacementNodeValue, errorCode);
-                return saveNode;
-            }
+        if (node->left != NULL && node->right != NULL) {
+            Node* replacementNode = deleteNode(node, node->right->value.key, errorCode);
+            Node* saveNode = copyNode(node, errorCode);
+            node->value.key = replacementNode->value.key;
+            node->value = replacementNode->value;
+            free(replacementNode);
+            return saveNode;
         }
     }
 
-    if (getLeftChild(node, errorCode) == NULL && getRightChild(node, errorCode) == NULL && getValue(node, errorCode).key != key) {
+    if (node->left == NULL && node->right == NULL && strcmp(node->value.key, key) != 0) {
         return node;
     }
 
-    if (getValue(node, errorCode).key < key) {
-        Node* theReturnedNode = deleteByKey(getRightChild(node, errorCode), key, errorCode);
+    Node* returnedNode = NULL;
+    if (node->value.key < key) {
+        returnedNode = deleteNode(node->right, key, errorCode);
 
-        if (theReturnedNode == NULL) {
-            Node* saveDeletedNode = copyNode(getRightChild(node, errorCode), errorCode);
-            addRightChild(node, NULL, errorCode);
+        if (returnedNode == NULL) {
+            Node* saveDeletedNode = copyNode(node->right, errorCode);
+            free(node->right);
+            node->right = NULL;
             return saveDeletedNode;
         }
-        else if (theReturnedNode == getLeftChild(getRightChild(node, errorCode), errorCode) || theReturnedNode == getRightChild(getRightChild(node, errorCode), errorCode)) {
-            Node* saveTheReturnedNode = copyNode(theReturnedNode, errorCode);
-            Node* saveDeletedNode = copyNode(getRightChild(node, errorCode), errorCode);
-            addRightChild(node, NULL, errorCode);
-            addRightChild(node, saveTheReturnedNode, errorCode);
+        else if (returnedNode == node->right->left || returnedNode == node->right->right) {
+            Node* saveDeletedNode = copyNode(node->right, errorCode);
+            free(node->right);
+            node->right = returnedNode;
             return saveDeletedNode;
         }
-        return theReturnedNode;
+        return returnedNode;
     }
-    if (getValue(node, errorCode).key > key) {
-        Node* theReturnedNode = deleteByKey(getLeftChild(node, errorCode), key, errorCode);
+    if (node->value.key > key) {
+        returnedNode = deleteNode(node->left, key, errorCode);
 
-        if (theReturnedNode == NULL) {
-            Node* saveDeletedNode = copyNode(getLeftChild(node, errorCode), errorCode);
-            addLeftChild(node, NULL, errorCode);
+        if (returnedNode == NULL) {
+            Node* saveDeletedNode = copyNode(node->left, errorCode);
+            free(node->left);
+            node->left = NULL;
             return saveDeletedNode;
         }
-        else if (theReturnedNode == getLeftChild(getLeftChild(node, errorCode), errorCode) || theReturnedNode == getRightChild(getLeftChild(node, errorCode), errorCode)) {
-            Node* saveTheReturnedNode = copyNode(theReturnedNode, errorCode);
-            Node* saveDeletedNode = copyNode(getLeftChild(node, errorCode), errorCode);
-            addLeftChild(node, NULL, errorCode);
-            addLeftChild(node, saveTheReturnedNode, errorCode);
+        else if (returnedNode == node->left->left || returnedNode == node->left->right) {
+            Node* saveDeletedNode = copyNode(node->left, errorCode);
+            free(node->left);
+            node->left = returnedNode;
             return saveDeletedNode;
         }
-        return theReturnedNode;
+        return returnedNode;
     }
+    if (returnedNode != NULL) {
+        free(returnedNode);
+    }
+    return node;
 }
