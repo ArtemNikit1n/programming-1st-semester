@@ -23,15 +23,15 @@ Stack* createStack(bool *errorCode) {
     return stack;
 }
 
-void deleteStack(Stack** stackDoublePointer) {
-    Stack* stack = *stackDoublePointer;
+void deleteStack(Stack** pointerToStack) {
+    Stack* stack = *pointerToStack;
     while (stack->head != NULL) {
         StackElement* next = stack->head->next;
         free(stack->head);
         stack->head = next;
     }
     free(stack);
-    *stackDoublePointer = NULL;
+    *pointerToStack = NULL;
 }
 
 bool isEmpty(Stack* stack) {
