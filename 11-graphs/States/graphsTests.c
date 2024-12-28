@@ -96,14 +96,14 @@ void testCreateStates(bool* errorCode) {
         return;
     }
     int expectedResult[10] = { 0, 0, 0, 8, 0, 0, 0, 8, 8, 8 };
-    int* informationAboutStates = giveInformationAboutStates(graph, &errorCode);
+    int* informationAboutStates = giveInformationAboutStates(graph, errorCode);
     if (*errorCode) {
-        deleteGraph(&graph, &errorCode);
+        deleteGraph(&graph, errorCode);
         return;
     }
     if (!areArraysEqual(expectedResult, informationAboutStates, graphSize)) {
         *errorCode = true;
-        deleteGraph(&graph, &errorCode);
+        deleteGraph(&graph, errorCode);
         return;
     }
 }

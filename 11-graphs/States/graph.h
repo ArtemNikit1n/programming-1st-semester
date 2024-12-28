@@ -23,10 +23,7 @@ void deleteGraph(Graph** pointerToGraph, bool* errorCode);
 void addVertex(Graph* graph, VertexValue value, bool* errorCode);
 
 // Connects two vertices.
-Graph* connectVertices(Graph* graph, int key1, int key2, int edgeWeight, bool* errorCode);
-
-// Prints the adjacency matrix.
-void printMatrix(Graph* graph);
+Graph* connectVertices(Graph* graph, int key1, int key2, const unsigned int edgeWeight, bool* errorCode);
 
 // Sets the capital by the key.
 void setCapital(Graph* graph, int key, bool* errorCode);
