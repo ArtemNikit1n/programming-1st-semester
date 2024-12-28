@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+//typedef struct Edge {
+//
+//} Edge;
+
 typedef struct Vertex {
     VertexValue value;
     int numberOfAdjacentVertices;
@@ -12,7 +16,7 @@ typedef struct Vertex {
 
 struct Graph {
     int numberOfCitiesOutsideState;
-    int numberVertices;
+    int numberOfVertices;
     int** adjacencyMatrix;
     Vertex** vertices;
 };
@@ -65,17 +69,17 @@ void addVertex(Graph* graph, VertexValue value, bool* errorCode) {
         }
     } 
 
-    if (value.key + 1 > graph->numberVertices) {
+    if (value.key + 1 > graph->numberOfVertices) {
         graph->vertices = realloc(graph->vertices, (value.key + 1) * sizeof(Vertex*));
         if (graph->vertices == NULL) {
             *errorCode = true;
             return;
         }
-        for (int i = graph->numberVertices; i < value.key + 1; ++i) {
+        for (int i = graph->numberOfVertices; i < value.key + 1; ++i) {
             graph->vertices[i] = NULL;
         }
 
-        graph->adjacencyMatrix = expandMatrix(graph->adjacencyMatrix, graph->numberVertices, value.key + 1, errorCode);
+        graph->adjacencyMatrix = expandMatrix(graph->adjacencyMatrix, graph->numberOfVertices, value.key + 1, errorCode);
         if (*errorCode) {
             return;
         }
@@ -85,7 +89,7 @@ void addVertex(Graph* graph, VertexValue value, bool* errorCode) {
         return;
     }
     graph->vertices[value.key] = createVertex(value, errorCode);
-    graph->numberVertices = max(graph->numberVertices, value.key + 1);
+    graph->numberOfVertices = max(graph->numberOfVertices, value.key + 1);
 }
 
 Vertex* addVertexToListOfAdjacentOnes(Vertex* vertex, Vertex* newVertex, bool* errorCode) {
@@ -118,7 +122,7 @@ Graph* connectVertices(Graph* graph, int key1, int key2, int edgeWeight, bool* e
         return;
     }
 
-    if (key1 >= graph->numberVertices || key2 >= graph->numberVertices || key2 < 0 || key1 < 0) {
+    if (key1 >= graph->numberOfVertices || key2 >= graph->numberOfVertices || key2 < 0 || key1 < 0) {
         *errorCode = true;
         return;
     }
@@ -168,8 +172,8 @@ void deleteGraph(Graph** pointerToGraph, bool* errorCode) {
         return;
     }
 
-    deleteMatrix(&(*pointerToGraph)->adjacencyMatrix, (*pointerToGraph)->numberVertices);
-    for (int i = 0; i < (*pointerToGraph)->numberVertices; ++i) {
+    deleteMatrix(&(*pointerToGraph)->adjacencyMatrix, (*pointerToGraph)->numberOfVertices);
+    for (int i = 0; i < (*pointerToGraph)->numberOfVertices; ++i) {
         if ((*pointerToGraph)->vertices[i] != NULL) {
             free((*pointerToGraph)->vertices[i]);
         }
@@ -203,7 +207,7 @@ Graph* createGraph(int initialSizeOfGraph, bool* errorCode) {
         return NULL;
     }
     graph->vertices = vertices;
-    graph->numberVertices = initialSizeOfGraph;
+    graph->numberOfVertices = initialSizeOfGraph;
     return graph;
 }
 
@@ -226,8 +230,8 @@ void setCapital(Graph* graph, int key, bool* errorCode) {
 
 void printMatrix(Graph* graph) {
     int** matrix = graph->adjacencyMatrix;
-    for (int i = 0; i < graph->numberVertices; ++i) {
-        for (int j = 0; j < graph->numberVertices; ++j) {
+    for (int i = 0; i < graph->numberOfVertices; ++i) {
+        for (int j = 0; j < graph->numberOfVertices; ++j) {
             printf("%d\t", matrix[i][j]);
         }
         printf("\n");
@@ -239,14 +243,14 @@ void addNearestCity(Graph* graph, const int city, bool* errorCode) {
         *errorCode = true;
         return;
     }
-    if (city < 0 || graph->numberVertices < city) {
+    if (city < 0 || graph->numberOfVertices < city) {
         *errorCode = true;
         return;
     }
 
     int shortestRoad = INT_MAX;
     int nearestCity = -2;
-    for (int i = 0; i < graph->numberVertices; ++i) {
+    for (int i = 0; i < graph->numberOfVertices; ++i) {
         Vertex* selectedCityOfState = graph->vertices[i];
         int stateNumber = selectedCityOfState->value.stateNumber;
         if (stateNumber != city) {
@@ -269,7 +273,7 @@ void addNearestCity(Graph* graph, const int city, bool* errorCode) {
 }
 
 void createStates(Graph* graph, bool* errorCode) {
-    int graphSize = graph->numberVertices;
+    int graphSize = graph->numberOfVertices;
 
     Queue* capitals = createQueue(*errorCode);
     if (*errorCode) {
@@ -299,13 +303,13 @@ void createStates(Graph* graph, bool* errorCode) {
 }
 
 int* giveInformationAboutStates(Graph* graph, bool* errorCode) {
-    int* information = calloc(graph->numberVertices, sizeof(int));
+    int* information = calloc(graph->numberOfVertices, sizeof(int));
     if (information == NULL) {
         *errorCode = true;
         return NULL;
     }
 
-    for (int i = 0; i < graph->numberVertices; ++i) {
+    for (int i = 0; i < graph->numberOfVertices; ++i) {
         information[i] = graph->vertices[i]->value.stateNumber;
     }
     return information;
@@ -316,5 +320,5 @@ int getGraphSize(Graph* graph, bool* errorCode) {
         *errorCode = true;
         return 0;
     }
-    return graph->numberVertices;
+    return graph->numberOfVertices;
 }
