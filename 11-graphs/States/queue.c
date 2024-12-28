@@ -24,12 +24,12 @@ Queue* createQueue(bool* errorCode) {
     return queue;
 }
 
-void deleteQueue(Queue** queueDoublePointer) {
-    if (queueDoublePointer == NULL || *queueDoublePointer == NULL) {
+void deleteQueue(Queue** pointerToQueue) {
+    if (pointerToQueue == NULL || *pointerToQueue == NULL) {
         return;
     }
 
-    QueueElement* current = (*queueDoublePointer)->front;
+    QueueElement* current = (*pointerToQueue)->front;
 
     while (current != NULL) {
         QueueElement* next = current->next;
@@ -37,8 +37,8 @@ void deleteQueue(Queue** queueDoublePointer) {
         current = next;
     }
 
-    free(*queueDoublePointer);
-    *queueDoublePointer = NULL;
+    free(*pointerToQueue);
+    *pointerToQueue = NULL;
 }
 
 void enqueue(Queue* queue, int value, bool* errorCode) {
