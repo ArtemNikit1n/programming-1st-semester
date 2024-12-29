@@ -2,7 +2,6 @@
 
 #include "graphsTests.h"
 #include "graph.h"
-#include "testsForQueue.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -62,10 +61,6 @@ Graph* buildGraph(const char* fileName, bool* errorCode) {
 int main(void) {
     bool errorCode = false;
     testGraph(&errorCode);
-    if (errorCode) {
-        return errorCode;
-    }
-    testQueue(&errorCode);
     if (errorCode) {
         return errorCode;
     }

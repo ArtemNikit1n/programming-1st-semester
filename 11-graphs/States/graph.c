@@ -1,5 +1,4 @@
 #include "graph.h"
-#include "queue.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -172,12 +171,12 @@ void setCapital(Graph* graph, int key, bool* errorCode) {
     graph->vertices[key]->value.stateNumber = key;
 }
 
-void addNearestCity(Graph* graph, const int city, bool* errorCode) {
+void addNearestCity(Graph* graph, const int stateNumber, bool* errorCode) {
     if (graph == NULL) {
         *errorCode = true;
         return;
     }
-    if (city < 0 || graph->numberOfVertices < city) {
+    if (stateNumber < 0 || graph->numberOfVertices < stateNumber) {
         *errorCode = true;
         return;
     }
@@ -186,15 +185,15 @@ void addNearestCity(Graph* graph, const int city, bool* errorCode) {
     int nearestCity = -2;
     for (int i = 0; i < graph->numberOfVertices; ++i) {
         Vertex* selectedCityOfState = graph->vertices[i];
-        int stateNumber = selectedCityOfState->value.stateNumber;
-        if (stateNumber != city) {
+        int selectedStateNumber = selectedCityOfState->value.stateNumber;
+        if (selectedStateNumber != stateNumber) {
             continue;
         }
         for (int j = 0; j < selectedCityOfState->numberOfAdjacentVertices; ++j) {
             int candidatesNumberForNearestCity = selectedCityOfState->adjacentVertices[j].adjacentVertex->value.key;
             if (selectedCityOfState->adjacentVertices[j].adjacentVertex->value.stateNumber == -1) {
-                shortestRoad = min(shortestRoad, graph->vertices[i]->adjacentVertices[candidatesNumberForNearestCity].edgeWeight);
-                if (shortestRoad == graph->vertices[i]->adjacentVertices[candidatesNumberForNearestCity].edgeWeight) {
+                shortestRoad = min(shortestRoad, selectedCityOfState->adjacentVertices[j].edgeWeight);
+                if (shortestRoad == selectedCityOfState->adjacentVertices[j].edgeWeight) {
                     nearestCity = candidatesNumberForNearestCity;
                 }
             }
@@ -203,41 +202,30 @@ void addNearestCity(Graph* graph, const int city, bool* errorCode) {
     if (nearestCity == -2) {
         return;
     }
-    graph->vertices[nearestCity]->value.stateNumber = city;
+    graph->vertices[nearestCity]->value.stateNumber = stateNumber;
 }
 
 void createStates(Graph* graph, bool* errorCode) {
-    int graphSize = graph->numberOfVertices;
-
-    Queue* capitals = createQueue(errorCode);
-    if (*errorCode) {
+    if (graph == NULL) {
         return;
     }
-    for (int i = 0; i < graphSize; ++i) {
+
+    graph->numberOfCitiesOutsideState = graph->numberOfVertices;
+    for (int i = 0; i < graph->numberOfVertices; ++i) {
         if (graph->vertices[i]->value.isCapital) {
-            enqueue(capitals, i, errorCode);
+            addNearestCity(graph, graph->vertices[i]->value.stateNumber, errorCode);
             if (*errorCode) {
-                deleteQueue(&capitals);
+                return;
+            }
+            --graph->numberOfCitiesOutsideState;
+            if (graph->numberOfCitiesOutsideState == 0) {
                 return;
             }
         }
-    }
-    graph->numberOfCitiesOutsideState = graphSize;
-    while (graph->numberOfCitiesOutsideState != 0) {
-        int selectedCity = dequeue(capitals, errorCode);
-        enqueue(capitals, selectedCity, errorCode);
-        if (*errorCode) {
-            deleteQueue(&capitals);
-            return;
+        if (i == graph->numberOfVertices - 1) {
+            i = -1;
         }
-        addNearestCity(graph, selectedCity, errorCode);
-        if (*errorCode) {
-            deleteQueue(&capitals);
-            return;
-        }
-        --graph->numberOfCitiesOutsideState;
     }
-    deleteQueue(&capitals);
 }
 
 int* giveInformationAboutStates(Graph* graph, bool* errorCode) {
