@@ -4,6 +4,11 @@
 
 #include "avlTree.h"
 
+typedef struct NodeValue {
+    const char* key;
+    const char* value;
+} NodeValue;
+
 typedef struct Node {
     NodeValue value;
     Node* left;
@@ -17,8 +22,21 @@ Node* createTree(const char* key, const char* value, bool* errorCode) {
         *errorCode = true;
         return NULL;
     }
-    root->value.key = key;
-    root->value.value = value;
+    const char* copyOfKey = strdup(key);
+    if (copyOfKey == NULL) {
+        free(root);
+        *errorCode = true;
+        return;
+    }
+    root->value.key = copyOfKey;
+    const char* copyOfValue = strdup(value);
+    if (copyOfValue == NULL) {
+        free(root->value.key);
+        free(root);
+        *errorCode = true;
+        return;
+    }
+    root->value.value = copyOfValue;
     return root;
 }
 
@@ -28,6 +46,14 @@ void deleteTree(Node** root) {
     }
     deleteTree((&(*root)->left));
     deleteTree((&(*root)->right));
+
+    if ((*root)->value.key != NULL) {
+        free((*root)->value.key);
+    }
+    if ((*root)->value.value != NULL) {
+        free((*root)->value.value);
+    }
+
     free(*root);
     *root = NULL;
 }
@@ -379,9 +405,4 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
         free(returnedNode);
     }
     return node;
-}
-
-NodeValue createNodeValue(const char* key, const char* value) {
-    NodeValue nodeValue = { .key = key, .value = value };
-    return nodeValue;
 }
