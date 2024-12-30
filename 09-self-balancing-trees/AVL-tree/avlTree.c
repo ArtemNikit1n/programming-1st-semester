@@ -26,7 +26,7 @@ Node* createTree(const char* key, const char* value, bool* errorCode) {
     if (copyOfKey == NULL) {
         free(root);
         *errorCode = true;
-        return;
+        return NULL;
     }
     root->value.key = copyOfKey;
     const char* copyOfValue = strdup(value);
@@ -34,7 +34,7 @@ Node* createTree(const char* key, const char* value, bool* errorCode) {
         free(root->value.key);
         free(root);
         *errorCode = true;
-        return;
+        return NULL;
     }
     root->value.value = copyOfValue;
     return root;
@@ -88,7 +88,6 @@ const char* searchByKey(Node* node, const char* key) {
         return NULL;
     }
 
-    const char* foundValue = NULL;
     if (strcmp(node->value.key, key) == 0) {
         return node->value.value;
     }
@@ -98,12 +97,9 @@ const char* searchByKey(Node* node, const char* key) {
     }
 
     if (strcmp(node->value.key, key) < 0) {
-        foundValue = searchByKey(node->right, key);
+        return searchByKey(node->right, key);
     }
-    if (strcmp(node->value.key, key) > 0) {
-        foundValue = searchByKey(node->left, key);
-    }
-    return foundValue;
+    return searchByKey(node->left, key);
 }
 
 Node* rotateLeft(Node* a) {
@@ -196,7 +192,13 @@ Node* balance(Node* node) {
 
 Node* addNode(Node* node, const char* key, const char* value, bool* isHeightChanged, bool* errorCode) {
     if (strcmp(key, node->value.key) == 0) {
-        node->value.value = value;
+        free(node->value.value);
+        const char* copyOfValue = strdup(value);
+        if (copyOfValue == NULL) {
+            *errorCode = true;
+            return NULL;
+        }
+        node->value.value = copyOfValue;
         *isHeightChanged = false;
         return node;
     }
@@ -215,10 +217,8 @@ Node* addNode(Node* node, const char* key, const char* value, bool* isHeightChan
             *isHeightChanged = false;
             return node;
         }
-        else {
-            *isHeightChanged = true;
-            return node;
-        }
+        *isHeightChanged = true;
+        return node;
     }
     else if (node->right == NULL && strcmp(key, node->value.key) > 0) {
         Node* newNode = createTree(key, value, errorCode);
@@ -234,10 +234,8 @@ Node* addNode(Node* node, const char* key, const char* value, bool* isHeightChan
             *isHeightChanged = false;
             return node;
         }
-        else {
-            *isHeightChanged = true;
-            return node;
-        }
+        *isHeightChanged = true;
+        return node;
     }
 
     if (strcmp(key, node->value.key) > 0) {
@@ -266,10 +264,8 @@ Node* addNode(Node* node, const char* key, const char* value, bool* isHeightChan
                 *isHeightChanged = false;
                 return node;
             }
-            else {
-                *isHeightChanged = true;
-                return node;
-            }
+            *isHeightChanged = true;
+            return node;
         }
         *isHeightChanged = false;
         return node;
