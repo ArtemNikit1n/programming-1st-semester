@@ -1,11 +1,5 @@
 #pragma once
 
-// A structure for storing a value in a node.
-typedef struct NodeValue {
-    const char* key;
-    const char* value;
-} NodeValue;
-
 // Tree Node.
 typedef struct Node Node;
 
@@ -23,6 +17,3 @@ Node* addNode(Node* node, const char* key, const char* value, bool* isHeightChan
 
 // Deletes a node by key.
 Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* errorCode);
-
-// Creates a value that can be stored in the node.
-NodeValue createNodeValue(const char* key, const char* value);
