@@ -40,7 +40,7 @@ char* getValueFromTheUser(bool* errorCode) {
     return value;
 }
 
-int getTheFunctionCodeFromTheUser(void) {
+int getFunctionCodeFromTheUser(void) {
     int functionCode = -1;
     printTheBackgroundInformation();
     int scanfReturns = scanf("%d", &functionCode);
@@ -53,7 +53,7 @@ int getTheFunctionCodeFromTheUser(void) {
     return functionCode;
 }
 
-void callTheFunction(int functionCode, bool* errorCode) {
+void launchAVLTree(int functionCode, bool* errorCode) {
     Node* root = NULL;
     bool isHeightChanged = false;
 
@@ -66,7 +66,7 @@ void callTheFunction(int functionCode, bool* errorCode) {
             if (*errorCode) {
                 *errorCode = false;
                 printf("Memory allocation error. Try again\n");
-                functionCode = getTheFunctionCodeFromTheUser();
+                functionCode = getFunctionCodeFromTheUser();
                 continue;
             }
 
@@ -76,10 +76,10 @@ void callTheFunction(int functionCode, bool* errorCode) {
                     *errorCode = false;
                     free(value);
                     printf("Memory allocation error. Try again\n");
-                    functionCode = getTheFunctionCodeFromTheUser();
+                    functionCode = getFunctionCodeFromTheUser();
                     continue;
                 }
-                functionCode = getTheFunctionCodeFromTheUser();
+                functionCode = getFunctionCodeFromTheUser();
                 continue;
             }
             root = addNode(root, key, value, &isHeightChanged, errorCode);
@@ -92,7 +92,7 @@ void callTheFunction(int functionCode, bool* errorCode) {
             if (*errorCode) {
                 *errorCode = false;
                 printf("Error. Try again later\n");
-                functionCode = getTheFunctionCodeFromTheUser();
+                functionCode = getFunctionCodeFromTheUser();
                 continue;
             }
             if (theFoundString != NULL) {
@@ -109,7 +109,7 @@ void callTheFunction(int functionCode, bool* errorCode) {
             if (*errorCode) {
                 *errorCode = false;
                 printf("Error. Try again later\n");
-                functionCode = getTheFunctionCodeFromTheUser();
+                functionCode = getFunctionCodeFromTheUser();
                 continue;
             }
             if (theFoundString != NULL) {
@@ -126,7 +126,7 @@ void callTheFunction(int functionCode, bool* errorCode) {
             isHeightChanged = false;
             printf("The value has been deleted!\n");
         }
-        functionCode = getTheFunctionCodeFromTheUser();
+        functionCode = getFunctionCodeFromTheUser();
     }
 }
 
@@ -137,7 +137,7 @@ int main(void) {
         return errorCode;
     }
 
-    callTheFunction(getTheFunctionCodeFromTheUser(), &errorCode);
+    launchAVLTree(getFunctionCodeFromTheUser(), &errorCode);
 
     return errorCode;
 }
