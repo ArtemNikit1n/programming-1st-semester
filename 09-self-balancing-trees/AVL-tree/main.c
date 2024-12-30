@@ -24,12 +24,8 @@ void clearBuffer() {
 }
 
 char* getValueFromTheUser(bool* errorCode) {
-    int buffer = 101;
-    char* value = calloc(buffer, sizeof(char));
-    if (value == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
+    const int buffer = 101;
+    char value[101] = { '\0' };
 
     scanf("%101s", value);
     while (strlen(value) == buffer) {
@@ -63,18 +59,11 @@ void launchAVLTree(int functionCode, bool* errorCode) {
             const char* key = getValueFromTheUser(errorCode);
             printf("Enter the value:\n");
             const char* value = getValueFromTheUser(errorCode);
-            if (*errorCode) {
-                *errorCode = false;
-                printf("Memory allocation error. Try again\n");
-                functionCode = getFunctionCodeFromTheUser();
-                continue;
-            }
 
             if (root == NULL) {
                 root = createTree(key, value, errorCode);
                 if (*errorCode) {
                     *errorCode = false;
-                    free(value);
                     printf("Memory allocation error. Try again\n");
                     functionCode = getFunctionCodeFromTheUser();
                     continue;
@@ -83,6 +72,12 @@ void launchAVLTree(int functionCode, bool* errorCode) {
                 continue;
             }
             root = addNode(root, key, value, &isHeightChanged, errorCode);
+            if (*errorCode) {
+                *errorCode = false;
+                printf("Error. Try again later\n");
+                functionCode = getFunctionCodeFromTheUser();
+                continue;
+            }
             isHeightChanged = false;
         }
         if (functionCode == 2) {
@@ -98,9 +93,7 @@ void launchAVLTree(int functionCode, bool* errorCode) {
             if (theFoundString != NULL) {
                 printf("%s\n", theFoundString);
             }
-            else {
-                printf("The key was not found\n");
-            }
+            printf("The key was not found\n");
         }
         if (functionCode == 3) {
             printf("Enter the key:\n");
@@ -115,14 +108,19 @@ void launchAVLTree(int functionCode, bool* errorCode) {
             if (theFoundString != NULL) {
                 printf("The key was found\n");
             }
-            else {
-                printf("The key was not found\n");
-            }
+            printf("The key was not found\n");
         }
         if (functionCode == 4) {
             printf("Enter the key:\n");
             const char* theKeyToDelete = getValueFromTheUser(errorCode);
+
             root = deleteNode(root, theKeyToDelete, &isHeightChanged, errorCode);
+            if (*errorCode) {
+                *errorCode = false;
+                printf("Error. Try again later\n");
+                functionCode = getFunctionCodeFromTheUser();
+                continue;
+            }
             isHeightChanged = false;
             printf("The value has been deleted!\n");
         }
