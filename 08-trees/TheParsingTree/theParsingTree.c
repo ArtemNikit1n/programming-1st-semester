@@ -15,7 +15,7 @@ Node* buildTree(FILE* file, bool* errorCode) {
         return NULL;
     }
 
-    const char numbers[] = "0123456789";
+    const char numbers[] = "-0123456789";
 
     while (!feof(file)) {
         int theCurrentCharacter = getc(file);
