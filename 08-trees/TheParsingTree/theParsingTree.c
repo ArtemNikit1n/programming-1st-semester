@@ -66,6 +66,7 @@ Node* buildTree(FILE* file, bool* errorCode) {
             push(stack, node, errorCode);
         }
     }
+    deleteStack(&stack);
     return root;
 }
 

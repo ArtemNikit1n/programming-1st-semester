@@ -43,6 +43,6 @@ int main(void) {
     printAPostfixEntry(root, &errorCode);
 
     printf("\nРезультат вычислений: %d\n", calculateItFromTheTree(root, &errorCode));
-
+    disposeNode(&root);
     return errorCode;
 }
