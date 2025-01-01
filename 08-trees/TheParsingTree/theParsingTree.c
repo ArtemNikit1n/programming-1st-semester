@@ -72,7 +72,7 @@ Node* buildTree(FILE* file, bool* errorCode) {
 
 void printAPostfixEntry(const Node* node, bool* errorCode) {
     if (node == NULL) {
-        return '\0';
+        return;
     }
 
     printAPostfixEntry(getLeftChild(node, errorCode), errorCode);
