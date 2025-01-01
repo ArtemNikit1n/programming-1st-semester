@@ -23,8 +23,10 @@ bool testAddingAndReadingValues(bool* errorCode) {
     Node* testRightChild = createNode(321, errorCode);
 
     if (*errorCode) {
-        disposeNode(&test2LeftChild);
         disposeNode(&testNode);
+        disposeNode(&test1LeftChild);
+        disposeNode(&test2LeftChild);
+        disposeNode(&testRightChild);
         return false;
     }
 
@@ -63,6 +65,7 @@ void runTheTreeTests(bool* errorCode) {
             return;
         }
         printf("Код ошибки: 0\n");
+        *errorCode = true;
         return;
     }
     if (!testAddingAndReadingValues(errorCode)) {
