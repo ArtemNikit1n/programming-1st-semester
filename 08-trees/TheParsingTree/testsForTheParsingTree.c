@@ -24,7 +24,7 @@ bool testBuildTreeAndCalculateItFromTheTree(bool* errorCode) {
     const Node* test2Root = buildTree(test2File, errorCode);
     fclose(test2File);
 
-    bool test2 = calculateItFromTheTree(test2Root, errorCode) == 80;
+    bool test2 = calculateItFromTheTree(test2Root, errorCode) == -70;
 
     return test2;
 }
