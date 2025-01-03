@@ -10,23 +10,19 @@ struct TestStruct {
 };
 
 bool testSearchByPhone() {
-    struct TestStruct* testStruct;
     char name[6] = "Artem";
     char phone[11] = "89004325486";
 
-    testStruct->name = name;
-    testStruct->phone = phone;
+    struct TestStruct testStruct = { .name = name, .phone = phone };
 
-    return searchByPhone(testStruct, phone);
+    return searchByPhone(&testStruct, phone);
 }
 
 bool testSearchByName() {
-    struct TestStruct* testStruct;
     char name[6] = "Artem";
     char phone[11] = "89004325486";
 
-    testStruct->name = name;
-    testStruct->phone = phone;
+    struct TestStruct testStruct = { .name = name, .phone = phone };
 
-    return searchByName(testStruct, name);
+    return searchByName(&testStruct, name);
 }
