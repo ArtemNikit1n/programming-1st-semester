@@ -1,6 +1,6 @@
 #pragma once
 
-#define _CRT_SECURE_NO_WARNINGS
+#include <stdbool.h>
 
 #define MAX_NAME_LENGTH 100
 #define MAX_PHONE_LENGTH 20
@@ -17,19 +17,19 @@ struct NameAndPhoneNumber {
 void addANewContact(struct NameAndPhoneNumber* records);
 
 // Читает данные, которые уже находились в файле, и добавляет их в структуру NameAndPhoneNumber
-void readingFromAFile(struct NameAndPhoneNumber* records, const char *filename);
+void readFromAFile(struct NameAndPhoneNumber* records, const char *filename);
 
 // Выводит содержимое структуры NameAndPhoneNumber с номерами и именами
 void printAllAvailableRecords(struct NameAndPhoneNumber* records);
 
 // Пользовательский ввод имени
-char* userInputForSearchByName();
+char* readUserInputForSearchByName(void);
 
 // Поиск телефона в структуре
 bool searchByName(struct NameAndPhoneNumber* records, char *name);
 
 // Пользовательский ввод номера телфона
-char* userInputForSearchByPhone();
+char* readUserInputForSearchByPhone(void);
 
 // Поиск имени в структуре
 bool searchByPhone(struct NameAndPhoneNumber* records, char *phone);

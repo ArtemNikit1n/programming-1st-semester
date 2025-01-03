@@ -1,11 +1,12 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include "workingWithAFile.h"
+
 #include <stdio.h>
 #include <stdbool.h>
-#include <locale.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-
-#include "workingWithAFile.h"
 
 void saveToFile(struct NameAndPhoneNumber* records, const char* filename) {
     FILE* file = fopen(filename, "w");
@@ -75,7 +76,7 @@ void addANewContact(struct NameAndPhoneNumber* records) {
     }
 }
 
-void readingFromAFile(struct NameAndPhoneNumber* records, const char *filename) {
+void readFromAFile(struct NameAndPhoneNumber* records, const char *filename) {
     FILE* file = fopen(filename, "r");
     assert(file != NULL);
 
@@ -91,7 +92,7 @@ void readingFromAFile(struct NameAndPhoneNumber* records, const char *filename) 
     fclose(file);
 }
 
-char* userInputForSearchByName() {
+char* readUserInputForSearchByName() {
     bool theInputWasSuccessful = false;
     char *name = NULL;
 
@@ -128,7 +129,7 @@ bool searchByName(struct NameAndPhoneNumber* records, char *name) {
     return thePhoneWasFound;
 }
 
-char* userInputForSearchByPhone() {
+char* readUserInputForSearchByPhone() {
     bool theInputWasSuccessful = false;
     char *phone = NULL;
 

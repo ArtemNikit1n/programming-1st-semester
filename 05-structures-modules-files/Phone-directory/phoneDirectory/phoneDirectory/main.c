@@ -1,13 +1,15 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <locale.h>
-#include <stdlib.h>
-#include <assert.h>
+#define _CRT_SECURE_NO_WARNINGS
 
 #include "workingWithAFile.h"
 #include "testsWorkingWithAFile.h"
 
-void outputOfReferenceInformation(void) {
+#include <stdio.h>
+#include <stdbool.h>
+#include <locale.h>
+#include <stdlib.h>
+#include <string.h>
+
+void printReferenceInformation(void) {
     printf("\n------------------"
         "\nГлавное меню:"
         "\n0 - выйти"
@@ -18,30 +20,22 @@ void outputOfReferenceInformation(void) {
         "\n5 - сохранить текущие данные в файл\n");
 }
 
-short userInput(bool *errorCode) {
-    outputOfReferenceInformation();
-
-    char *strCommandNumber = (char *)calloc(10, sizeof(char));
-    char *endptrCommandNumber = NULL;
-    short commandNumber = -1;
-
-    assert(strCommandNumber != NULL);
-
+short readUserInput(void) {
+    printReferenceInformation();
     printf("\nВведите команду: ");
-    scanf("%s", strCommandNumber);
-    commandNumber = (short)strtol(strCommandNumber, &endptrCommandNumber, 10);
 
-    if (commandNumber < 0 || commandNumber > 6 || *endptrCommandNumber != '\0') {
+    short functionCode = -1;
+    int scanfReturns = scanf("%d", &functionCode);
+    while (functionCode > 5 || functionCode < 0 || scanfReturns != 1) {
         printf("\nНекорректный номер команды, попробуйте ещё раз\n");
-        free(strCommandNumber);
-        userInput(errorCode);
-    } else {
-        free(strCommandNumber);
-        return commandNumber;
+        printReferenceInformation();
+        while (getchar() != '\n');
+        scanfReturns = scanf("%d", &functionCode);
     }
+    return functionCode;
 }
 
-void callingTheFunction(struct NameAndPhoneNumber* records, short commandNumber, bool *errorCode) {
+void launchPhoneDirectory(struct NameAndPhoneNumber* records, short commandNumber, bool *errorCode) {
     if (commandNumber == 0) {
         printf("Выход из справочника...\n");
         return;
@@ -49,30 +43,30 @@ void callingTheFunction(struct NameAndPhoneNumber* records, short commandNumber,
     else if (commandNumber == 1) {
         printf("\nДобавление записи\n\n");
         addANewContact(records);
-        commandNumber = userInput(errorCode);
-        callingTheFunction(records, commandNumber, errorCode);
+        commandNumber = readUserInput();
+        launchPhoneDirectory(records, commandNumber, errorCode);
     }
     else if (commandNumber == 2) {
         printAllAvailableRecords(records);
-        commandNumber = userInput(errorCode) ;
-        callingTheFunction(records, commandNumber, errorCode);
+        commandNumber = readUserInput() ;
+        launchPhoneDirectory(records, commandNumber, errorCode);
     }
     else if (commandNumber == 3) {
-        char *name = userInputForSearchByName();
+        char *name = readUserInputForSearchByName();
         searchByName(records, name);
-        commandNumber = userInput(errorCode);
-        callingTheFunction(records, commandNumber, errorCode);
+        commandNumber = readUserInput();
+        launchPhoneDirectory(records, commandNumber, errorCode);
     }
     else if (commandNumber == 4) {
-        char *phone = userInputForSearchByPhone();
+        char *phone = readUserInputForSearchByPhone();
         searchByPhone(records, phone);
-        commandNumber = userInput(errorCode); 
-        callingTheFunction(records, commandNumber, errorCode);
+        commandNumber = readUserInput();
+        launchPhoneDirectory(records, commandNumber, errorCode);
     }
     else if (commandNumber == 5) {
         saveToFile(records, "phoneDatabase.txt");
-        commandNumber = userInput(errorCode);
-        callingTheFunction(records, commandNumber, errorCode);
+        commandNumber = readUserInput();
+        launchPhoneDirectory(records, commandNumber, errorCode);
     }
 }
 
@@ -82,29 +76,29 @@ int main(void) {
     bool errorCode = false;
 
 
-    if (!testSearchByName) {
+    if (!testSearchByName()) {
         printf("Тест testSearchByName не пройден");
         errorCode = true;
         return errorCode;
     }
 
-    if (!testSearchByPhone) {
+    if (!testSearchByPhone()) {
         printf("Тест testSearchByPhone не пройден");
         errorCode = true;
         return errorCode;
     }
 
-    short commandNumber = userInput(&errorCode);
+    short commandNumber = readUserInput();
     struct NameAndPhoneNumber records = {
         .numberOfEntries = 0,
         .names = { { '\0' } },
         .phones = { { '\0' } }
     };
 
-    readingFromAFile(&records, "phoneDatabase.txt");
-    callingTheFunction(&records, commandNumber, &errorCode);
+    readFromAFile(&records, "phoneDatabase.txt");
+    launchPhoneDirectory(&records, commandNumber, &errorCode);
     while (errorCode) {
-        callingTheFunction(&records, commandNumber, &errorCode);
+        launchPhoneDirectory(&records, commandNumber, &errorCode);
     }
 
     return errorCode;
