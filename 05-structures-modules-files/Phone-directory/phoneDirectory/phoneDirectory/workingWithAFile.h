@@ -2,37 +2,33 @@
 
 #include <stdbool.h>
 
-#define MAX_NAME_LENGTH 100
-#define MAX_PHONE_LENGTH 20
+#define MAX_RECORD_LENGTH 50
 #define MAX_ENTRIES 100
 
-// Структура для хранения данных о номерах и именах
+// Структура для хранения данных о номерах и именах.
 struct NameAndPhoneNumber {
-    char names[MAX_ENTRIES][MAX_NAME_LENGTH];
-    char phones[MAX_ENTRIES][MAX_PHONE_LENGTH];
+    char names[MAX_ENTRIES][MAX_RECORD_LENGTH];
+    char phones[MAX_ENTRIES][MAX_RECORD_LENGTH];
     int numberOfEntries;
 };
 
-// Добавляет имя и телефон в структуру NameAndPhoneNumber
+// Добавляет имя и телефон в структуру NameAndPhoneNumber.
 void addANewContact(struct NameAndPhoneNumber* records);
 
-// Читает данные, которые уже находились в файле, и добавляет их в структуру NameAndPhoneNumber
-void readFromAFile(struct NameAndPhoneNumber* records, const char *filename);
+// Читает данные, которые уже находились в файле, и добавляет их в структуру NameAndPhoneNumber. Возвращает false при удачном открытии файла.
+bool readFromAFile(struct NameAndPhoneNumber* records, const char *filename);
 
-// Выводит содержимое структуры NameAndPhoneNumber с номерами и именами
+// Выводит содержимое структуры NameAndPhoneNumber с номерами и именами.
 void printAllAvailableRecords(struct NameAndPhoneNumber* records);
 
-// Пользовательский ввод имени
-char* readUserInputForSearchByName(void);
+// Поиск телефона в структуре. Возвращает true, если телефон найден.
+const char* searchByName(struct NameAndPhoneNumber* records, const char *name);
 
-// Поиск телефона в структуре
-bool searchByName(struct NameAndPhoneNumber* records, char *name);
+// Функция для получения телефона или строки от пользователя.
+const char* getStringValueFromUser(void);
 
-// Пользовательский ввод номера телфона
-char* readUserInputForSearchByPhone(void);
+// Поиск имени в структуре. Возвращает true, если имя найдено.
+const char* searchByPhone(struct NameAndPhoneNumber* records, const char *phone);
 
-// Поиск имени в структуре
-bool searchByPhone(struct NameAndPhoneNumber* records, char *phone);
-
-// Функция для сохранения данных из структуры в файл
-void saveToFile(struct NameAndPhoneNumber* records, const char *filename);
+// Функция для сохранения данных из структуры в файл. Возвращает false при удачном открытии файла.
+bool saveToFile(struct NameAndPhoneNumber* records, const char *filename);

@@ -1,28 +1,35 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "workingWithAFile.h"
-#include "testsWorkingWithAFile.h"
 
-struct TestStruct {
-    char* name;
-    char* phone;
+struct testStruct {
+    char names[MAX_ENTRIES][MAX_RECORD_LENGTH];
+    char phones[MAX_ENTRIES][MAX_RECORD_LENGTH];
+    int numberOfEntries;
 };
 
-bool testSearchByPhone() {
-    char name[6] = "Artem";
-    char phone[11] = "89004325486";
+bool testSearchByPhone(void) {
+    const char* name = "Artem";
+    const char* phone = "89004325486";
 
-    struct TestStruct testStruct = { .name = name, .phone = phone };
+    struct testStruct testStruct = { .numberOfEntries = 1 };
 
-    return searchByPhone(&testStruct, phone);
+    strcpy(testStruct.names[0], name);
+    strcpy(testStruct.phones[0], phone);
+
+    return strcmp(searchByPhone(&testStruct, phone), name) == 0;
 }
 
-bool testSearchByName() {
-    char name[6] = "Artem";
-    char phone[11] = "89004325486";
+bool testSearchByName(void) {
+    const char* name = "Artem";
+    const char* phone = "89004325486";
 
-    struct TestStruct testStruct = { .name = name, .phone = phone };
+    struct testStruct testStruct = { .numberOfEntries = 1 };
 
-    return searchByName(&testStruct, name);
+    strcpy(testStruct.names[0], name);
+    strcpy(testStruct.phones[0], phone);
+
+    return strcmp(searchByName(&testStruct, name), phone) == 0;
 }
