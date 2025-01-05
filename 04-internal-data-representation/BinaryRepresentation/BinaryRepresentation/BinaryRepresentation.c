@@ -6,9 +6,9 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#define SIZEOF 32
+#define SIZE_OF_NUMBER 32
 
-bool comparingTwoArrays(bool firstArray[], bool secondArray[], int arrayLength) {
+bool areArraysEqual(bool firstArray[], bool secondArray[], int arrayLength) {
     bool errorCode = true;
     for (int i = 0; i < arrayLength; ++i) {
         if (firstArray[i] != secondArray[i]) {
@@ -26,35 +26,34 @@ void printBoolArray(bool boolArray[], int boolArrayLength) {
 }
 
 void binarySum(bool binaryFirstNumber[], bool binarySecondNumber[], bool binarySumArray[]) {
-    bool theAdditionalTerm = 0;
-    for (int i = SIZEOF - 1; i >= 0; --i) {
-        bool oneAndZero = (binaryFirstNumber[i] && !binarySecondNumber[i]) || (!binaryFirstNumber[i] && binarySecondNumber[i]);
+    bool theAdditionalTerm = false;
+    for (int i = SIZE_OF_NUMBER - 1; i >= 0; --i) {
         if (!binaryFirstNumber[i] && !binarySecondNumber[i]) {
             if (theAdditionalTerm) {
-                theAdditionalTerm = 0;
-                binarySumArray[i] = 1;
-            } 
+                theAdditionalTerm = false;
+                binarySumArray[i] = true;
+            }
             else {
-                binarySumArray[i] = 0;
+                binarySumArray[i] = false;
             }
         }
         if (binaryFirstNumber[i] && binarySecondNumber[i]) {
             if (theAdditionalTerm) {
-                theAdditionalTerm = 1;
-                binarySumArray[i] = 1;
+                theAdditionalTerm = true;
+                binarySumArray[i] = true;
             }
             else {
-                theAdditionalTerm = 1;
-                binarySumArray[i] = 0;
+                theAdditionalTerm = true;
+                binarySumArray[i] = false;
             }
         }
-        if (oneAndZero) {
+        if (binaryFirstNumber[i] ^ binarySecondNumber[i]) {
             if (theAdditionalTerm) {
-                theAdditionalTerm = 1;
-                binarySumArray[i] = 0;
+                theAdditionalTerm = true;
+                binarySumArray[i] = false;
             }
             else {
-                binarySumArray[i] = 1;
+                binarySumArray[i] = true;
             }
         }
     }
@@ -64,7 +63,7 @@ int conversionToDecimal(bool binaryNumber[]) {
     int decimalNumber = 0;
 
     int k = 1;
-    for (int i = SIZEOF - 1; i >= 0; --i) {
+    for (int i = SIZE_OF_NUMBER - 1; i >= 0; --i) {
         decimalNumber += binaryNumber[i] * k;
         k *= 2;
     }
@@ -72,103 +71,79 @@ int conversionToDecimal(bool binaryNumber[]) {
 }
 
 void getBinaryNumber(int decimalNumber, bool binaryNumber[]) {
-    for (int i = 0; i < SIZEOF; ++i) {
-        if ((decimalNumber) & (1 << i)) {
-            binaryNumber[SIZEOF - 1 - i] = 1;
-        } else {
-            binaryNumber[SIZEOF - 1 - i] = 0;
-        }
+    for (int i = 0; i < SIZE_OF_NUMBER; ++i) {
+        binaryNumber[SIZE_OF_NUMBER - 1 - i] = (decimalNumber & (1 << i)) != 0;
     }
 }
 
-void userInput(int *firstNumber, int *secondNumber, bool *errorCode) {
-    char strFirstNumber[100];
-    char strSecondNumber[100];
-    char* endptrFirstNumber = NULL;
-    char* endptrSecondNumber = NULL;
-    errno = 0;
+int getIntValueFromUser(void) {
+    int functionCode = -1;
+    int scanfReturns = scanf("%d", &functionCode);
+    while (scanfReturns != 1) {
+        printf("Ошибка ввода. Попробуйте ещё раз:\n");
+        while (getchar() != '\n');
+        scanfReturns = scanf("%d", &functionCode);
+    }
+    return functionCode;
+}
 
-    setlocale(LC_ALL, "Rus");
-
+void readUserInput(int *firstNumber, int *secondNumber, bool *errorCode) {
     printf("Введите первое число:\n");
-    scanf("%s", strFirstNumber); 
-    *firstNumber = (int)strtol(strFirstNumber, &endptrFirstNumber, 10);
+    *firstNumber = getIntValueFromUser();
 
     printf("Введите второе число:\n");
-    scanf("%s", strSecondNumber);
-    *secondNumber = (int)strtol(strSecondNumber, &endptrSecondNumber, 10);
-
-    if (errno == ERANGE) {
-        printf("Ошибка ввода");
-        *errorCode = true;
-    }
-
-    if (*endptrFirstNumber != '\0' || *endptrSecondNumber != '\0') {
-        printf("Ошибка ввода");
-        *errorCode = true;
-    }
-}
-
-void checkingTheAmountForStackOverflow(int firstNumber, int secondNumber, bool *errorCode) {
-    if (firstNumber < 0 && secondNumber < 0 && abs(firstNumber) > INT_MAX + (secondNumber + 1)) {
-        printf("Переполнение стека");
-        *errorCode = true;
-    }
-    if (firstNumber > 0 && secondNumber > 0 && firstNumber > INT_MAX - secondNumber) {
-        printf("Переполнение стека");
-        *errorCode = true;
-    }
+    *secondNumber = getIntValueFromUser();
 }
 
 bool testComparingTwoArrays() {
     bool firstArray[6] = { 1, 0, 0, 1, 0, 1 };
     bool secondArray[6] = { 0, 1, 1, 1, 0, 0 };
 
-    return !comparingTwoArrays(firstArray, secondArray, 6) && comparingTwoArrays(firstArray, firstArray, 6);
+    return !areArraysEqual(firstArray, secondArray, 6) && areArraysEqual(firstArray, firstArray, 6);
 }
 
 bool testGetBinaryNumber() {
     int positiveNumber = 2048;
     int negativeNumber = -1025;
-    bool positiveNumberArray[SIZEOF] = { 0 };
+    bool positiveNumberArray[SIZE_OF_NUMBER] = { 0 };
     positiveNumberArray[20] = 1;
-    bool negativeNumberArray[SIZEOF] = { 0 };
+    bool negativeNumberArray[SIZE_OF_NUMBER] = { 0 };
     for (int i = 0; i < 32; i++) {
         negativeNumberArray[i] = 1;
     }
     negativeNumberArray[21] = 0;
-    bool theResultIsForThePositive[SIZEOF] = { 0 };
-    bool theResultIsForTheNegative[SIZEOF] = { 0 };
+    bool theResultIsForThePositive[SIZE_OF_NUMBER] = { 0 };
+    bool theResultIsForTheNegative[SIZE_OF_NUMBER] = { 0 };
     getBinaryNumber(positiveNumber, theResultIsForThePositive);
     getBinaryNumber(negativeNumber, theResultIsForTheNegative);
 
-    return comparingTwoArrays(positiveNumberArray, theResultIsForThePositive, SIZEOF) && comparingTwoArrays(negativeNumberArray, theResultIsForTheNegative, SIZEOF);
+    return areArraysEqual(positiveNumberArray, theResultIsForThePositive, SIZE_OF_NUMBER) && areArraysEqual(negativeNumberArray, theResultIsForTheNegative, SIZE_OF_NUMBER);
 }
 
 bool testBinarySum() {
-    bool theFirstSummand[SIZEOF] = { 0 };
-    for (int i = 1; i < SIZEOF; i++) {
+    bool theFirstSummand[SIZE_OF_NUMBER] = { 0 };
+    for (int i = 1; i < SIZE_OF_NUMBER; i++) {
         theFirstSummand[i] = 1;
     }
-    bool theSecondSummand[SIZEOF] = { 0 };
-    for (int i = 0; i < SIZEOF; i++) {
+    bool theSecondSummand[SIZE_OF_NUMBER] = { 0 };
+    for (int i = 0; i < SIZE_OF_NUMBER; i++) {
         theSecondSummand[i] = 1;
     }
-    bool expectedResult[SIZEOF] = { 0 };
-    for (int i = 1; i < SIZEOF - 1; i++) {
+    bool expectedResult[SIZE_OF_NUMBER] = { 0 };
+    for (int i = 1; i < SIZE_OF_NUMBER - 1; i++) {
         expectedResult[i] = 1;
     }
 
-    bool result[SIZEOF] = { 0 };
+    bool result[SIZE_OF_NUMBER] = { 0 };
     binarySum(theFirstSummand, theSecondSummand, result);
-    return comparingTwoArrays(result, expectedResult, SIZEOF);
+    return areArraysEqual(result, expectedResult, SIZE_OF_NUMBER);
 }
 
 bool testConversionToDecimal() {
-    bool positiveNumberArray[SIZEOF] = { 0 };
+    bool positiveNumberArray[SIZE_OF_NUMBER] = { 0 };
     positiveNumberArray[20] = 1;
-    bool negativeNumberArray[SIZEOF] = { 0 };
-    for (int i = 0; i < SIZEOF; i++) {
+    bool negativeNumberArray[SIZE_OF_NUMBER] = { 0 };
+    for (int i = 0; i < SIZE_OF_NUMBER; i++) {
         negativeNumberArray[i] = 1;
     }
     negativeNumberArray[21] = 0;
@@ -179,43 +154,35 @@ int main(void) {
     int firstNumber = -1;
     int secondNumber = -1;
     int decimalSumNumber = -1;
-    bool binaryFirstNumber[SIZEOF] = { 0 };
-    bool binarySecondNumber[SIZEOF] = { 0 };
-    bool binarySumArray[SIZEOF] = { 0 };
+    bool binaryFirstNumber[SIZE_OF_NUMBER] = { 0 };
+    bool binarySecondNumber[SIZE_OF_NUMBER] = { 0 };
+    bool binarySumArray[SIZE_OF_NUMBER] = { 0 };
 
     bool errorCode = false;
 
     setlocale(LC_ALL, "Rus");
 
     if (!testComparingTwoArrays()) {
-        printf("Тест comparingTwoArrays не пройден\n");
-        errorCode = true;
-        return errorCode;
+        printf("Тест areArraysEqual не пройден\n");
+        return true;
     }
 
     if (!testGetBinaryNumber()) {
         printf("Тест getBinaryNumber не пройден\n");
-        errorCode = true;
-        return errorCode;
+        return true;
     }
 
     if (!testBinarySum()) {
         printf("Тест binarySum не пройден\n");
-        errorCode = true;
-        return errorCode;
+        return true;
     }
 
     if (!testConversionToDecimal()) {
         printf("Тест conversionToDecimal не пройден\n");
-        errorCode = true;
-        return errorCode;
+        return true;
     }
 
-    userInput(&firstNumber, &secondNumber, &errorCode);
-    if (errorCode) {
-        return errorCode;
-    }
-    checkingTheAmountForStackOverflow(firstNumber, secondNumber, &errorCode);
+    readUserInput(&firstNumber, &secondNumber, &errorCode);
     if (errorCode) {
         return errorCode;
     }
@@ -225,13 +192,13 @@ int main(void) {
     binarySum(binaryFirstNumber, binarySecondNumber, binarySumArray);
 
     printf("Двоичное представление первого числа в дополнительном коде:\n");
-    printBoolArray(binaryFirstNumber, SIZEOF);
+    printBoolArray(binaryFirstNumber, SIZE_OF_NUMBER);
     printf("\nДвоичное представление второго числа в дополнительном коде:\n");
-    printBoolArray(binarySecondNumber, SIZEOF);
+    printBoolArray(binarySecondNumber, SIZE_OF_NUMBER);
     printf("\nДвоичная сумма:\n");
-    printBoolArray(binarySumArray, SIZEOF);
+    printBoolArray(binarySumArray, SIZE_OF_NUMBER);
     decimalSumNumber = conversionToDecimal(binarySumArray);
-    printf("\nДесятичная сумма:\n%d", decimalSumNumber);
+    printf("\nДесятичная сумма (в кольце вычетов по модулю 2 147 483 648):\n%d", decimalSumNumber);
 
     return errorCode;
 }
