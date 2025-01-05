@@ -308,7 +308,7 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
             Node* replacementNode = deleteNode(node, node->right->value.key, isHeightChanged, errorCode);
             Node* saveNode = copyNode(node, errorCode);
             node->value.key = replacementNode->value.key;
-            node->value = replacementNode->value;
+            node->value.value = replacementNode->value.value;
             free(replacementNode);
             return saveNode;
         }
@@ -324,8 +324,7 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
 
         if (returnedNode == NULL) {
             Node* saveDeletedNode = copyNode(node->right, errorCode);
-            free(node->right);
-            node->right = NULL;
+            deleteTree(&(node->right));
             if (*isHeightChanged) {
                 --node->balance;
                 node = balance(node);
@@ -337,6 +336,8 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
         }
         else if (returnedNode == node->right->left || returnedNode == node->right->right) {
             Node* saveDeletedNode = copyNode(node->right, errorCode);
+            free(node->right->value.key);
+            free(node->right->value.value);
             free(node->right);
             node->right = returnedNode;
             if (*isHeightChanged) {
@@ -363,7 +364,7 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
 
         if (returnedNode == NULL) {
             Node* saveDeletedNode = copyNode(node->left, errorCode);
-            free(node->left);
+            deleteTree(&(node->left));
             node->left = NULL;
             if (*isHeightChanged) {
                 ++node->balance;
@@ -376,6 +377,8 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
         }
         else if (returnedNode == node->left->left || returnedNode == node->left->right) {
             Node* saveDeletedNode = copyNode(node->left, errorCode);
+            free(node->left->value.key);
+            free(node->left->value.value);
             free(node->left);
             node->left = returnedNode;
             if (*isHeightChanged) {
@@ -398,7 +401,7 @@ Node* deleteNode(Node* node, const char* key, bool* isHeightChanged, bool* error
         return returnedNode;
     }
     if (returnedNode != NULL) {
-        free(returnedNode);
+        deleteTree(&returnedNode);
     }
     return node;
 }
