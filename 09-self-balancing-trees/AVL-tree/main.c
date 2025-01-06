@@ -18,11 +18,6 @@ void printTheBackgroundInformation() {
     );
 }
 
-void clearBuffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
-
 char* getValueFromTheUser(bool* errorCode) {
     const int buffer = 101;
     char value[101] = { '\0' };
@@ -30,7 +25,7 @@ char* getValueFromTheUser(bool* errorCode) {
     scanf("%101s", value);
     while (strlen(value) == buffer) {
         printf("The string size is too large. Try again\n");
-        clearBuffer();
+        while (getchar() != '\n');
         scanf("%101s", value);
     }
     return value;
@@ -43,7 +38,7 @@ int getFunctionCodeFromTheUser(void) {
     while (functionCode > 4 || functionCode < 0 || scanfReturns != 1) {
         printf("Incorrect number. Please try again:\n");
         printTheBackgroundInformation();
-        clearBuffer();
+        while(getchar() != '\n');
         scanfReturns = scanf("%d", &functionCode);
     }
     return functionCode;
