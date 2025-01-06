@@ -32,6 +32,9 @@ int main(void) {
     bool errorCode = false;
 
     runTests(&errorCode);
+    if (errorCode) {
+        return errorCode;
+    }
 
     printf("Введите выражение в инфиксной форме:\n"
         "Разрешённые символы: {0123456789+-*/( )}\n");
@@ -52,5 +55,7 @@ int main(void) {
     printf("Ваше выражение в постфиксной форме:\n");
 
     printf("%s", postfixForm);
+
+    free(postfixForm);
     return errorCode;
  }
