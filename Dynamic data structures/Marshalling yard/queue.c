@@ -44,7 +44,7 @@ void enqueue(Queue* queue, char value, bool *errorCode) {
     QueueElement* element = (QueueElement*)calloc(1, sizeof(QueueElement));
     if (element == NULL) {
         errorCode = true;
-        return NULL;
+        return;
     }
     element->value = value;
     if (queue->back == NULL) {
@@ -60,7 +60,7 @@ void enqueue(Queue* queue, char value, bool *errorCode) {
 char dequeue(Queue* queue, bool* errorCode) {
     if (queue->front == NULL) {
         errorCode = true;
-        return 0;
+        return '\0';
     }
     char value = queue->front->value;
     QueueElement* tmp = queue->front;

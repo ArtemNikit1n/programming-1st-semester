@@ -14,7 +14,7 @@ char dequeue(Queue* queue, bool* errorCode);
 // Creates a queue.
 Queue* createQueue(bool* errorCode);
 
-// Checking whether the stack contains at least one element.
+// Checks whether the queue contains at least one element.
 bool queueIsEmpty(Queue* queue);
 
 // Deletes the queue.
