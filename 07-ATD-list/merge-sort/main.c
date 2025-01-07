@@ -8,6 +8,7 @@
 #include <locale.h>
 #include <stdlib.h>
 
+#include "stringUtils.h"
 #include "mergeSort.h"
 #include "../list/list.h"
 #include "../list/testsForList.h"
@@ -135,6 +136,10 @@ int main(void) {
         return errorCode;
     }
     runMergeSortingTests(&errorCode);
+    if (errorCode) {
+        return errorCode;
+    }
+    testAllUtilitiesForStrings(&errorCode);
     if (errorCode) {
         return errorCode;
     }

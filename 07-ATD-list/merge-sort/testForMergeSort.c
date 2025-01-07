@@ -4,6 +4,7 @@
 
 #include "../list/list.h"
 #include "mergeSort.h"
+#include "stringUtils.h"
 
 bool checkTheLexicographicOrder(List* list, SortingCriteria criteria, bool* errorCode) {
     for (Position i = next(first(list, errorCode), errorCode); i != last(list, errorCode); i = next(i, errorCode)) {
@@ -19,22 +20,7 @@ bool checkTheLexicographicOrder(List* list, SortingCriteria criteria, bool* erro
             iValue = getValue(i, errorCode).phone;
             jValue = getValue(j, errorCode).phone;
         }
-        int strcmpResult = -2;
-        if (iValue == '\0' || jValue == '\0') {
-            if (iValue == '\0' && jValue != '\0') {
-                strcmpResult = -1;
-            }
-            if (iValue != '\0' && jValue == '\0') {
-                strcmpResult = 1;
-            }
-            if (iValue == '\0' && jValue == '\0') {
-                strcmpResult = 0;
-            }
-        }
-        else {
-            strcmpResult = strcmp(iValue, jValue);
-        }
-        if (strcmpResult > 0) {
+        if (compareTwoString(iValue, jValue) > 0) {
             return false;
         }
         if (*errorCode) {
@@ -46,21 +32,48 @@ bool checkTheLexicographicOrder(List* list, SortingCriteria criteria, bool* erro
 
 bool testSortByMerging(bool* errorCode) {
     List* testList = createList(errorCode);
+    if (*errorCode) {
+        return false;
+    }
     NameAndPhone testStruct = { .name = "Artem", .phone = "89123599486" };
     add(testList, first(testList, errorCode), testStruct, errorCode);
+    if (*errorCode) {
+        deleteList(&testList);
+        return false;
+    }
     testStruct.name = "Nikitka";
     testStruct.phone = "89123219486";
     add(testList, first(testList, errorCode), testStruct, errorCode);
+    if (*errorCode) {
+        deleteList(&testList);
+        return false;
+    }
     testStruct.name = '\0';
     testStruct.phone = "-023-12-";
     add(testList, first(testList, errorCode), testStruct, errorCode);
+    if (*errorCode) {
+        deleteList(&testList);
+        return false;
+    }
     testStruct.name = "Pashka";
     testStruct.phone = '\0';
     add(testList, first(testList, errorCode), testStruct, errorCode);
+    if (*errorCode) {
+        deleteList(&testList);
+        return false;
+    }
 
     mergeSort(testList, phone, errorCode);
+    if (*errorCode) {
+        deleteList(&testList);
+        return false;
+    }
     bool test1 = checkTheLexicographicOrder(testList, phone, errorCode);
     mergeSort(testList, name, errorCode);
+    if (*errorCode) {
+        deleteList(&testList);
+        return false;
+    }
     bool test2 = checkTheLexicographicOrder(testList, name, errorCode);
     deleteList(&testList);
     return test1 && test2;

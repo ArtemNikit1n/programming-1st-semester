@@ -2,13 +2,18 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "stringUtils.h"
 #include "mergeSort.h"
 #include "../list/list.h"
 
 void merge(List* list, Position left, Position middle, Position right, SortingCriteria criteria, bool* errorCode) {
     List* result = createList(errorCode);
+    if (*errorCode) {
+        return;
+    }
     Position i = first(result, errorCode);
     if (*errorCode) {
+        deleteList(&result);
         return;
     }
     Position saveLeft = left;
@@ -26,26 +31,12 @@ void merge(List* list, Position left, Position middle, Position right, SortingCr
             middleValue = getValue(middle, errorCode).phone;
         }
 
-        int strcmpResult = -2;
-        if (leftValue == '\0' || middleValue == '\0') {
-            if (leftValue == '\0' && middleValue != '\0') {
-                strcmpResult = -1;
-            }
-            if (leftValue != '\0' && middleValue == '\0') {
-                strcmpResult = 1;
-            }
-            if (leftValue == '\0' && middleValue == '\0') {
-                strcmpResult = 0;
-            }
-        } else {
-            strcmpResult = strcmp(leftValue, middleValue);
-        }
-
-        if (strcmpResult < 0) {
+        if (compareTwoString(leftValue, middleValue) < 0) {
             add(result, i, getValue(left, errorCode), errorCode);
             i = next(i, errorCode);
             left = next(left, errorCode);
             if (*errorCode) {
+                deleteList(&result);
                 return;
             }
         } else {
@@ -53,6 +44,7 @@ void merge(List* list, Position left, Position middle, Position right, SortingCr
             i = next(i, errorCode);
             middle = next(middle, errorCode);
             if (*errorCode) {
+                deleteList(&result);
                 return;
             }
         }
@@ -123,7 +115,6 @@ void sortByMerging(List* list, Position left, Position right, SortingCriteria cr
             return;
         }
         if (i == left) {
-            right = saveRight;
             return;
         }
     }
