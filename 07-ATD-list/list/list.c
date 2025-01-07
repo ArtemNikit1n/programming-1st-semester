@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -30,6 +29,7 @@ List* createList(bool* errorCode) {
     }
     List* list = calloc(1, sizeof(List));
     if (list == NULL) {
+        free(guardian);
         *errorCode = true;
         return NULL;
     }
@@ -57,6 +57,12 @@ Value removeListElement(List* list, Position position, bool* errorCode) {
         Value emptyValue = { .name = NULL, .phone = NULL };
         return emptyValue;
     }
+    if (list->head == NULL) {
+        *errorCode = true;
+        Value emptyValue = { .name = NULL, .phone = NULL };
+        return emptyValue;
+    }
+
     ListElement* temp = position->next;
     if (temp == NULL) {
         *errorCode = true;
@@ -66,10 +72,6 @@ Value removeListElement(List* list, Position position, bool* errorCode) {
     Value value = temp->value;
     position->next = position->next->next;
     free(temp);
-    if (list->head == NULL) {
-        Value emptyValue = { .name = NULL, .phone = NULL };
-        return emptyValue;
-    }
 
     return value;
 }
