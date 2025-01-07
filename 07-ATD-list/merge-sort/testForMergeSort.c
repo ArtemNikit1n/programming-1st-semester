@@ -63,15 +63,12 @@ bool testSortByMerging(bool* errorCode) {
     mergeSort(testList, name, errorCode);
     bool test2 = checkTheLexicographicOrder(testList, name, errorCode);
     deleteList(&testList);
-    return test1;
+    return test1 && test2;
 }
 
 void runMergeSortingTests(bool* errorCode) {
     if (!testSortByMerging(errorCode)) {
         printf("Тест testSortByMerging не пройден\n");
-        if (*errorCode) {
-            printf("Ошибка в работе модуля\n");
-        }
         *errorCode = true;
     }
 }
