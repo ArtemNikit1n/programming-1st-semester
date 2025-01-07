@@ -143,3 +143,7 @@ void sortByMerging(List* list, Position left, Position right, SortingCriteria cr
     }
     merge(list, left, middle, right, criteria, errorCode);
 }
+
+void mergeSort(List* list, SortingCriteria criteria, bool* errorCode) {
+    sortByMerging(list, next(first(list, errorCode), errorCode), NULL, criteria, errorCode);
+}

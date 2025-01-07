@@ -89,7 +89,7 @@ void callTheFunction(int functionCode, bool* errorCode) {
     }
     while (functionCode != 0) {
         if (functionCode == 1) {
-            sortByMerging(records, next(first(records, errorCode), errorCode), NULL, phone, errorCode);
+            mergeSort(records, phone, errorCode);
             if (*errorCode) {
                 deleteList(&records);
                 printf("Произошла ошибка, попробуйте позже\n");
@@ -98,7 +98,7 @@ void callTheFunction(int functionCode, bool* errorCode) {
             printf("Номера телефонов были успешно отсортированы!\n");
         }
         if (functionCode == 2) {
-            sortByMerging(records, next(first(records, errorCode), errorCode), NULL, name, errorCode);
+            mergeSort(records, name, errorCode);
             if (*errorCode) {
                 deleteList(&records);
                 printf("Произошла ошибка, попробуйте позже\n");

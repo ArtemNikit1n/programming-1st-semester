@@ -58,9 +58,9 @@ bool testSortByMerging(bool* errorCode) {
     testStruct.phone = '\0';
     add(testList, first(testList, errorCode), testStruct, errorCode);
 
-    sortByMerging(testList, next(first(testList, errorCode), errorCode), NULL, phone, errorCode);
+    mergeSort(testList, phone, errorCode);
     bool test1 = checkTheLexicographicOrder(testList, phone, errorCode);
-    sortByMerging(testList, next(first(testList, errorCode), errorCode), NULL, name, errorCode);
+    mergeSort(testList, name, errorCode);
     bool test2 = checkTheLexicographicOrder(testList, name, errorCode);
     deleteList(&testList);
     return test1;
