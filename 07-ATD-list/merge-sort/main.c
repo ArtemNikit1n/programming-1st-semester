@@ -12,7 +12,7 @@
 #include "../list/list.h"
 #include "../list/testsForList.h"
 
-void printTheBackgroundInformation() {
+void printTheBackgroundInformation(void) {
     printf(
         "0 Ц выйти\n"
         "1 Ц отсортировать по номеру телефона\n"
@@ -43,7 +43,16 @@ void readFromTheFile(List* records, const char* filename, bool* errorCode) {
     int scanfResult = 2;
     while (scanfResult == 2) {
         char* name = calloc(1, sizeof(char) * MAX_NAME_LENGTH);
+        if (name == NULL) {
+            *errorCode = true;
+            return;
+        }
         char* phone = calloc(1, sizeof(char) * MAX_PHONE_LENGTH);
+        if (phone == NULL) {
+            free(name);
+            *errorCode = true;
+            return;
+        }
         scanfResult = fscanf(file, "%s - %s\n", name, phone);
         if (scanfResult != 2) {
             break;
@@ -51,14 +60,24 @@ void readFromTheFile(List* records, const char* filename, bool* errorCode) {
 
         NameAndPhone currentData = { .name = name, .phone = phone };
         add(records, i, currentData, errorCode);
+        if (*errorCode) {
+            free(name);
+            free(phone);
+            return;
+        }
         i = next(i, errorCode);
+        if (*errorCode) {
+            free(name);
+            free(phone);
+            return;
+        }
     }
     fclose(file);
 }
 
 void callTheFunction(int functionCode, bool* errorCode) {
     List* records = createList(errorCode);
-    if (*errorCode == true) {
+    if (*errorCode) {
         printf("ќшибка выделени€ пам€ти");
         return;
     }
