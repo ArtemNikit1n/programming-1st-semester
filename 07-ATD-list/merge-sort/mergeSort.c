@@ -55,6 +55,7 @@ void merge(List* list, Position left, Position middle, Position right, SortingCr
         i = next(i, errorCode);
         left = next(left, errorCode);
         if (*errorCode) {
+            deleteList(&result);
             return;
         }
     }
@@ -64,21 +65,25 @@ void merge(List* list, Position left, Position middle, Position right, SortingCr
         i = next(i, errorCode);
         middle = next(middle, errorCode);
         if (*errorCode) {
+            deleteList(&result);
             return;
         }
     }
 
     i = next(first(result, errorCode), errorCode);
     if (*errorCode) {
+        deleteList(&result);
         return;
     }
     left = saveLeft;
     for (Position j = left; j != NULL && i != NULL; j = next(j, errorCode)) {
         if (*errorCode) {
+            deleteList(&result);
             return;
         }
         setValue(j, getValue(i, errorCode), errorCode);
         if (*errorCode) {
+            deleteList(&result);
             return;
         }
         i = next(i, errorCode);
