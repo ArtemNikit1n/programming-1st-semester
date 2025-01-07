@@ -88,6 +88,7 @@ void merge(List* list, Position left, Position middle, Position right, SortingCr
         }
         i = next(i, errorCode);
     }
+    deleteList(&result);
 }
 
 Position calculateTheMiddle(List* list, Position left, Position right, bool* errorCode) {
