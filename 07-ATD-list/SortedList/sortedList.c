@@ -4,11 +4,47 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../merge-sort/mergeSort.h"
 #include "../list/list.h"
 
+void sortListByInserts(List* list, bool* errorCode) {
+    if (listIsEmpty(list, errorCode)) {
+        return;
+    }
+
+    Position sortedEnd = first(list);
+    Position unsortedStart = next(sortedEnd, errorCode);
+    while (unsortedStart != NULL) {
+        Value valueToInsert = getValue(unsortedStart, errorCode);
+
+        Position insertPosition = first(list);
+        while (insertPosition != unsortedStart) {
+            Value currentValue = getValue(next(insertPosition, errorCode), errorCode);
+            if (currentValue > valueToInsert) {
+                break;
+            }
+            insertPosition = next(insertPosition, errorCode);
+        }
+
+        if (insertPosition != unsortedStart) {
+            removeListElement(list, sortedEnd, errorCode);
+            add(list, insertPosition, valueToInsert, errorCode);
+        }
+        else {
+            sortedEnd = unsortedStart;
+        }
+        unsortedStart = next(sortedEnd, errorCode);
+    }
+}
+
 void printList(const List* list, bool* errorCode) {
-    for (Position i = first(list, errorCode); i != last(list, errorCode); i = next(i, errorCode)) {
+    if (list == NULL) {
+        *errorCode = true;
+        return;
+    }
+    if (errorCode == NULL) {
+        return;
+    }
+    for (Position i = first(list); i != last(list, errorCode); i = next(i, errorCode)) {
         printf("%d ", getValue(next(i, errorCode), errorCode));
         if (*errorCode) {
             printf("Ошибка. Невозможно вывести список.\n");
@@ -19,16 +55,32 @@ void printList(const List* list, bool* errorCode) {
 }
 
 void addItToSortedList(List* list, int valueToAdd, bool* errorCode) {
+    if (list == NULL) {
+        *errorCode = true;
+        return;
+    }
+    if (errorCode == NULL) {
+        return;
+    }
     add(list, last(list, errorCode), valueToAdd, errorCode);
-    sortByMerging(list, next(first(list, errorCode), errorCode), NULL, errorCode);
+    sortListByInserts(list, errorCode);
 }
 
-void deleteFromSortedList(List* list, int position, bool* errorCode) {
-    int j = 1;
-    Position i = first(list, errorCode);
-    while (j < position) {
-        i = next(i, errorCode);
-        ++j;
+void deleteFromSortedList(List* list, int valueToDelete, bool* errorCode) {
+    if (list == NULL) {
+        *errorCode = true;
+        return;
     }
-    removeListElement(list, i, errorCode);
+    if (errorCode == NULL) {
+        return;
+    }
+    for (Position i = first(list); i != last(list, errorCode); i = next(i, errorCode)) {
+        if (valueToDelete == getValue(next(i, errorCode), errorCode)) {
+            removeListElement(list, i, errorCode);
+            return;
+        }
+        if (*errorCode) {
+            return;
+        }
+    }
 }

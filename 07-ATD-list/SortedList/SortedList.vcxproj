@@ -129,8 +129,6 @@
   <ItemGroup>
     <ClCompile Include="..\list\list.c" />
     <ClCompile Include="..\list\testsForList.c" />
-    <ClCompile Include="..\merge-sort\mergeSort.c" />
-    <ClCompile Include="..\merge-sort\testForMergeSort.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="sortedList.c" />
     <ClCompile Include="testsForSortedList.c" />
@@ -138,8 +136,6 @@
   <ItemGroup>
     <ClInclude Include="..\list\list.h" />
     <ClInclude Include="..\list\testsForList.h" />
-    <ClInclude Include="..\merge-sort\mergeSort.h" />
-    <ClInclude Include="..\merge-sort\testForMergeSort.h" />
     <ClInclude Include="testsForSortedList.h" />
   </ItemGroup>
   <ItemGroup>

@@ -6,11 +6,10 @@
 
 #include "sortedList.h"
 #include "../list/list.h"
-#include "../merge-sort/testForMergeSort.h"
 #include "../list/testsForlist.h"
 #include "testsForSortedList.h"
 
-void printTheBackgroundInformation() {
+void printTheBackgroundInformation(void) {
     printf(
         "0 – выйти\n"
         "1 – добавить значение в сортированный список\n"
@@ -61,22 +60,16 @@ void callTheFunction(int functionCode, bool* errorCode) {
                 continue;
             }
 
-            printf(
-                "Введите позицию, которую вы хотите удалить из списка\n"
-                "(От 1 до %d)\n", listLength);
+            printf("Введите значение, которое вы хотите удалить из списка\n");
 
-            int position = getIntValueFromUser();
-            while (position <= 0 || position > listLength) {
-                printf("В вашем списке нет такой позиции. Попробуйте ещё раз\n");
-                position = getIntValueFromUser();
-            }
-            deleteFromSortedList(list, position, errorCode);
+            int valueToDelete = getIntValueFromUser();
+            deleteFromSortedList(list, valueToDelete, errorCode);
 
             if (*errorCode) {
-                printf("При удалении числа произошла ошибка\n");
+                printf("При удалении значения произошла ошибка\n");
                 *errorCode = false;
             } else {
-                printf("Число успешно удалено\n");
+                printf("Значение успешно удалено\n");
                 --listLength;
             }
         }
@@ -102,10 +95,6 @@ int main(void) {
     setlocale(LC_ALL, "Ru-ru");
     bool errorCode = false;
     runTheListTests(&errorCode);
-    if (errorCode) {
-        return errorCode;
-    }
-    runMergeSortingTests(&errorCode);
     if (errorCode) {
         return errorCode;
     }

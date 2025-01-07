@@ -15,38 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="list.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
     <ClCompile Include="main.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\list\list.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="..\list\testsForList.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="mergeSort.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="testForMergeSort.c">
+    <ClCompile Include="testsForList.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="phoneDatabase.txt">
-      <Filter>Исходные файлы</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\list\list.h">
+    <ClInclude Include="testsForList.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="..\list\testsForList.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="mergeSort.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="testForMergeSort.h">
+    <ClInclude Include="list.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

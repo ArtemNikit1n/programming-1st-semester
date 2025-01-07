@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{54459132-cea2-4351-8eee-e8b946d4f514}</ProjectGuid>
-    <RootNamespace>mergesort</RootNamespace>
+    <ProjectGuid>{bc9b65c1-f071-439a-9cb6-7b089ce4e346}</ProjectGuid>
+    <RootNamespace>list</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,20 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\list\list.c" />
-    <ClCompile Include="..\list\testsForList.c" />
+    <ClCompile Include="list.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="mergeSort.c" />
-    <ClCompile Include="testForMergeSort.c" />
+    <ClCompile Include="testsForList.c" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="phoneDatabase.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\list\list.h" />
-    <ClInclude Include="..\list\testsForList.h" />
-    <ClInclude Include="mergeSort.h" />
-    <ClInclude Include="testForMergeSort.h" />
+    <ClInclude Include="list.h" />
+    <ClInclude Include="testsForList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
