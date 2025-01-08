@@ -6,33 +6,32 @@
 
 #include "../list/list.h"
 
-void sortListByInserts(List* list, bool* errorCode) {
-    if (listIsEmpty(list, errorCode)) {
+void insertLastElement(List* list, Position sortedEnd, bool* errorCode) {
+    if (first(list) == sortedEnd) {
         return;
     }
 
-    Position sortedEnd = first(list);
-    Position unsortedStart = next(sortedEnd, errorCode);
-    while (unsortedStart != NULL) {
-        Value valueToInsert = getValue(unsortedStart, errorCode);
+    Position unsortedElement = next(sortedEnd, errorCode);
+    Value valueToInsert = getValue(unsortedElement, errorCode);
+    if (*errorCode) {
+        return;
+    }
 
-        Position insertPosition = first(list);
-        while (insertPosition != unsortedStart) {
-            Value currentValue = getValue(next(insertPosition, errorCode), errorCode);
-            if (currentValue > valueToInsert) {
-                break;
-            }
-            insertPosition = next(insertPosition, errorCode);
-        }
-
-        if (insertPosition != unsortedStart) {
+    Position insertPosition = first(list);
+    while (insertPosition != unsortedElement) {
+        Value currentValue = getValue(next(insertPosition, errorCode), errorCode);
+        if (currentValue > valueToInsert) {
             removeListElement(list, sortedEnd, errorCode);
+            if (*errorCode) {
+                return;
+            }
             add(list, insertPosition, valueToInsert, errorCode);
+            return;
         }
-        else {
-            sortedEnd = unsortedStart;
+        insertPosition = next(insertPosition, errorCode);
+        if (*errorCode) {
+            return;
         }
-        unsortedStart = next(sortedEnd, errorCode);
     }
 }
 
@@ -62,8 +61,15 @@ void addItToSortedList(List* list, int valueToAdd, bool* errorCode) {
     if (errorCode == NULL) {
         return;
     }
-    add(list, last(list, errorCode), valueToAdd, errorCode);
-    sortListByInserts(list, errorCode);
+    Position penultimateElementInList = last(list, errorCode);
+    if (*errorCode) {
+        return;
+    }
+    add(list, penultimateElementInList, valueToAdd, errorCode);
+    if (*errorCode) {
+        return;
+    }
+    insertLastElement(list, penultimateElementInList, errorCode);
 }
 
 void deleteFromSortedList(List* list, int valueToDelete, bool* errorCode) {
