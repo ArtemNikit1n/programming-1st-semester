@@ -55,7 +55,7 @@ void fillInHashTable(HashTable* hashTable, const char* fileName, bool* errorCode
                 symbol = fgetc(file);
                 continue;
             }
-            if (wordLength >= 50) {
+            if (wordLength >= MAX_WORD_LENGTH) {
                 *errorCode = true;
                 return;
             }
