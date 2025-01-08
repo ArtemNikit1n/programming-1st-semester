@@ -20,8 +20,11 @@ void printTheBackgroundInformation() {
 
 char* getValueFromTheUser(bool* errorCode) {
     const int buffer = 101;
-    char value[101] = { '\0' };
-
+    char* value = calloc(buffer, sizeof(char));
+    if (value == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
     scanf("%101s", value);
     while (strlen(value) == buffer) {
         printf("The string size is too large. Try again\n");
@@ -52,12 +55,27 @@ void launchAVLTree(int functionCode, bool* errorCode) {
         if (functionCode == 1) {
             printf("Enter the key:\n");
             const char* key = getValueFromTheUser(errorCode);
+            if (*errorCode) {
+                *errorCode = false;
+                printf("Memory allocation error. Try again\n");
+                functionCode = getFunctionCodeFromTheUser();
+                continue;
+            }
             printf("Enter the value:\n");
             const char* value = getValueFromTheUser(errorCode);
+            if (*errorCode) {
+                free(key);
+                *errorCode = false;
+                printf("Memory allocation error. Try again\n");
+                functionCode = getFunctionCodeFromTheUser();
+                continue;
+            }
 
             if (root == NULL) {
                 root = createTree(key, value, errorCode);
                 if (*errorCode) {
+                    free(key);
+                    free(value);
                     *errorCode = false;
                     printf("Memory allocation error. Try again\n");
                     functionCode = getFunctionCodeFromTheUser();
@@ -68,48 +86,65 @@ void launchAVLTree(int functionCode, bool* errorCode) {
             }
             root = addNode(root, key, value, &isHeightChanged, errorCode);
             if (*errorCode) {
+                free(key);
+                free(value);
                 *errorCode = false;
                 printf("Error. Try again later\n");
                 functionCode = getFunctionCodeFromTheUser();
                 continue;
             }
+            free(key);
+            free(value);
             isHeightChanged = false;
         }
         if (functionCode == 2) {
             printf("Enter the key:\n");
             const char* theKeyForTheSearch = getValueFromTheUser(errorCode);
-            const char* theFoundString = searchByKey(root, theKeyForTheSearch);
             if (*errorCode) {
                 *errorCode = false;
                 printf("Error. Try again later\n");
                 functionCode = getFunctionCodeFromTheUser();
                 continue;
             }
+            const char* theFoundString = searchByKey(root, theKeyForTheSearch);
+            free(theKeyForTheSearch);
             if (theFoundString != NULL) {
                 printf("%s\n", theFoundString);
             }
-            printf("The key was not found\n");
+            else {
+                printf("The key was not found\n");
+            }
         }
         if (functionCode == 3) {
             printf("Enter the key:\n");
             const char* keyForSearch = getValueFromTheUser(errorCode);
-            const char* theFoundString = searchByKey(root, keyForSearch);
             if (*errorCode) {
                 *errorCode = false;
                 printf("Error. Try again later\n");
                 functionCode = getFunctionCodeFromTheUser();
                 continue;
             }
+            const char* theFoundString = searchByKey(root, keyForSearch);
+            free(keyForSearch);
             if (theFoundString != NULL) {
                 printf("The key was found\n");
             }
-            printf("The key was not found\n");
+            else {
+                printf("The key was not found\n");
+            }
         }
         if (functionCode == 4) {
             printf("Enter the key:\n");
             const char* theKeyToDelete = getValueFromTheUser(errorCode);
+            if (*errorCode) {
+                *errorCode = false;
+                printf("Error. Try again later\n");
+                functionCode = getFunctionCodeFromTheUser();
+                continue;
+            }
 
             root = deleteNode(root, theKeyToDelete, &isHeightChanged, errorCode);
+            free(theKeyToDelete);
             if (*errorCode) {
                 *errorCode = false;
                 printf("Error. Try again later\n");
