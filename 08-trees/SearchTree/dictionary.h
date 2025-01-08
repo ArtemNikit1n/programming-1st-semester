@@ -2,14 +2,6 @@
 
 #include <stdbool.h>
 
-#pragma once
-
-// Structure for node values.
-typedef struct {
-    char* value;
-    int key;
-} NodeValue;
-
 // Tree Node.
 typedef struct Node Node;
 
@@ -27,6 +19,3 @@ Node* addNode(Node* node, const int key, const char* value, bool* errorCode);
 
 // Deletes a node by key.
 Node* deleteNode(Node* node, const int key, bool* errorCode);
-
-// Creates a value that can be stored in the node.
-NodeValue createNodeValue(const int key, const char* value);

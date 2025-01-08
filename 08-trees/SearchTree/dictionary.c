@@ -1,8 +1,14 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "dictionary.h"
+
+typedef struct {
+    char* value;
+    int key;
+} NodeValue;
 
 typedef struct Node {
     NodeValue value;
@@ -20,23 +26,6 @@ Node* createNode(NodeValue value, bool* errorCode) {
     return node;
 }
 
-NodeValue getValue(Node* node, bool* errorCode) {
-    if (node == NULL) {
-        NodeValue incorrectNodeValues = { .key = -1, .value = NULL };
-        *errorCode = true;
-        return incorrectNodeValues;
-    }
-    return node->value;
-}
-
-void setValue(Node* node, NodeValue value, bool* errorCode) {
-    if (node == NULL) {
-        *errorCode = true;
-        return;
-    }
-    node->value = value;
-}
-
 Node* createTree(const int key, const char* value, bool* errorCode) {
     Node* root = calloc(1, sizeof(Node));
     if (root == NULL) {
@@ -44,7 +33,14 @@ Node* createTree(const int key, const char* value, bool* errorCode) {
         return NULL;
     }
     root->value.key = key;
-    root->value.value = value;
+
+    const char* copyOfValue = strdup(value);
+    if (copyOfValue == NULL) {
+        free(root);
+        *errorCode = true;
+        return NULL;
+    }
+    root->value.value = copyOfValue;
     return root;
 }
 
@@ -54,13 +50,13 @@ void deleteTree(Node** root) {
     }
     deleteTree((&(*root)->left));
     deleteTree((&(*root)->right));
+
+    if ((*root)->value.value != NULL) {
+        free((*root)->value.value);
+    }
+
     free(*root);
     *root = NULL;
-}
-
-NodeValue createNodeValue(int key, char* value) {
-    NodeValue nodeValue = { .key = key, .value = value };
-    return nodeValue;
 }
 
 Node* addNode(Node* node, const int key, const char* value, bool* errorCode) {
@@ -101,7 +97,6 @@ char* searchByKey(Node* node, const int key) {
         return NULL;
     }
 
-    const char* foundValue = NULL;
     if (node->value.key == key) {
         return node->value.value;
     }
@@ -110,6 +105,7 @@ char* searchByKey(Node* node, const int key) {
         return NULL;
     }
 
+    const char* foundValue = NULL;
     if (node->value.key < key) {
         foundValue = searchByKey(node->right, key);
     }
@@ -168,12 +164,13 @@ Node* deleteNode(Node* node, const int key, bool* errorCode) {
 
         if (returnedNode == NULL) {
             Node* saveDeletedNode = copyNode(node->right, errorCode);
-            free(node->right);
+            deleteTree(&(node->right));
             node->right = NULL;
             return saveDeletedNode;
         }
         else if (returnedNode == node->right->left || returnedNode == node->right->right) {
             Node* saveDeletedNode = copyNode(node->right, errorCode);
+            free(node->right->value.value);
             free(node->right);
             node->right = returnedNode;
             return saveDeletedNode;
@@ -185,20 +182,20 @@ Node* deleteNode(Node* node, const int key, bool* errorCode) {
 
         if (returnedNode == NULL) {
             Node* saveDeletedNode = copyNode(node->left, errorCode);
-            free(node->left);
+            deleteTree(&(node->left));
             node->left = NULL;
             return saveDeletedNode;
         }
         else if (returnedNode == node->left->left || returnedNode == node->left->right) {
             Node* saveDeletedNode = copyNode(node->left, errorCode);
-            free(node->left);
+            free(node->left->value.value);
             node->left = returnedNode;
             return saveDeletedNode;
         }
         return returnedNode;
     }
     if (returnedNode != NULL) {
-        free(returnedNode);
+        deleteTree(&returnedNode);
     }
     return node;
 }

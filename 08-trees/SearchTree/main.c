@@ -18,10 +18,13 @@ void printTheBackgroundInformation() {
     );
 }
 
-char* getValueFromTheUser() {
+char* getValueFromTheUser(bool* errorCode) {
     const int buffer = 101;
-    char value[101] = { '\0' };
-
+    char* value = calloc(buffer, sizeof(char));
+    if (value == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
     scanf("%101s", value);
     while (strlen(value) == buffer) {
         printf("The string size is too large. Try again\n");
@@ -64,11 +67,18 @@ void callTheFunction(int functionCode, bool* errorCode) {
             printf("Enter the key:\n");
             int key = getNumberFromTheUser();
             printf("Enter the value:\n");
-            char* value = getValueFromTheUser();
+            char* value = getValueFromTheUser(errorCode);
+            if (*errorCode) {
+                *errorCode = false;
+                printf("Memory allocation error. Try again\n");
+                functionCode = getFunctionCodeFromTheUser();
+                continue;
+            }
 
             if (root == NULL) {
                 root = createTree(key, value, errorCode);
                 if (*errorCode) {
+                    free(value);
                     *errorCode = false;
                     printf("Memory allocation error. Try again\n");
                     functionCode = getFunctionCodeFromTheUser();
@@ -78,6 +88,7 @@ void callTheFunction(int functionCode, bool* errorCode) {
                 continue;
             }
             root = addNode(root, key, value, errorCode);
+            free(value);
             if (*errorCode) {
                 *errorCode = false;
                 printf("Error. Try again later\n");
@@ -92,7 +103,9 @@ void callTheFunction(int functionCode, bool* errorCode) {
             if (theFoundString != NULL) {
                 printf("%s\n", theFoundString);
             }
-            printf("The key was not found\n");
+            else {
+                printf("The key was not found\n");
+            }
         }
         if (functionCode == 3) {
             printf("Enter the key:\n");
