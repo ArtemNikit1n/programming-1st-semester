@@ -6,37 +6,26 @@
 #include <locale.h>
 #include <string.h>
 
-#include "../Tree/tree.h"
-#include "../Tree/testsForTree.h"
 #include "dictionary.h"
 
 void printTheBackgroundInformation() {
     printf(
-        "0 – Выход\n"
-        "1 – Добавить значение в словарь\n"
-        "2 – Вывести значение по ключу\n"
-        "3 – Проверить наличие заданного ключа в словаре\n"
-        "4 - Удалить заданный ключ и связанное с ним значение из словаря\n\n"
+        "0 - Exit\n"
+        "1 - Add a value by key to the dictionary. If such a key already exists, the value is replaced with a new one.\n"
+        "2 - Get the key value from the dictionary.\n"
+        "3 - Check for the specified key.\n"
+        "4 - Delete the specified key and its associated value from the dictionary.\n\n"
     );
 }
 
-void clearBuffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
+char* getValueFromTheUser() {
+    const int buffer = 101;
+    char value[101] = { '\0' };
 
-char* getValueFromTheUser(bool* errorCode) {
-    int buffer = 101;
-    char* value = calloc(buffer, sizeof(char));
-    if (value == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
-    printf("Введите значение:\n");
     scanf("%101s", value);
     while (strlen(value) == buffer) {
-        printf("Введена слишком длинная строка, попробуйте ещё раз\n");
-        clearBuffer();
+        printf("The string size is too large. Try again\n");
+        while (getchar() != '\n');
         scanf("%101s", value);
     }
     return value;
@@ -46,21 +35,21 @@ int getNumberFromTheUser(void) {
     int number = -1;
     int scanfReturns = scanf("%d", &number);
     while (scanfReturns != 1) {
-        printf("Введён некорректный ключ, попробуйте ещё раз:\n");
-        clearBuffer();
+        printf("Incorrect key has been entered, please try again:\n");
+        while (getchar() != '\n');
         scanfReturns = scanf("%d", &number);
     }
     return number;
 }
 
-int getTheFunctionCodeFromTheUser(void) {
+int getFunctionCodeFromTheUser(void) {
     int functionCode = -1;
     printTheBackgroundInformation();
     int scanfReturns = scanf("%d", &functionCode);
     while (functionCode > 4 || functionCode < 0 || scanfReturns != 1) {
-        printf("Введён некорректный номер команды, попробуйте ещё раз:\n");
+        printf("Incorrect number. Please try again:\n");
         printTheBackgroundInformation();
-        clearBuffer();
+        while (getchar() != '\n');
         scanfReturns = scanf("%d", &functionCode);
     }
     return functionCode;
@@ -68,60 +57,72 @@ int getTheFunctionCodeFromTheUser(void) {
 
 void callTheFunction(int functionCode, bool* errorCode) {
     Node* root = NULL;
+    bool isHeightChanged = false;
+
     while (functionCode != 0) {
         if (functionCode == 1) {
-            printf("Введите ключ:\n");
+            printf("Enter the key:\n");
             int key = getNumberFromTheUser();
-            char* value = getValueFromTheUser(errorCode);
-            if (*errorCode) {
-                *errorCode = false;
-                printf("Ошибка выделения памяти, попробуйте в другой раз\n");
-                functionCode = getTheFunctionCodeFromTheUser();
-                continue;
-            }
+            printf("Enter the value:\n");
+            char* value = getValueFromTheUser();
 
             if (root == NULL) {
                 root = createTree(key, value, errorCode);
                 if (*errorCode) {
                     *errorCode = false;
-                    free(value);
-                    printf("Ошибка выделения памяти, попробуйте в другой раз\n");
-                    functionCode = getTheFunctionCodeFromTheUser();
+                    printf("Memory allocation error. Try again\n");
+                    functionCode = getFunctionCodeFromTheUser();
                     continue;
                 }
-                functionCode = getTheFunctionCodeFromTheUser();
+                functionCode = getFunctionCodeFromTheUser();
                 continue;
             }
-            addNode(root, key, value, errorCode);
+            root = addNode(root, key, value, errorCode);
+            if (*errorCode) {
+                *errorCode = false;
+                printf("Error. Try again later\n");
+                functionCode = getFunctionCodeFromTheUser();
+                continue;
+            }
         }
         if (functionCode == 2) {
-            printf("Введите ключ:\n");
+            printf("Enter the key:\n");
             int theKeyForTheSearch = getNumberFromTheUser();
-            char* theFoundString = searchByKey(root, theKeyForTheSearch);
-            printf("%s\n", theFoundString);
+            const char* theFoundString = searchByKey(root, theKeyForTheSearch);
+            if (theFoundString != NULL) {
+                printf("%s\n", theFoundString);
+            }
+            printf("The key was not found\n");
         }
         if (functionCode == 3) {
-            printf("Введите ключ:\n");
-            int theKeyForTheSearch = getNumberFromTheUser();
-            char* theFoundString = searchByKey(root, theKeyForTheSearch);
+            printf("Enter the key:\n");
+            int keyForSearch = getNumberFromTheUser();
+            const char* theFoundString = searchByKey(root, keyForSearch);
             if (theFoundString != NULL) {
-                printf("Ключ найден\n");
-            } else {
-                printf("Ключ не найден\n");
+                printf("The key was found\n");
+            }
+            else {
+                printf("The key was not found\n");
             }
         }
         if (functionCode == 4) {
-            printf("Введите ключ:\n");
+            printf("Enter the key:\n");
             int theKeyToDelete = getNumberFromTheUser();
+
             root = deleteNode(root, theKeyToDelete, errorCode);
-            printf("Ключ успешно удалён!\n");
+            if (*errorCode) {
+                *errorCode = false;
+                printf("Error. Try again later\n");
+                functionCode = getFunctionCodeFromTheUser();
+                continue;
+            }
+            printf("The value has been deleted!\n");
         }
-        functionCode = getTheFunctionCodeFromTheUser();
+        functionCode = getFunctionCodeFromTheUser();
     }
 }
 
 int main(void) {
-    setlocale(LC_ALL, "Ru-ru");
     bool errorCode = false;
 
     runTheDictionaryTests(&errorCode);
@@ -129,6 +130,6 @@ int main(void) {
         return errorCode;
     }
 
-    callTheFunction(getTheFunctionCodeFromTheUser(), &errorCode);
+    callTheFunction(getFunctionCodeFromTheUser(), &errorCode);
     return errorCode;
 }
