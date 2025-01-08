@@ -9,8 +9,5 @@ int main(void) {
     setlocale(LC_ALL, "Ru-ru");
     bool errorCode = false;
     runTheListTests(&errorCode);
-    if (errorCode) {
-        return errorCode;
-    }
     return errorCode;
 }

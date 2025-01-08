@@ -22,7 +22,7 @@ List* createList(bool* errorCode);
 Position add(List* list, Position position, Value value, bool* errorCode);
 
 // Deletes an element from the specified location.
-Value removeListElement(List* list, Position position, bool* errorCode);
+void removeListElement(List* list, Position position, bool* errorCode);
 
 // Returns a pointer to the first added element.
 Position first(List* list, bool* errorCode);

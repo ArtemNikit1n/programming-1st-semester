@@ -1,7 +1,7 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "../list/list.h"
 
@@ -31,6 +31,7 @@ List* createList(bool* errorCode) {
     }
     List* list = calloc(1, sizeof(List));
     if (list == NULL) {
+        free(guardian);
         *errorCode = true;
         return NULL;
     }
@@ -38,38 +39,38 @@ List* createList(bool* errorCode) {
     return list;
 }
 
-void deleteList(List** listDoublePointer) {
-    List* list = *listDoublePointer;
-    if (list == NULL) {
+void deleteList(List** list) {
+    if ((*list) == NULL) {
         return;
     }
-    while (list->head != NULL) {
-        ListElement* next = list->head->next;
-        free(list->head);
-        list->head = next;
+    while ((*list)->head != NULL) {
+        ListElement* next = (*list)->head->next;
+        free((*list)->head->value);
+        free((*list)->head);
+        (*list)->head = next;
     }
-    free(list);
-    *listDoublePointer = NULL;
+    free(*list);
+    *list = NULL;
 }
 
-Value removeListElement(List* list, Position position, bool* errorCode) {
+void removeListElement(List* list, Position position, bool* errorCode) {
     if (list == NULL || NULL == position) {
         *errorCode = true;
-        return true;
+        return;
     }
     ListElement* temp = position->next;
     if (temp == NULL) {
         *errorCode = true;
-        return NULL;
+        return;
     }
     Value value = temp->value;
     position->next = position->next->next;
+    free(temp->value);
     free(temp);
     if (list->head == NULL) {
         *errorCode = true;
-        return NULL;
+        return;
     }
-    return value;
 }
 
 Position add(List* list, Position position, Value value, bool* errorCode) {
@@ -83,7 +84,13 @@ Position add(List* list, Position position, Value value, bool* errorCode) {
         *errorCode = true;
         return NULL;
     }
-    new->value = value;
+    char* newValue = strdup(value);
+    if (newValue == NULL && value != '\0') {
+        free(new);
+        *errorCode = true;
+        return NULL;
+    }
+    new->value = newValue;
     new->frequency = 1;
 
     ListElement* temp = position->next;
@@ -119,7 +126,7 @@ void setFrequency(Position position, int frequency, bool* errorCode) {
 int getFrequency(Position position, bool* errorCode) {
     if (position == NULL) {
         *errorCode = true;
-        return;
+        return 0;
     }
     return position->frequency;
 }

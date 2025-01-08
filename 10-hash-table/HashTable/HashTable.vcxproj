@@ -131,11 +131,13 @@
     <ClCompile Include="..\list\testsForList.c" />
     <ClCompile Include="hashTable.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="testsForHashTable.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\list\list.h" />
     <ClInclude Include="..\list\testsForList.h" />
     <ClInclude Include="hashTable.h" />
+    <ClInclude Include="testsForHashTable.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="text.txt" />

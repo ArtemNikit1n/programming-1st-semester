@@ -4,22 +4,53 @@
 #include <string.h>
 
 #include "../list/list.h"
+#include "hashTable.h"
 
-void printHashTable(List* hashTable[], int *hashTableSize, bool *errorCode) {
+struct HashTable {
+    List** table;
+    size_t size;
+    size_t numberOfElements;
+};
+
+size_t getFrequencyFromHashTable(HashTable* hashTable, Key value, bool* errorCode) {
+    if (hashTable == NULL || value == NULL) {
+        *errorCode = true;
+        return 0;
+    }
+    const size_t hash = hashStringPolynomial(value, hashTable->size);
+    if (hashTable->table[hash] == NULL) {
+        return 0;
+    }
+
+    List* list = hashTable->table[hash];
+    for (Position i = next(first(list, errorCode), errorCode); i != NULL; i = next(i, errorCode)) {
+        if (strcmp(getValue(i, errorCode), value) == 0) {
+            if (*errorCode) {
+                return 0;
+            }
+            return getFrequency(i, errorCode);
+        }
+    }
+}
+
+void printHashTable(HashTable* hashTable, bool *errorCode) {
     printf("<Word> - <Frequency>\n");
-    for (int i = 0; i < *hashTableSize; ++i) {
-        if (hashTable[i] == NULL) {
+    for (int i = 0; i < hashTable->size; ++i) {
+        if (hashTable->table[i] == NULL) {
             continue;
         }
-        Position j = next(first(hashTable[i], errorCode), errorCode);
+        Position j = next(first(hashTable->table[i], errorCode), errorCode);
         while (j != NULL) {
+            if (*errorCode) {
+                return;
+            }
             printf("%s - %d\n", getValue(j, errorCode), getFrequency(j, errorCode));
             j = next(j, errorCode);
         }
     }
 }
 
-int hashStringPolynomial(const char* word, const int tableSize) {
+int hashStringPolynomial(const char* word, const size_t tableSize) {
     const int coefficientOfMultiplication = 29;
     int polynomial = 0;
     for (int i = 0; word[i] != '\0'; ++i) {
@@ -29,139 +60,162 @@ int hashStringPolynomial(const char* word, const int tableSize) {
     return polynomial;
 }
 
-bool isSpecialCharacters(const char symbol) {
-    const char specialCharacters[] = { ' ', ',', '.', '\n', '"', '?', '!', '(', ')'};
-    int numberOfSpecialCharacters = sizeof(specialCharacters) / sizeof(specialCharacters[0]);
-    for (int i = 0; i < numberOfSpecialCharacters; ++i) {
-        if (symbol == specialCharacters[i]) {
-            return true;
-        }
-    }
-    return false;
+double calculateFillFactor(HashTable* hashTable) {
+    return (double)(hashTable->numberOfElements) / (double)(hashTable->size);
 }
 
-List** doubleHashTable(List* hashTable[], int* hashTableSize, bool* errorCode) {
-    List** copyOfHashTable = calloc(*hashTableSize, sizeof(List*));
-    if (copyOfHashTable == NULL) {
+HashTable* doubleHashTable(HashTable* hashTable, bool* errorCode) {
+    List* tableContents = createList(errorCode);
+    if (*errorCode) {
+        return NULL;
+    }
+    for (int i = 0; i < hashTable->size; ++i) {
+        if (hashTable->table[i] != NULL) {
+            for (Position j = next(first(hashTable->table[i], errorCode), errorCode); j != NULL; j = next(j, errorCode)) {
+                add(tableContents, first(tableContents, errorCode), getValue(j, errorCode), errorCode);
+                setFrequency(next(first(tableContents, errorCode), errorCode), getFrequency(j, errorCode), errorCode);
+                if (*errorCode) {
+                    deleteList(&tableContents);
+                    return NULL;
+                }
+            }
+            deleteList(&hashTable->table[i]);
+        }
+    }
+
+    hashTable->size *= 2;
+    List** memoryForNewTable = realloc(hashTable->table, hashTable->size * sizeof(List*));
+    if (memoryForNewTable == NULL) {
+        deleteList(&tableContents);
+        *errorCode = true;
+        return hashTable;
+    }
+    hashTable->table = memoryForNewTable;
+    memset(hashTable->table, NULL, hashTable->size * sizeof(List*));
+
+    for (Position i = next(first(tableContents, errorCode), errorCode); i != NULL; i = next(i, errorCode)) {
+        while (getFrequency(i, errorCode) != 0) {
+            addValueToHashTable(hashTable, getValue(i, errorCode), errorCode);
+            setFrequency(i, getFrequency(i, errorCode) - 1, errorCode);
+            if (*errorCode) {
+                deleteList(&tableContents);
+                return NULL;
+            }
+        }
+    }
+    deleteList(&tableContents);
+    return hashTable;
+}
+
+void addValueToHashTable(HashTable* hashTable, Key value, bool* errorCode) {
+    if (hashTable == NULL || strlen(value) > MAX_WORD_LENGTH) {
         *errorCode = true;
         return;
     }
-    for (int i = 0; i < *hashTableSize; ++i) {
-        if (hashTable[i] != NULL) {
-            List* copyOfList = createList(errorCode);
-            for (Position j = next(first(hashTable[i], errorCode), errorCode); j != NULL; j = next(j, errorCode)) {
-                add(copyOfList, first(copyOfList, errorCode), getValue(j, errorCode), errorCode);
-                setFrequency(next(first(copyOfList, errorCode), errorCode), getFrequency(j, errorCode), errorCode);
-            }
+
+    const size_t hash = hashStringPolynomial(value, hashTable->size);
+    if (hashTable->table[hash] == NULL) {
+        hashTable->table[hash] = createList(errorCode);
+        if (*errorCode) {
+            return;
+        }
+    }
+    List* list = hashTable->table[hash];
+
+    bool isStringRepeating = false;
+    for (Position i = next(first(list, errorCode), errorCode); i != NULL; i = next(i, errorCode)) {
+        if (strcmp(getValue(i, errorCode), value) == 0) {
+            setFrequency(i, getFrequency(i, errorCode) + 1, errorCode);
+            isStringRepeating = true;
             if (*errorCode) {
+                deleteList(&list);
                 return;
             }
-            copyOfHashTable[i] = copyOfList;
-            deleteList(&hashTable[i]);
+        }
+    }
+    if (!isStringRepeating) {
+        ++hashTable->numberOfElements;
+        add(list, first(list, errorCode), value, errorCode);
+        if (*errorCode) {
+            deleteList(&list);
+            return;
         }
     }
 
-    *hashTableSize *= 2;
-    hashTable = realloc(hashTable, *hashTableSize * sizeof(List*));
+    double hashTableFillFactor = calculateFillFactor(hashTable);
+    while (hashTableFillFactor > 1.1) {
+        HashTable* newHashTable = doubleHashTable(hashTable, errorCode);
+        if (*errorCode) {
+            deleteList(&list);
+            return;
+        }
+        hashTable = newHashTable;
+        hashTableFillFactor = calculateFillFactor(hashTable);
+    }
+}
+
+HashTable* createHashTable(bool* errorCode) {
+    HashTable* hashTable = calloc(1, sizeof(HashTable));
+    if (hashTable == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    hashTable->size = HASH_TABLE_INITIAL_SIZE;
+    hashTable->table = calloc(HASH_TABLE_INITIAL_SIZE, sizeof(List*));
+    if (hashTable->table == NULL) {
+        free(hashTable);
+        *errorCode = true;
+        return NULL;
+    }
+    return hashTable;
+}
+
+void deleteHashTable(HashTable** hashTable, bool* errorCode) {
     if (hashTable == NULL) {
         *errorCode = true;
         return;
     }
-    memset(hashTable, NULL, *hashTableSize * sizeof(List*));
-
-    for (int i = 0; i < *hashTableSize / 2; ++i) {
-        if (copyOfHashTable[i] != NULL) {
-            for (Position j = next(first(copyOfHashTable[i], errorCode), errorCode); j != NULL; j = next(j, errorCode)) {
-                int hash = hashStringPolynomial(getValue(j, errorCode), *hashTableSize);
-                if (hashTable[hash] == NULL) {
-                    hashTable[hash] = createList(errorCode);
-                }
-
-                add(hashTable[hash], first(hashTable[hash], errorCode), getValue(j, errorCode), errorCode);
-                setFrequency(next(first(hashTable[hash], errorCode), errorCode), getFrequency(j, errorCode), errorCode);
-            }
-            if (*errorCode) {
-                return;
-            }
-            deleteList(&copyOfHashTable[i]);
-        }
-    }
-
-    return hashTable;
-}
-
-List** buildHashTable(List* hashTable[], const char* fileName, int* hashTableSize, bool* errorCode) {
-    FILE* file = fopen(fileName, "r");
-
-    int numberOfWords = 0;
-
-    char* buffer = calloc(50, sizeof(char));
-    if (buffer == NULL) {
-        *errorCode = true;
+    if (*hashTable == NULL) {
         return;
     }
-
-    char symbol = fgetc(file);
-    int wordLength = 0;
-
-    if (!isSpecialCharacters(symbol)) {
-        buffer[wordLength] = symbol;
-        ++wordLength;
+    if ((*hashTable)->table == NULL) {
+        free(*hashTable);
+        *hashTable = NULL;
+        return;
     }
-    while (symbol != EOF) {
-        while (isSpecialCharacters(symbol)) {
-            symbol = fgetc(file);
+    for (size_t i = 0; i < (*hashTable)->size; ++i) {
+        deleteList(&(*hashTable)->table[i]);
+    }
+    free(*hashTable);
+    *hashTable = NULL;
+}
+
+size_t calculateMaxListLength(HashTable* hashTable, bool* errorCode) {
+    size_t maxListLength = 0;
+    for (int i = 0; i < hashTable->size; ++i) {
+        if (hashTable->table[i] == NULL) {
             continue;
         }
-        symbol = fgetc(file);
-
-        if (isSpecialCharacters(symbol)) {
-            while (isSpecialCharacters(symbol)) {
-                symbol = fgetc(file);
-                continue;
-            }
-
-            int hash = hashStringPolynomial(buffer, *hashTableSize);
-            if (hashTable[hash] == NULL) {
-                hashTable[hash] = createList(errorCode);
-            }
-
-            bool isStringRepeating = false;
-            for (Position i = next(first(hashTable[hash], errorCode), errorCode); i != NULL; i = next(i, errorCode)) {
-                if (strcmp(getValue(i, errorCode), buffer) == 0) {
-                    setFrequency(i, getFrequency(i, errorCode) + 1, errorCode);
-                    free(buffer);
-                    buffer = calloc(50, sizeof(char));
-                    if (buffer == NULL) {
-                        *errorCode = true;
-                        return;
-                    }
-                    isStringRepeating = true;
-                }
-            }
-            if (!isStringRepeating) {
-                ++numberOfWords;
-
-                add(hashTable[hash], first(hashTable[hash], errorCode), buffer, errorCode);
-                buffer = calloc(50, sizeof(char));
-                if (buffer == NULL) {
-                    *errorCode = true;
-                    return;
-                }
-            }
-            wordLength = 0;
+        Position j = next(first(hashTable->table[i], errorCode), errorCode);
+        if (*errorCode) {
+            return 0;
         }
-
-        buffer[wordLength] = symbol;
-        ++wordLength;
+        size_t listLength = 0;
+        while (j != NULL) {
+            j = next(j, errorCode);
+            ++listLength;
+        }
+        maxListLength = max(listLength, maxListLength);
     }
-    fclose(file);
+    return maxListLength;
+}
 
-    float hashTableFillFactor = (float)numberOfWords / (float)*hashTableSize;
-
-    while (hashTableFillFactor > 1.1) {
-        hashTable = doubleHashTable(hashTable, hashTableSize, errorCode);
-        hashTableFillFactor = (float)numberOfWords / (float)*hashTableSize;
+double calculateAverageListLength(HashTable* hashTable) {
+    size_t numberOfFilledCells = 0;
+    for (size_t i = 0; i < hashTable->size; ++i) {
+        if (hashTable->table[i] != NULL) {
+            ++numberOfFilledCells;
+        }
     }
-    return hashTable;
+    return ((double)hashTable->numberOfElements) / ((double)numberOfFilledCells);
 }

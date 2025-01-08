@@ -2,60 +2,100 @@
 #include <stdlib.h>
 
 #include "../list/testsForList.h"
-#include "../list/list.h"
 #include "hashTable.h"
+#include "testsForHashTable.h"
 
-void printStatisticsOnTable(List** hashTable, int *hashTableSize, bool *errorCode) {
-    int numberOfFilledCells = 0;
-    int maxLengthOfList = -1;
-    int numberOfWords = 0;
-
-    for (int i = 0; i < *hashTableSize; ++i) {
-        if (hashTable[i] == NULL) {
-            continue;
-        }
-        ++numberOfFilledCells;
-        int currentLegthOfList = 0;
-
-        Position j = next(first(hashTable[i], errorCode), errorCode);
-        while (j != NULL) {
-            j = next(j, errorCode);
-            maxLengthOfList = max(maxLengthOfList, currentLegthOfList);
-            ++currentLegthOfList;
-            ++numberOfWords;
+bool isOneOfSpecialCharacters(const char symbol) {
+    const char specialCharacters[] = { ' ', ',', '.', '\n', '"', '?', '!', '(', ')' };
+    int numberOfSpecialCharacters = sizeof(specialCharacters) / sizeof(specialCharacters[0]);
+    for (int i = 0; i < numberOfSpecialCharacters; ++i) {
+        if (symbol == specialCharacters[i]) {
+            return true;
         }
     }
+    return false;
+}
 
-    float hashTableFillFactor = (float)numberOfWords / (float)*hashTableSize;
-    float averageLengthOfList = (float)numberOfWords / (float)numberOfFilledCells;
-
+void printStatisticsOnTable(HashTable* hashTable, bool *errorCode) {
+    const double fillFactor = calculateFillFactor(hashTable);
+    const size_t maxListLength = calculateMaxListLength(hashTable, errorCode);
+    if (*errorCode) {
+        return;
+    }
+    const double averageListLength = calculateAverageListLength(hashTable);
     printf("\nHash table fill factor: %f\n"
         "The average length of the list: %f\n"
-        "Maximum list length: %d\n", hashTableFillFactor, averageLengthOfList, maxLengthOfList);
+        "Maximum list length: %d\n", fillFactor, averageListLength, maxListLength);
 }
+
+void fillInHashTable(HashTable* hashTable, const char* fileName, bool* errorCode) {
+    FILE* file = fopen(fileName, "r");
+    if (file == NULL) {
+        *errorCode = true;
+        return;
+    }
+    char buffer[MAX_WORD_LENGTH] = { '\0' };
+
+    char symbol = fgetc(file);
+    int wordLength = 0;
+
+    if (!isOneOfSpecialCharacters(symbol)) {
+        buffer[wordLength] = symbol;
+        ++wordLength;
+    }
+    while (symbol != EOF) {
+        while (isOneOfSpecialCharacters(symbol)) {
+            symbol = fgetc(file);
+            continue;
+        }
+        symbol = fgetc(file);
+
+        if (isOneOfSpecialCharacters(symbol)) {
+            while (isOneOfSpecialCharacters(symbol)) {
+                symbol = fgetc(file);
+                continue;
+            }
+            if (wordLength >= 50) {
+                *errorCode = true;
+                return;
+            }
+            addValueToHashTable(hashTable, buffer, errorCode);
+            if (*errorCode) {
+                fclose(file);
+                return;
+            }
+            memset(buffer, 0, MAX_WORD_LENGTH);
+            wordLength = 0;
+        }
+        buffer[wordLength] = symbol;
+        ++wordLength;
+    }
+    fclose(file);
+ }
 
 int main(void) {
     bool errorCode = false;
     if (!runTheListTests(&errorCode)) {
         return errorCode;
     }
-
-    int hashTableSize = 5;
-
-    List** hashTable = calloc(hashTableSize, sizeof(List*));
-    if (hashTable == NULL) {
-        errorCode = true;
-        return;
+    runTheHashTableTests(&errorCode);
+    if (errorCode) {
+        printf("Tests hashTable FAILED");
+        return errorCode;
     }
-    hashTable = buildHashTable(hashTable, "text.txt", &hashTableSize, &errorCode);
 
-    printHashTable(hashTable, &hashTableSize, &errorCode);
-    printStatisticsOnTable(hashTable, &hashTableSize, &errorCode);
-
-    for (int i = 0; i < hashTableSize; ++i) {
-        if (hashTable[i] != NULL) {
-            deleteList(&hashTable[i]);
-        }
+    HashTable* hashTable = createHashTable(&errorCode);
+    if (errorCode) {
+        return errorCode;
     }
-    free(hashTable);
+    fillInHashTable(hashTable, "text.txt", &errorCode);
+    if (errorCode) {
+        deleteHashTable(&hashTable, &errorCode);
+        return errorCode;
+    }
+
+    printHashTable(hashTable, &errorCode);
+    printStatisticsOnTable(hashTable, &errorCode);
+    deleteHashTable(&hashTable, &errorCode);
+    return errorCode;
 }

@@ -28,21 +28,22 @@ bool testAddAndRemove(bool* errorCode) {
         deleteList(&list);
         return false;
     }
-
-    bool test1 = strcmp(removeListElement(list, next(first(list, errorCode), errorCode), errorCode), "456aasd") == 0;
+    bool test1 = strcmp(getValue(next(next(first(list, errorCode), errorCode), errorCode), errorCode), "456aasd") == 0;
+    removeListElement(list, next(next(first(list, errorCode), errorCode), errorCode), errorCode);
     bool test2 = strcmp(getValue(next(first(list, errorCode), errorCode), errorCode), "123qwe") == 0;
-    bool test3 = strcmp(removeListElement(list, first(list, errorCode), errorCode), "123qwe") == 0;
-    bool test4 = removeListElement(list, first(list, errorCode), errorCode) == '\0';
+    removeListElement(list, first(list, errorCode), errorCode);
+    bool test3 = getValue(first(list, errorCode), errorCode) == '\0';
+    removeListElement(list, first(list, errorCode), errorCode);
     if (*errorCode) {
         deleteList(&list);
         return false;
     }
-    bool test5 = listIsEmpty(list, errorCode);
+    bool test4 = listIsEmpty(list, errorCode);
     deleteList(&list);
     if (*errorCode) {
         return false;
     }
-    return test1 && test2 && test3 && test4 && test5;
+    return test1 && test2 && test3 && test4;
 }
 
 bool runTheListTests(bool* errorCode) {
