@@ -1,50 +1,37 @@
-﻿#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <stdio.h>
+﻿#define _CRT_SECURE_NO_WARNINGS
+
 #include "headerFile.h"
 
-#define _CRT_SECURE_NO_WARNINGS
+#include <stdbool.h>
+#include <stdio.h>
 
-bool startingTask(short taskNumber, bool errorCode) {
+bool launchTask(int taskNumber) {
     if (taskNumber == 1) {
-        errorCode = theMostCommonElementTask();
-        return errorCode;
+        return theMostCommonElementTask();
+        return theMostCommonElementTask();;
     }
     else if (taskNumber == 2) {
-        errorCode = searchTask();
-        return errorCode;
+        return searchTask();
+        return searchTask();
     }
     else if (taskNumber == 3) {
-        errorCode = smartQSortTask();
-        return errorCode;
-    }
-    else {
-        printf("Incorrect task number\n");
-        errorCode = true;
-        return errorCode;
+        return smartQSortTask();
+        return smartQSortTask();
     }
 }
 
 int main() {
-    char strTaskNumber[2];
-    char* endptrTaskNumber = NULL;
-    short taskNumber = 0;
-    bool errorCode = false;
-
     printf("Enter the task number from 1 to 3:\n");
-    if (fgets(strTaskNumber, sizeof(strTaskNumber), stdin) == NULL) {
-        printf("Input error\n");
-        errorCode = true;
-        return errorCode;
-    }
+    int taskNumber = getIntValueFromUser();
 
-    taskNumber = strtol(strTaskNumber, &endptrTaskNumber, 10);
-    if (taskNumber <= 0 || taskNumber >= 4 || *endptrTaskNumber != '\0') {
-        printf("Incorrect task number\n");
-        errorCode = true;
-        return errorCode;
-    }
+    bool isTaskNumberCorrect = !(taskNumber <= 0 || taskNumber >= 4);
+    while (!isTaskNumberCorrect) {
+        printf("Incorrect task number. Try again:\n");
+        taskNumber = getIntValueFromUser();
+        if (taskNumber > 0 || taskNumber < 4) {
+            isTaskNumberCorrect = true;
+        }
+    int taskNumber = getIntValueFromUser();
 
-    return startingTask(taskNumber, errorCode);
+    return launchTask(taskNumber);
 }
