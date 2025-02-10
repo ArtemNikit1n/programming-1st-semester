@@ -7,7 +7,6 @@
 #include "testsForPostfixCalculator.h"
 #include "../Stack/testsForStack.h"
 
-
 void runTests(bool* errorCode) {
     if (!testCalculate(errorCode)) {
         printf("Тест testCalculate не пройден\n");
@@ -33,7 +32,7 @@ int main(void) {
     printf("Введите выражение в постфиксной форме:\n"
         "Разрешённые символы: {0123456789+-*/ }\n");
 
-    char* inputString = userInput(&errorCode);
+    char* inputString = readUserInput(&errorCode);
     if (errorCode) {
         return errorCode;
     }
@@ -42,7 +41,7 @@ int main(void) {
         printf("Вычисления не были завершены\n");
         return errorCode;
     }
-    printf("%d", calculate(inputString, &errorCode));
+    printf("%d", calculatesResult);
 
     return errorCode;
 }

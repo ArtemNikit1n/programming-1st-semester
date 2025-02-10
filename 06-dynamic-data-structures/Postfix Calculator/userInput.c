@@ -5,7 +5,7 @@
 #include <string.h>
 #include <assert.h>
 
-bool checkingUserInput(const char *string) {
+bool checkUserInput(const char *string) {
     const char correctCharacters[] = "0123456789+-*/ ";
     int i = 0;
 
@@ -23,10 +23,10 @@ bool checkingUserInput(const char *string) {
     return true;
 }
 
-char* userInput(bool* errorCode) {
+char* readUserInput(bool* errorCode) {
     char* inputString = (char*)calloc(1, sizeof(char));
     if (inputString == NULL) {
-        printf("Ошибка выделения памяти\n");
+        printf("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ\n");
         *errorCode = true;
         return NULL;
     }
@@ -47,7 +47,7 @@ char* userInput(bool* errorCode) {
                 bufferSize *= 2;
                 char* tmp = (char*)realloc(inputString, bufferSize * sizeof(char));
                 if (tmp == NULL) {
-                    printf("Ошибка выделения памяти\n");
+                    printf("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ\n");
                     *errorCode = true;
                     return NULL;
                 }
@@ -57,13 +57,13 @@ char* userInput(bool* errorCode) {
         }
 
         inputString[lineLength] = '\0';
-        if (!checkingUserInput(inputString)) {
+        if (!checkUserInput(inputString)) {
             isInputIncorrect = true;
             free(inputString);
-            printf("Выражение не должно содержать буквы, попробуйте ещё раз\n");
+            printf("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ\n");
             inputString = (char*)calloc(1, sizeof(char));
             if (inputString == NULL) {
-                printf("Ошибка выделения памяти\n");
+                printf("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ\n");
                 *errorCode = true;
                 return NULL;
             }
