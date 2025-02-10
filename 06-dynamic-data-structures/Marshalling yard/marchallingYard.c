@@ -1,9 +1,9 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include "../stack/stack.h"
+#include "../Stack/stack.h"
 #include "queue.h"
 
 char* queueToString(Queue* queue, const int inputStringLength, bool* errorCode) {

@@ -6,7 +6,7 @@
 #include "userInput.h"
 #include "TestsForMarchallingYard.h"
 #include "testsForQueue.h"
-#include "../stack/testsForStack.h"
+#include "../Stack/testsForStack.h"
 
 void runTests(bool* errorCode) {
     runStackTest(&errorCode);
@@ -50,6 +50,7 @@ int main(void) {
         return errorCode;
     }
     if (errorCode) {
+        free(postfixForm);
         printf("Программа завершена с ошибкой\n");
         return errorCode;
     }

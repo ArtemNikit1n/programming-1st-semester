@@ -39,6 +39,5 @@ void testTheMarshallingYard(bool *errorCode) {
 
     if (!(test1 && test2 && test3 && test4)) {
         *errorCode = true;
-        return;
     }
 }
