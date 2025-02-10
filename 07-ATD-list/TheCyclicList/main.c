@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <locale.h>
 
-#include "list.h"
+#include "theCyclicList.h"
 #include "testsForList.h"
 
 int main(void) {
