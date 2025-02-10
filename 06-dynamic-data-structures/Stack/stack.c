@@ -3,10 +3,10 @@
 #include <assert.h>
 #include <stdbool.h>
 
-#include "stack.h"
+#include "../stack/stack.h"
 
 typedef struct StackElement {
-    int value;
+    char value;
     struct StackElement* next;
 } StackElement;
 
@@ -38,7 +38,7 @@ bool isEmpty(Stack* stack) {
     return NULL == stack->head;
 }
 
-void push(Stack* stack, int value, bool *errorCode) {
+void push(Stack* stack, char value, bool *errorCode) {
     StackElement* element = calloc(1, sizeof(StackElement));
     if (NULL == element) {
         *errorCode = true;
@@ -49,13 +49,13 @@ void push(Stack* stack, int value, bool *errorCode) {
     stack->head = element;
 }
 
-int pop(Stack* stack, bool *errorCode) {
+char pop(Stack* stack, bool *errorCode) {
     if (stack->head == NULL) {
         *errorCode = true;
         return 0;
     }
     StackElement* tmp = stack->head;
-    int value = stack->head->value;
+    char value = stack->head->value;
     stack->head = stack->head->next;
     free(tmp);
     return value;

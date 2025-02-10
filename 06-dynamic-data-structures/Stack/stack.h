@@ -15,8 +15,8 @@ void deleteStack(Stack** stackDoublePointer);
 bool isEmpty(Stack* stack);
 
 // Adds an element to the end of the stack.
-void push(Stack* stack, int value, bool* errorCode);
+void push(Stack* stack, char value, bool* errorCode);
 
 // Removes an element from the beginning of the stack.
 // Returns a deleted value.
-int pop(Stack* stack, bool* errorCode);
+char pop(Stack* stack, bool* errorCode);
