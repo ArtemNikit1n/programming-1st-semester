@@ -4,7 +4,7 @@
 
 #include "workingWithAFile.h"
 
-struct testStruct {
+struct TestStruct {
     char names[MAX_ENTRIES][MAX_RECORD_LENGTH];
     char phones[MAX_ENTRIES][MAX_RECORD_LENGTH];
     int numberOfEntries;
@@ -14,7 +14,7 @@ bool testSearchByPhone(void) {
     const char* name = "Artem";
     const char* phone = "89004325486";
 
-    struct testStruct testStruct = { .numberOfEntries = 1 };
+    struct TestStruct testStruct = { .numberOfEntries = 1 };
 
     strcpy(testStruct.names[0], name);
     strcpy(testStruct.phones[0], phone);
@@ -26,7 +26,7 @@ bool testSearchByName(void) {
     const char* name = "Artem";
     const char* phone = "89004325486";
 
-    struct testStruct testStruct = { .numberOfEntries = 1 };
+    struct TestStruct testStruct = { .numberOfEntries = 1 };
 
     strcpy(testStruct.names[0], name);
     strcpy(testStruct.phones[0], phone);

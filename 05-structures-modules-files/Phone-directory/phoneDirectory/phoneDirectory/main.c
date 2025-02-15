@@ -40,11 +40,9 @@ void launchPhoneDirectory(struct NameAndPhoneNumber* records, int commandNumber)
         if (commandNumber == 1) {
             printf("\nДобавление записи\n\n");
             addANewContact(records);
-            commandNumber = readUserInput();
         }
         else if (commandNumber == 2) {
             printAllAvailableRecords(records);
-            commandNumber = readUserInput() ;
         }
         else if (commandNumber == 3) {
             printf("\nВведите имя искомого контакта:\n\n");
@@ -61,7 +59,6 @@ void launchPhoneDirectory(struct NameAndPhoneNumber* records, int commandNumber)
                 printf("\nТелефон не найден");
             }
             printf("\n%s", foundPhone);
-            commandNumber = readUserInput();
         }
         else if (commandNumber == 4) {
             printf("\nВведите телефон искомого контакта:\n\n");
@@ -80,15 +77,14 @@ void launchPhoneDirectory(struct NameAndPhoneNumber* records, int commandNumber)
                 continue;
             }
             printf("\n%s", foundName);
-            commandNumber = readUserInput();
         }
         else if (commandNumber == 5) {
             if (saveToFile(records, "phoneDatabase.txt")) {
                 printf("\nОшибка открытия файла, попробуйте ещё раз");
             }
             printf("\nКонтакты успешно сохранены в файл\n");
-            commandNumber = readUserInput();
         }
+        commandNumber = readUserInput();
     }
     printf("Выход из справочника...\n");
 

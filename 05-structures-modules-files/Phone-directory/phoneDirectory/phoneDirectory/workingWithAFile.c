@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-bool saveToFile(struct NameAndPhoneNumber* records, const char* filename) {
-    FILE* file = fopen(filename, "w");
+bool saveToFile(struct NameAndPhoneNumber* records, const char* fileName) {
+    FILE* file = fopen(fileName, "w");
     if (file == NULL) {
         return true;
     }
@@ -19,6 +19,7 @@ bool saveToFile(struct NameAndPhoneNumber* records, const char* filename) {
     for (int i = 0; i < records->numberOfEntries; ++i) {
         fprintf(file, "%s - %s\n", records->names[i], records->phones[i]);
     }
+    fclose(file);
     return false;
 }
 
