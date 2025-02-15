@@ -18,12 +18,6 @@
     <ClCompile Include="main.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\list\list.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="..\list\testsForList.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="mergeSort.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -34,6 +28,12 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="testsStringUtils.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\listForMergeSort\list.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\listForMergeSort\testsForList.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -55,6 +55,12 @@
     </ClInclude>
     <ClInclude Include="testsStringUtils.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\listForMergeSort\list.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="..\listForMergeSort\testsForList.h">
+      <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

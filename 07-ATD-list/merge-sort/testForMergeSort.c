@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "../list/list.h"
+#include "../listForMergeSort/list.h"
 #include "mergeSort.h"
 #include "stringUtils.h"
 

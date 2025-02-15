@@ -15,10 +15,10 @@
 
 void printTheBackgroundInformation(void) {
     printf(
-        "0 � �����\n"
-        "1 � ������������� �� ������ ��������\n"
-        "2 � ������������� �� �����\n"
-        "3 � ����������� ������ �� �����\n"
+        "0 – выйти\n"
+        "1 – отсортировать по номеру телефона\n"
+        "2 – отсортировать по имени\n"
+        "3 – распечатать данные из файла\n"
     );
 }
 
@@ -26,7 +26,7 @@ void printList(const List* list, bool* errorCode) {
     for (Position i = first(list, errorCode); i != last(list, errorCode); i = next(i, errorCode)) {
         printf("%s - %s\n", getValue(next(i, errorCode), errorCode).name, getValue(next(i, errorCode), errorCode).phone);
         if (*errorCode) {
-            printf("������. ����� ����� ��������� ����������.\n");
+            printf("Ошибка. Вывод ваших контактов остановлен.\n");
             return;
         }
     }
@@ -79,13 +79,13 @@ void readFromTheFile(List* records, const char* filename, bool* errorCode) {
 void callTheFunction(int functionCode, bool* errorCode) {
     List* records = createList(errorCode);
     if (*errorCode) {
-        printf("������ ��������� ������");
+        printf("Ошибка выделения памяти");
         return;
     }
     readFromTheFile(records, "phoneDatabase.txt", errorCode);
     if (*errorCode) {
         deleteList(&records);
-        printf("������ ��� ������ �� �����");
+        printf("Произошла ошибка, попробуйте позже");
         return;
     }
     while (functionCode != 0) {
@@ -93,22 +93,22 @@ void callTheFunction(int functionCode, bool* errorCode) {
             mergeSort(records, phone, errorCode);
             if (*errorCode) {
                 deleteList(&records);
-                printf("��������� ������, ���������� �����\n");
+                printf("Произошла ошибка, попробуйте позже\n");
                 return;
             }
-            printf("������ ��������� ���� ������� �������������!\n");
+            printf("Номера телефонов были успешно отсортированы!\n");
         }
         if (functionCode == 2) {
             mergeSort(records, name, errorCode);
             if (*errorCode) {
                 deleteList(&records);
-                printf("��������� ������, ���������� �����\n");
+                printf("Произошла ошибка, попробуйте позже\n");
                 return;
             }
-            printf("����� ��������� ���� ������� �������������!\n");
+            printf("Имена контактов были успешно отсортированы!\n");
         }
         if (functionCode == 3) {
-            printf("���� ��������:\n");
+            printf("Ваши контакты:\n");
             printList(records, errorCode);
         }
         functionCode = getTheFunctionCodeFromTheUser();
@@ -120,7 +120,7 @@ int getTheFunctionCodeFromTheUser(void) {
     int functionCode = -1;
     int scanfReturns = scanf("%d", &functionCode);
     while (functionCode > 3 || functionCode < 0 || scanfReturns != 1) {
-        printf("����� ������� ����� �����������, ���������� ��� ���\n");
+        printf("Номер команды введён некорректно, попробуйте ещё раз\n");
         printTheBackgroundInformation();
         while (getchar() != '\n');
         scanfReturns = scanf("%d", &functionCode);

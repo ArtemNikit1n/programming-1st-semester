@@ -127,8 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\list\list.c" />
-    <ClCompile Include="..\list\testsForList.c" />
+    <ClCompile Include="..\listForMergeSort\list.c" />
+    <ClCompile Include="..\listForMergeSort\testsForList.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mergeSort.c" />
     <ClCompile Include="stringUtils.c" />
@@ -139,6 +139,8 @@
     <Text Include="phoneDatabase.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\listForMergeSort\list.h" />
+    <ClInclude Include="..\listForMergeSort\testsForList.h" />
     <ClInclude Include="..\list\list.h" />
     <ClInclude Include="..\list\testsForList.h" />
     <ClInclude Include="mergeSort.h" />
