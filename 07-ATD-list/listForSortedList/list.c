@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "../list/list.h"
+#include "../listForSortedList/list.h"
 
 typedef struct ListElement {
     Value value;
