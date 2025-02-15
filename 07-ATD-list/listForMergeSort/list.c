@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "../list/list.h"
+#include "../listForMergeSort/list.h"
 
 typedef struct ListElement {
     Value value;
@@ -52,21 +52,20 @@ void deleteList(List** listDoublePointer) {
 }
 
 Value removeListElement(List* list, Position position, bool* errorCode) {
+    Value emptyValue = { .name = NULL, .phone = NULL };
+
     if (list == NULL || NULL == position) {
         *errorCode = true;
-        Value emptyValue = { .name = NULL, .phone = NULL };
         return emptyValue;
     }
     if (list->head == NULL) {
         *errorCode = true;
-        Value emptyValue = { .name = NULL, .phone = NULL };
         return emptyValue;
     }
 
     ListElement* temp = position->next;
     if (temp == NULL) {
         *errorCode = true;
-        Value emptyValue = { .name = NULL, .phone = NULL };
         return emptyValue;
     }
     Value value = temp->value;

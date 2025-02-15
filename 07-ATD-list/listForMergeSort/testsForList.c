@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "../list/list.h"
+#include "../listForMergeSort/list.h"
 
 bool testListIsEmptyAndCreateList(bool* errorCode) {
     List* list = createList(errorCode);
