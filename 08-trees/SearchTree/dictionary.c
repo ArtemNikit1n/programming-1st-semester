@@ -16,16 +16,6 @@ typedef struct Node {
     Node* right;
 } Node;
 
-Node* createNode(NodeValue value, bool* errorCode) {
-    Node* node = calloc(1, sizeof(Node));
-    if (node == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
-    node->value = value;
-    return node;
-}
-
 Node* createTree(const int key, const char* value, bool* errorCode) {
     Node* root = calloc(1, sizeof(Node));
     if (root == NULL) {
@@ -51,9 +41,7 @@ void deleteTree(Node** root) {
     deleteTree((&(*root)->left));
     deleteTree((&(*root)->right));
 
-    if ((*root)->value.value != NULL) {
-        free((*root)->value.value);
-    }
+    free((*root)->value.value);
 
     free(*root);
     *root = NULL;
@@ -105,14 +93,7 @@ char* searchByKey(Node* node, const int key) {
         return NULL;
     }
 
-    const char* foundValue = NULL;
-    if (node->value.key < key) {
-        foundValue = searchByKey(node->right, key);
-    }
-    if (node->value.key > key) {
-        foundValue = searchByKey(node->left, key);
-    }
-    return foundValue;
+    return searchByKey(node->value.key < key ? node->right : node->left, key);
 }
 
 Node* copyNode(const Node* source, bool* errorCode) {
