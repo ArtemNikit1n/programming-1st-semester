@@ -128,9 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
+    <ClCompile Include="searchForTheMostFrequentElement.c" />
     <ClCompile Include="smartQSort.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="searchForTheMostFrequentElement.h" />
     <ClInclude Include="smartQSort.h" />
   </ItemGroup>
   <ItemGroup>

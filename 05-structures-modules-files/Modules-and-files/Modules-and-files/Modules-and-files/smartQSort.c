@@ -59,19 +59,3 @@ void smartQSort(int array[], int start, int stop) {
     }
 
 }
-
-void readingAnArrayOfNumbersFromAFile(int memoryForNumbers[], int *arrayLength, bool *errorCode) {
-    FILE* file = fopen("data.txt", "r");
-    if (file == NULL) {
-        printf("File not found\n");
-        *errorCode = true;
-        return;
-    }
-
-    int i = 0;
-    while (fscanf(file, "%d", &memoryForNumbers[i]) == 1) {
-        i++;
-    }
-    fclose(file);
-    *arrayLength = i;
-}

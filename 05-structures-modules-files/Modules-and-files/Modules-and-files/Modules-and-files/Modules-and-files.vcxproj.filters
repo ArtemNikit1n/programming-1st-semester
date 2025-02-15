@@ -21,15 +21,21 @@
     <ClCompile Include="smartQSort.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="searchForTheMostFrequentElement.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="searchForTheMostFrequentElement.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
     <ClInclude Include="smartQSort.h">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data.txt">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Файлы ресурсов</Filter>
     </Text>
   </ItemGroup>
 </Project>
