@@ -42,6 +42,10 @@ void fillInHashTable(HashTable* hashTable, const char* fileName, bool* errorCode
     if (!isOneOfSpecialCharacters(symbol)) {
         buffer[wordLength] = symbol;
         ++wordLength;
+        if (wordLength >= MAX_WORD_LENGTH) {
+            *errorCode = true;
+            return;
+        }
     }
     while (symbol != EOF) {
         while (isOneOfSpecialCharacters(symbol)) {
@@ -69,6 +73,10 @@ void fillInHashTable(HashTable* hashTable, const char* fileName, bool* errorCode
         }
         buffer[wordLength] = symbol;
         ++wordLength;
+        if (wordLength >= MAX_WORD_LENGTH) {
+            *errorCode = true;
+            return;
+        }
     }
     fclose(file);
  }

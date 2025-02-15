@@ -52,7 +52,7 @@ void printHashTable(HashTable* hashTable, bool *errorCode) {
 
 int hashStringPolynomial(const char* word, const size_t tableSize) {
     const int coefficientOfMultiplication = 29;
-    int polynomial = 0;
+    size_t polynomial = 0;
     for (int i = 0; word[i] != '\0'; ++i) {
         const unsigned int numberInAlphabet = word[i];
         polynomial = (polynomial * coefficientOfMultiplication + numberInAlphabet) % tableSize;
