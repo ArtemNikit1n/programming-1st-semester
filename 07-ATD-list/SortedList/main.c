@@ -5,8 +5,8 @@
 #include <locale.h>
 
 #include "sortedList.h"
-#include "../list/list.h"
-#include "../list/testsForlist.h"
+#include "../listForSortedList/list.h"
+#include "../listForSortedList/testsForlist.h"
 #include "testsForSortedList.h"
 
 void printTheBackgroundInformation(void) {

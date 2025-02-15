@@ -18,27 +18,27 @@
     <ClCompile Include="main.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\list\list.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="..\list\testsForList.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="sortedList.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="testsForSortedList.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="..\listForSortedList\list.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\listForSortedList\testsForList.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\list\list.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="..\list\testsForList.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="testsForSortedList.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\listForSortedList\list.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\listForSortedList\testsForList.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

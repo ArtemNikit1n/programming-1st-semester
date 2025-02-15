@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../list/list.h"
+#include "../listForSortedList/list.h"
 
 void insertLastElement(List* list, Position sortedEnd, bool* errorCode) {
     if (first(list) == sortedEnd) {

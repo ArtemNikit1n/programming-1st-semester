@@ -127,15 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\list\list.c" />
-    <ClCompile Include="..\list\testsForList.c" />
+    <ClCompile Include="..\listForSortedList\list.c" />
+    <ClCompile Include="..\listForSortedList\testsForList.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="sortedList.c" />
     <ClCompile Include="testsForSortedList.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\list\list.h" />
-    <ClInclude Include="..\list\testsForList.h" />
+    <ClInclude Include="..\listForSortedList\list.h" />
+    <ClInclude Include="..\listForSortedList\testsForList.h" />
     <ClInclude Include="testsForSortedList.h" />
   </ItemGroup>
   <ItemGroup>

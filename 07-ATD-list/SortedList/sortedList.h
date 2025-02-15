@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../list/list.h"
+#include "../listForSortedList/list.h"
 #include "stdbool.h"
 
 // Print all the values of the list.
