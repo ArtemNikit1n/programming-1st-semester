@@ -32,6 +32,8 @@ Node* buildTree(FILE* file, bool* errorCode) {
 
         Node* node = createNode(theCurrentCharacter, errorCode);
         if (*errorCode) {
+            disposeNode(&node);
+            deleteStack(&stack);
             return NULL;
         }
 
@@ -42,6 +44,8 @@ Node* buildTree(FILE* file, bool* errorCode) {
 
             push(stack, node, errorCode);
             if (*errorCode) {
+                disposeNode(&node);
+                deleteStack(&stack);
                 return NULL;
             }
             continue;
@@ -51,6 +55,8 @@ Node* buildTree(FILE* file, bool* errorCode) {
         if (getLeftChild(previousOperation, errorCode) == NULL) {
             addLeftChild(previousOperation, node, errorCode);
             if (*errorCode) {
+                disposeNode(&node);
+                deleteStack(&stack);
                 return NULL;
             }
         } 
@@ -58,6 +64,8 @@ Node* buildTree(FILE* file, bool* errorCode) {
             addRightChild(previousOperation, node, errorCode);
             pop(stack, errorCode);
             if (*errorCode) {
+                disposeNode(&node);
+                deleteStack(&stack);
                 return NULL;
             }
         }

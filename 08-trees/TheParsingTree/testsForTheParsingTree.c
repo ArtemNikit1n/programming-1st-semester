@@ -8,8 +8,8 @@
 bool testBuildTreeAndCalculateItFromTheTree(bool* errorCode) {
     const FILE* test1File = fopen("test1.txt", "r");
     if (test1File == NULL) {
-        errorCode = true;
-        return errorCode;
+        *errorCode = true;
+        return true;
     }
     const Node* test1Root = buildTree(test1File, errorCode);
     fclose(test1File);
@@ -18,8 +18,8 @@ bool testBuildTreeAndCalculateItFromTheTree(bool* errorCode) {
 
     const FILE* test2File = fopen("test2.txt", "r");
     if (test2File == NULL) {
-        errorCode = true;
-        return errorCode;
+        *errorCode = true;
+        return true;
     }
     const Node* test2Root = buildTree(test2File, errorCode);
     fclose(test2File);
