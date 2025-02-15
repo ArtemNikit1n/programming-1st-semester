@@ -15,43 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD:03-sorting/Sorting/Sorting.vcxproj.filters
     <ClCompile Include="main.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="searchTask.c">
-=======
-    <ClCompile Include="workingWithAFile.c">
->>>>>>> 05-structures-modules-files:05-structures-modules-files/Phone-directory/phoneDirectory/phoneDirectory/phoneDirectory.vcxproj.filters
+    <ClCompile Include="smartQSort.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="theMostCommonElementTask.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="smartQSortTask.c">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="main.c">
+    <ClCompile Include="searchForTheMostFrequentElement.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="testsWorkingWithAFile.h">
+    <ClInclude Include="searchForTheMostFrequentElement.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="workingWithAFile.h">
+    <ClInclude Include="smartQSort.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD:03-sorting/Sorting/Sorting.vcxproj.filters
-    <ClInclude Include="headerFile.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-=======
-    <Text Include="phoneDatabase.txt">
+    <Text Include="data.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
->>>>>>> 05-structures-modules-files:05-structures-modules-files/Phone-directory/phoneDirectory/phoneDirectory/phoneDirectory.vcxproj.filters
   </ItemGroup>
 </Project>

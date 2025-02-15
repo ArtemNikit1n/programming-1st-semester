@@ -18,20 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.c" />
-    <ClCompile Include="searchTask.c" />
-    <ClCompile Include="smartQSortTask.c" />
-    <ClCompile Include="theMostCommonElementTask.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="headerFile.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{c55b273f-3421-48b4-8a3a-6c795a5422e8}</ProjectGuid>
-    <RootNamespace>Sorting</RootNamespace>
+    <ProjectGuid>{34b1337b-a5aa-4ccc-9e2a-928dcac4896c}</ProjectGuid>
+    <RootNamespace>phoneDirectory</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -111,10 +102,8 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <CompileAs>CompileAsC</CompileAs>
-      <LanguageStandard_C>Default</LanguageStandard_C>
       <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
@@ -138,6 +127,18 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c" />
+    <ClCompile Include="testsWorkingWithAFile.c" />
+    <ClCompile Include="workingWithAFile.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="phoneDatabase.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="testsWorkingWithAFile.h" />
+    <ClInclude Include="workingWithAFile.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
