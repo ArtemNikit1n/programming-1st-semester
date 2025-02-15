@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include <locale.h>
 #include <string.h>
 
-#include "dictionary.h"
+#include "avlTree.h"
+#include "avlTreeTests.h"
 
 void printTheBackgroundInformation() {
     printf(
@@ -34,20 +34,6 @@ char* getValueFromTheUser(bool* errorCode) {
     return value;
 }
 
-<<<<<<< HEAD:08-trees/SearchTree/main.c
-int getNumberFromTheUser(void) {
-    int number = -1;
-    int scanfReturns = scanf("%d", &number);
-    while (scanfReturns != 1) {
-        printf("Incorrect key has been entered, please try again:\n");
-        while (getchar() != '\n');
-        scanfReturns = scanf("%d", &number);
-    }
-    return number;
-}
-
-=======
->>>>>>> origin/09-self-balancing-trees:09-self-balancing-trees/AVL-tree/main.c
 int getFunctionCodeFromTheUser(void) {
     int functionCode = -1;
     printTheBackgroundInformation();
@@ -55,11 +41,7 @@ int getFunctionCodeFromTheUser(void) {
     while (functionCode > 4 || functionCode < 0 || scanfReturns != 1) {
         printf("Incorrect number. Please try again:\n");
         printTheBackgroundInformation();
-<<<<<<< HEAD:08-trees/SearchTree/main.c
         while (getchar() != '\n');
-=======
-        while(getchar() != '\n');
->>>>>>> origin/09-self-balancing-trees:09-self-balancing-trees/AVL-tree/main.c
         scanfReturns = scanf("%d", &functionCode);
     }
     return functionCode;
@@ -72,19 +54,11 @@ void launchAVLTree(int functionCode, bool* errorCode) {
     while (functionCode != 0) {
         if (functionCode == 1) {
             printf("Enter the key:\n");
-<<<<<<< HEAD:08-trees/SearchTree/main.c
-            int key = getNumberFromTheUser();
-            printf("Enter the value:\n");
-            char* value = getValueFromTheUser(errorCode);
-=======
             const char* key = getValueFromTheUser(errorCode);
->>>>>>> origin/09-self-balancing-trees:09-self-balancing-trees/AVL-tree/main.c
             if (*errorCode) {
                 *errorCode = false;
                 printf("Memory allocation error. Try again\n");
                 functionCode = getFunctionCodeFromTheUser();
-<<<<<<< HEAD:08-trees/SearchTree/main.c
-=======
                 continue;
             }
             printf("Enter the value:\n");
@@ -94,17 +68,13 @@ void launchAVLTree(int functionCode, bool* errorCode) {
                 *errorCode = false;
                 printf("Memory allocation error. Try again\n");
                 functionCode = getFunctionCodeFromTheUser();
->>>>>>> origin/09-self-balancing-trees:09-self-balancing-trees/AVL-tree/main.c
                 continue;
             }
 
             if (root == NULL) {
                 root = createTree(key, value, errorCode);
                 if (*errorCode) {
-<<<<<<< HEAD:08-trees/SearchTree/main.c
-=======
                     free(key);
->>>>>>> origin/09-self-balancing-trees:09-self-balancing-trees/AVL-tree/main.c
                     free(value);
                     *errorCode = false;
                     printf("Memory allocation error. Try again\n");
@@ -114,10 +84,6 @@ void launchAVLTree(int functionCode, bool* errorCode) {
                 functionCode = getFunctionCodeFromTheUser();
                 continue;
             }
-<<<<<<< HEAD:08-trees/SearchTree/main.c
-            root = addNode(root, key, value, errorCode);
-            free(value);
-=======
             root = addNode(root, key, value, &isHeightChanged, errorCode);
             if (*errorCode) {
                 free(key);
@@ -134,23 +100,14 @@ void launchAVLTree(int functionCode, bool* errorCode) {
         if (functionCode == 2) {
             printf("Enter the key:\n");
             const char* theKeyForTheSearch = getValueFromTheUser(errorCode);
->>>>>>> origin/09-self-balancing-trees:09-self-balancing-trees/AVL-tree/main.c
             if (*errorCode) {
                 *errorCode = false;
                 printf("Error. Try again later\n");
                 functionCode = getFunctionCodeFromTheUser();
                 continue;
             }
-<<<<<<< HEAD:08-trees/SearchTree/main.c
-        }
-        if (functionCode == 2) {
-            printf("Enter the key:\n");
-            int theKeyForTheSearch = getNumberFromTheUser();
-            const char* theFoundString = searchByKey(root, theKeyForTheSearch);
-=======
             const char* theFoundString = searchByKey(root, theKeyForTheSearch);
             free(theKeyForTheSearch);
->>>>>>> origin/09-self-balancing-trees:09-self-balancing-trees/AVL-tree/main.c
             if (theFoundString != NULL) {
                 printf("%s\n", theFoundString);
             }
@@ -160,10 +117,6 @@ void launchAVLTree(int functionCode, bool* errorCode) {
         }
         if (functionCode == 3) {
             printf("Enter the key:\n");
-<<<<<<< HEAD:08-trees/SearchTree/main.c
-            int keyForSearch = getNumberFromTheUser();
-            const char* theFoundString = searchByKey(root, keyForSearch);
-=======
             const char* keyForSearch = getValueFromTheUser(errorCode);
             if (*errorCode) {
                 *errorCode = false;
@@ -173,7 +126,6 @@ void launchAVLTree(int functionCode, bool* errorCode) {
             }
             const char* theFoundString = searchByKey(root, keyForSearch);
             free(keyForSearch);
->>>>>>> origin/09-self-balancing-trees:09-self-balancing-trees/AVL-tree/main.c
             if (theFoundString != NULL) {
                 printf("The key was found\n");
             }
@@ -183,21 +135,13 @@ void launchAVLTree(int functionCode, bool* errorCode) {
         }
         if (functionCode == 4) {
             printf("Enter the key:\n");
-<<<<<<< HEAD:08-trees/SearchTree/main.c
-            int theKeyToDelete = getNumberFromTheUser();
-
-            root = deleteNode(root, theKeyToDelete, errorCode);
-=======
             const char* theKeyToDelete = getValueFromTheUser(errorCode);
->>>>>>> origin/09-self-balancing-trees:09-self-balancing-trees/AVL-tree/main.c
             if (*errorCode) {
                 *errorCode = false;
                 printf("Error. Try again later\n");
                 functionCode = getFunctionCodeFromTheUser();
                 continue;
             }
-<<<<<<< HEAD:08-trees/SearchTree/main.c
-=======
 
             root = deleteNode(root, theKeyToDelete, &isHeightChanged, errorCode);
             free(theKeyToDelete);
@@ -208,7 +152,6 @@ void launchAVLTree(int functionCode, bool* errorCode) {
                 continue;
             }
             isHeightChanged = false;
->>>>>>> origin/09-self-balancing-trees:09-self-balancing-trees/AVL-tree/main.c
             printf("The value has been deleted!\n");
         }
         functionCode = getFunctionCodeFromTheUser();
@@ -217,17 +160,12 @@ void launchAVLTree(int functionCode, bool* errorCode) {
 
 int main(void) {
     bool errorCode = false;
-
-    runTheDictionaryTests(&errorCode);
+    runAVLTreeTests(&errorCode);
     if (errorCode) {
         return errorCode;
     }
 
-<<<<<<< HEAD:08-trees/SearchTree/main.c
-    callTheFunction(getFunctionCodeFromTheUser(), &errorCode);
-=======
     launchAVLTree(getFunctionCodeFromTheUser(), &errorCode);
 
->>>>>>> origin/09-self-balancing-trees:09-self-balancing-trees/AVL-tree/main.c
     return errorCode;
 }
