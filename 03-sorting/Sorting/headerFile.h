@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdio.h>
 
 // Task 1.
 bool theMostCommonElementTask(void);

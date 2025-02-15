@@ -35,17 +35,6 @@ bool testFindTheMostCommonElement() {
     return test1 && test2 && test3;
 }
 
-int getIntValueFromUser(void) {
-    int value = -1;
-    int scanfReturns = scanf("%d", &value);
-    while (scanfReturns != 1) {
-        printf("Input error\n");
-        while (getchar() != '\n');
-        scanfReturns = scanf("%d", &value);
-    }
-    return value;
-}
-
 bool theMostCommonElementTask(void) {
     bool errorCode = false;
 

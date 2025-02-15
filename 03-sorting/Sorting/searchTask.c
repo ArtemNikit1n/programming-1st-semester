@@ -1,26 +1,24 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #include "headerFile.h"
 
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 bool isNumberInArray(int desiredValue, int array[], size_t arrayLength) {
     if (array == NULL) {
-        return;
+        return false;
     }
     smartQSort(array, 0, arrayLength - 1);
 
     int start = 0;
     int stop = arrayLength - 1;
-    int i = 0;
 
     while (true) {
         if (start > stop) {
             return false;
         }
-        int averageIndex = (int)((start + stop) / 2);
+        size_t averageIndex = (size_t)((start + stop) / 2);
         if (array[averageIndex] == desiredValue) {
             return true;
         }
@@ -47,7 +45,7 @@ bool* search(int searchArea[], size_t searchAreaLength, int desiredNumbersArray[
         return NULL;
     }
 
-    for (int i = 0; i < desiredNumbersArrayLength; ++i) {
+    for (size_t i = 0; i < desiredNumbersArrayLength; ++i) {
         if (isNumberInArray(desiredNumbersArray[i], searchArea, searchAreaLength)) {
             isNumberInSearchArea[i] = true;
         }
@@ -56,7 +54,7 @@ bool* search(int searchArea[], size_t searchAreaLength, int desiredNumbersArray[
 }
 
 bool areBitScalesEqual(bool firstBitScale[], bool secondBitScale[], size_t bitScaleSize) {
-    for (int i = 0; i < bitScaleSize; ++i) {
+    for (size_t i = 0; i < bitScaleSize; ++i) {
         if (firstBitScale[i] != secondBitScale[i]) {
             return false;
         }

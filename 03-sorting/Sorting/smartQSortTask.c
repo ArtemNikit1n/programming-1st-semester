@@ -1,7 +1,10 @@
+#include "headerFile.h"
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 void swap(int* first, int* second) {
     if (*first == *second) {
@@ -12,10 +15,10 @@ void swap(int* first, int* second) {
     *second = tmp;
 }
 
-void insertionsort(int array[], int startIndex, int endIndex) {
+void insertionSort(int array[], int startIndex, int endIndex) {
     for (int i = startIndex + 1; i <= endIndex; ++i) {
         int j = i;
-        while(array[j] < array[j - 1] && startIndex < j) {
+        while (array[j] < array[j - 1] && startIndex < j) {
             swap(&array[j], &array[j - 1]);
             --j;
         }
@@ -81,7 +84,7 @@ bool testSmartQSort() {
     smartQSort(testArray1, 0, 0);
     bool test1 = testArray1[0] == 0;
 
-    int testArray2[21] = { -20, 19, 18, 17, 16, 15, 14, 13, -12, 11, 10, 9, 8, 7, 6, 5, -4, 3, 2, 1, 0};
+    int testArray2[21] = { -20, 19, 18, 17, 16, 15, 14, 13, -12, 11, 10, 9, 8, 7, 6, 5, -4, 3, 2, 1, 0 };
     smartQSort(testArray2, 0, 20);
     bool test2 = isArraySorted(testArray2, 21);
 
@@ -89,11 +92,7 @@ bool testSmartQSort() {
 }
 
 bool smartQSortTask(void) {
-    char* endptrArrayLength = NULL;
-    char strArrayLength[6] = { 0 };
-
     int array[1000] = { 0 };
-    int arrayLength = -1;
     bool errorCode = false;
 
     if (!testSmartQSort()) {
@@ -103,10 +102,10 @@ bool smartQSortTask(void) {
     }
 
     printf("Enter the array size:\n");
-    scanf("%s", strArrayLength);
-    arrayLength = (int)strtol(strArrayLength, &endptrArrayLength, 10);
+    int arrayLength = -1;
+    arrayLength = getIntValueFromUser();
 
-    if (arrayLength > 1000 || arrayLength < 1 || *endptrArrayLength != '\0') {
+    if (arrayLength > 1000 || arrayLength < 1) {
         printf("Invalid array value");
         errorCode = true;
         return errorCode;

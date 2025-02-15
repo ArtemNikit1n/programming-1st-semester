@@ -8,30 +8,30 @@
 bool launchTask(int taskNumber) {
     if (taskNumber == 1) {
         return theMostCommonElementTask();
-        return theMostCommonElementTask();;
     }
     else if (taskNumber == 2) {
-        return searchTask();
         return searchTask();
     }
     else if (taskNumber == 3) {
         return smartQSortTask();
-        return smartQSortTask();
     }
+    return true;
 }
 
-int main() {
+int main(void) {
     printf("Enter the task number from 1 to 3:\n");
-    int taskNumber = getIntValueFromUser();
+    int taskNumber = 0;
+    taskNumber = getIntValueFromUser();
 
-    bool isTaskNumberCorrect = !(taskNumber <= 0 || taskNumber >= 4);
+
+    bool isTaskNumberCorrect = (taskNumber > 0 && taskNumber < 4);
     while (!isTaskNumberCorrect) {
         printf("Incorrect task number. Try again:\n");
         taskNumber = getIntValueFromUser();
-        if (taskNumber > 0 || taskNumber < 4) {
+        if (taskNumber > 0 && taskNumber < 4) {
             isTaskNumberCorrect = true;
         }
-    int taskNumber = getIntValueFromUser();
+    }
 
     return launchTask(taskNumber);
 }
